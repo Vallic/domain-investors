@@ -1,0 +1,76 @@
+# Around Drupal's major releases, a pull request with the new major version.
+# Off until you set them up: see docs/automatic-updates.md.
+name: Drupal core major updates around release windows
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '47 4 * 6,8,12 5' # Fridays in June, August, December; even years only below.
+permissions:
+  contents: read
+concurrency:
+  group: drupal-dependency-updates
+  cancel-in-progress: false
+jobs:
+  window:
+    if: vars.DRUPAL_UPDATES == 'on' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.window.outputs.run }}
+    steps:
+      - name: Match core major release years (manual runs always allowed)
+        id: window
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          release_year=$(date -u +%Y)
+          if [[ "$EVENT_NAME" == 'workflow_dispatch' ]] || (( release_year % 2 == 0 )); then
+            echo 'run=true' >> "$GITHUB_OUTPUT"
+          fi
+  update:
+    needs: window
+    if: needs.window.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require the automation token
+        env:
+          UPDATE_TOKEN: ${{ secrets.DRUPAL_UPDATE_TOKEN }}
+        run: |
+          if [ -z "$UPDATE_TOKEN" ]; then
+            echo "Set DRUPAL_UPDATE_TOKEN so update PRs can trigger required checks."
+            exit 1
+          fi
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          token: ${{ secrets.DRUPAL_UPDATE_TOKEN }}
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: gd, pdo_mysql, mbstring, intl, bcmath, zip, opcache
+          tools: composer:v2
+          coverage: none
+      - name: Upgrade selected packages
+        uses: valicm/drupal-update@v6.0.0
+        with:
+          update_type: major
+          update_scope: core
+      - name: Validate Composer files and platform
+        run: |
+          composer validate --no-check-publish
+          composer check-platform-reqs --lock
+      # The pull request then runs tests.yml: coding standards and full installs.
+      - name: Create or update the upgrade PR
+        id: pr
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.DRUPAL_UPDATE_TOKEN }}
+          base: ${{ github.event.repository.default_branch }}
+          branch: updates/drupal-core-major
+          title: Drupal core major upgrade
+          commit-message: Drupal core major upgrade
+          body: ${{ env.DRUPAL_UPDATES_TABLE }}
+          # Keep scaffolded/config changes. Normal repository ignore rules still apply to
+          # vendor and installed packages; the updater's backup directories ignore themselves.
+          add-paths: |
+            .
+          delete-branch: true

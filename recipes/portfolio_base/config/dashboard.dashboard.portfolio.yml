@@ -1,0 +1,47 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.portfolio-tasks
+  module:
+    - domain_portfolio_tools
+    - layout_builder
+    - system
+id: portfolio
+label: 'Domain portfolio'
+description: "The owner's dashboard: offers waiting, recent sales, expiring domains, sync health and the next steps of setting up."
+layout:
+  -
+    layout_id: layout_twocol_section
+    layout_settings:
+      label: 'Portfolio and tasks'
+      column_widths: 67-33
+      context_mapping: {  }
+    components:
+      7c2f9e41-0a6b-4d3e-9b58-1e4f6a2d8c73:
+        uuid: 7c2f9e41-0a6b-4d3e-9b58-1e4f6a2d8c73
+        region: first
+        configuration:
+          id: domain_portfolio_owner_dashboard
+          label: 'Your domains'
+          label_display: '0'
+          provider: domain_portfolio_tools
+          context_mapping: {  }
+        weight: 0
+        additional: {  }
+      e5a1d3b7-6c4f-4f2a-8e19-3b7c9d0f5a62:
+        uuid: e5a1d3b7-6c4f-4f2a-8e19-3b7c9d0f5a62
+        region: second
+        configuration:
+          id: 'system_menu_block:portfolio-tasks'
+          label: Tasks
+          label_display: visible
+          provider: system
+          context_mapping: {  }
+          level: 1
+          depth: 1
+          expand_all_items: false
+        weight: 0
+        additional: {  }
+    third_party_settings: {  }
+weight: 0

@@ -1,0 +1,345 @@
+name: 'Domain Investors: base'
+description: 'Sells your own domain names: a domain catalog with sale terms, buy now and offers, the domain checkout and handover, the owner dashboard as the admin landing page, SEO and mail. Applied by the Domain Investors installer; the optional portfolio_* recipes build on it.'
+type: 'Domain Investors'
+recipes:
+  # Pages, with a body editor.
+  - core/recipes/page_content_type
+  - core/recipes/basic_html_format_editor
+install:
+  # Core.
+  - big_pipe
+  - block
+  - config
+  - contact
+  - contextual
+  - datetime
+  - dblog
+  - dynamic_page_cache
+  - field_ui
+  - file
+  - layout_builder
+  - link
+  - menu_link_content
+  - menu_ui
+  - navigation
+  - node
+  - options
+  - path
+  - text
+  - views
+  - views_ui
+  # Commerce. No shipping: domains are handed over, not shipped.
+  - commerce
+  - commerce_store
+  - commerce_price
+  - commerce_product
+  - commerce_order
+  - commerce_cart
+  - commerce_checkout
+  - commerce_payment
+  - commerce_promotion
+  - commerce_tax
+  - commerce_log
+  - commerce_number_pattern
+  - commerce_agree_terms
+  - commerce_pricelist
+  - commerce_exchanger
+  - commerce_currency_resolver
+  - advancedqueue
+  # Offers and handovers move through workflows.
+  - state_machine
+  # Commerce Domains: catalog, checkout, handover, import, marketplaces and
+  # CSV files, offers, pricing, bulk editing and the owner's portfolio pages.
+  # Offers via Escrow.com come with recipes/portfolio_escrow.
+  - commerce_domains
+  - commerce_domains_checkout
+  - commerce_domains_handover
+  - commerce_domains_import
+  - commerce_domains_marketplace
+  - commerce_domains_offer
+  - commerce_domains_owner
+  - commerce_domains_pricing
+  - commerce_domains_bulk
+  # API credentials of registrars and marketplaces, read through keys.
+  - key
+  # SEO.
+  - token
+  - pathauto
+  - redirect
+  - metatag
+  - metatag_open_graph
+  - schema_metatag
+  - schema_product
+  - simple_sitemap
+  # Mail: Symfony Mailer, which settings.vallic.php points at the stack's
+  # relay on Vallic Cloud. Antibot keeps bots off the offer and contact forms.
+  - symfony_mailer
+  - mailer_transport
+  - mailer_policy
+  - mailer_override
+  - antibot
+  # Sign-up proves a person: an image CAPTCHA, made on the site, beside
+  # Antibot's check for JavaScript.
+  - captcha
+  - image_captcha
+  # Two-factor authentication for the Owner and the Assistant, who can push
+  # domains away at the registrars: an authenticator app, with recovery
+  # codes. Its secrets are encrypted with TFA_ENCRYPTION_KEY.
+  - encrypt
+  - real_aes
+  - tfa
+  # Admin UX: Default Admin (core's administration theme, experimental in
+  # 11.4), Coffee, the Dashboard module (as in Drupal CMS) with the owner's
+  # domain dashboard on it, and field groups on the domain form.
+  - field_group
+  - coffee
+  - dashboard
+  - domain_portfolio_tools
+  - default_admin
+  # Portfolio for visitors: the Domain Investors design system, its four
+  # templates and six colour schemes. Its blocks come with it.
+  - portfolio
+config:
+  # Configuration that already exists is left as it is.
+  strict: false
+  import:
+    node:
+      - core.entity_view_mode.node.full
+      - core.entity_view_mode.node.teaser
+      - views.view.content
+    user:
+      - core.entity_view_mode.user.compact
+      - views.view.user_admin_people
+    dblog:
+      - views.view.watchdog
+    contact:
+      - contact.form.personal
+    system:
+      - system.menu.account
+      - system.menu.footer
+      - system.menu.main
+    navigation:
+      - system.menu.content
+      - system.menu.navigation-user-links
+    # The visitor theme's blocks: messages, tabs, page titles, the checkout
+    # progress and the footer menu. A recipe installs a theme without its
+    # optional configuration, so they are listed.
+    portfolio:
+      - block.block.portfolio_checkout_progress
+      - block.block.portfolio_content
+      - block.block.portfolio_footer_menu
+      - block.block.portfolio_local_actions
+      - block.block.portfolio_messages
+      - block.block.portfolio_page_title
+      - block.block.portfolio_primary_local_tasks
+      - block.block.portfolio_secondary_local_tasks
+    default_admin:
+      - block.block.default_admin_breadcrumbs
+      - block.block.default_admin_content
+      - block.block.default_admin_local_actions
+      - block.block.default_admin_messages
+      - block.block.default_admin_page_title
+      - block.block.default_admin_primary_local_tasks
+      - block.block.default_admin_secondary_local_tasks
+    # Commerce's own configuration: the store and order types, the order
+    # number pattern, the customer profile, and the admin listings.
+    commerce_store: '*'
+    commerce_order: '*'
+    commerce_cart: '*'
+    commerce_payment: '*'
+    commerce_promotion: '*'
+    commerce_tax: '*'
+    commerce_log: '*'
+    commerce_pricelist: '*'
+    commerce_checkout:
+      - commerce_checkout.commerce_checkout_flow.default
+      - core.entity_view_mode.commerce_product_variation.summary
+      - views.view.commerce_checkout_order_summary
+    # Not Commerce's "default" product type: domains have their own.
+    commerce_product:
+      - commerce_order.commerce_order_item_type.default
+      - core.entity_form_display.commerce_order_item.default.add_to_cart
+      - core.entity_form_display.commerce_order_item.default.default
+      - core.entity_view_display.commerce_order_item.default.default
+      - core.entity_view_mode.commerce_product_variation.cart
+      - system.action.commerce_product_delete_action
+      - system.action.commerce_publish_product
+      - system.action.commerce_unpublish_product
+      - views.view.commerce_products
+    advancedqueue: '*'
+    # The marketplace sync queue, the Domains overview and the Marketplace
+    # listings report.
+    commerce_domains_marketplace: '*'
+    # Bulk actions on the Domains overview.
+    commerce_domains_bulk: '*'
+    metatag: '*'
+    pathauto: '*'
+    # Not redirect's language settings, which need the Language module.
+    redirect:
+      - system.action.redirect_delete_action
+      - views.view.redirect
+    simple_sitemap: '*'
+    symfony_mailer: '*'
+    mailer_transport: '*'
+    mailer_policy: '*'
+    dashboard: '*'
+  actions:
+    # The domain checkout, for orders of the default type; Buy now goes
+    # straight to it, so "added to your cart" would only puzzle the buyer.
+    # A placed order has to stay open for Commerce Domains to cancel it when
+    # it goes unpaid, which puts its domain back on sale. Commerce's default
+    # workflow completes orders as they are placed.
+    commerce_order.commerce_order_type.default:
+      setProperties:
+        workflow: order_fulfillment
+      setThirdPartySettings:
+        -
+          module: commerce_checkout
+          key: checkout_flow
+          value: domain
+        -
+          module: commerce_cart
+          key: enable_cart_message
+          value: false
+
+    # Visitors: domains, pages, offers and the contact form.
+    user.role.anonymous:
+      grantPermissions:
+        - 'access content'
+        - 'access checkout'
+        - 'access site-wide contact form'
+        - 'make domain offers'
+        - 'view commerce_product'
+    user.role.authenticated:
+      grantPermissions:
+        - 'access content'
+        - 'access checkout'
+        - 'access site-wide contact form'
+        - 'make domain offers'
+        - 'view commerce_product'
+        - 'view own commerce_order'
+    # The Assistant looks after domains, offers and orders: no providers,
+    # keys, payment gateways, payments or site configuration.
+    user.role.assistant:
+      grantPermissions:
+        - 'access administration pages'
+        - 'access coffee'
+        - 'access commerce administration pages'
+        - 'access commerce_order overview'
+        - 'access commerce_product overview'
+        - 'access content overview'
+        - 'access contextual links'
+        - 'access navigation'
+        - 'administer domain offers'
+        - 'create domain commerce_product'
+        - 'create page content'
+        - 'delete any page content'
+        - 'delete own domain commerce_product'
+        - 'edit any page content'
+        - 'hand over domains'
+        - 'import domains'
+        - 'manage domain commerce_product_variation'
+        # Costs, sales and valuations on the domain form; without it they
+        # are read-only.
+        - 'manage domain portfolio'
+        - 'update any domain commerce_product'
+        - 'update default commerce_order'
+        - 'use text format basic_html'
+        - 'view commerce_order'
+        - 'view commerce_product'
+        - 'view domain handovers'
+        - 'view domain portfolio'
+        - 'view portfolio dashboard'
+        - 'view the administration theme'
+        # Its two-factor authentication, which the role requires.
+        - 'setup own tfa'
+
+    # The admin theme, also for editing pages.
+    system.theme:
+      simpleConfigUpdate:
+        default: portfolio
+        admin: default_admin
+    node.settings:
+      simpleConfigUpdate:
+        use_admin_theme: true
+    # The Dashboard button at the top of the navigation, in place of
+    # Shortcuts, which this site does not install (as Drupal CMS does it).
+    navigation.block_layout:
+      simpleConfigUpdate:
+        sections.0.components.2622e40b-8786-4b8c-8883-19e49da53023.configuration:
+          id: navigation_dashboard
+          label: Dashboard
+          label_display: '0'
+          provider: dashboard
+
+    # The front page lists the domains for sale.
+    system.site:
+      simpleConfigUpdate:
+        page.front: /domains
+    # People sign up only by buying: checkout makes their account.
+    user.settings:
+      simpleConfigUpdate:
+        register: admin_only
+    # Contact goes through the site's form, not personal ones, linked in the
+    # footer beside the terms and conditions.
+    contact.settings:
+      simpleConfigUpdate:
+        user_default_enabled: false
+    core.menu.static_menu_link_overrides:
+      overrideMenuLinks:
+        contact.site_page:
+          enabled: true
+          weight: 20
+
+    # Domains go into URLs whole: "the" in the.com is not a word to drop, and
+    # the dot in co.uk stays.
+    pathauto.settings:
+      simpleConfigUpdate:
+        ignore_words: ''
+        punctuation.period: 2
+    # Domains, pages and the domain list in the sitemap.
+    simple_sitemap.settings:
+      simpleConfigUpdate:
+        enabled_entity_types:
+          - commerce_product
+          - node
+    # The offer and contact forms, and the account forms, need JavaScript.
+    # Required for the roles that manage domains and orders. The first three
+    # logins without it set up are allowed, to set it up; then it is
+    # required. settings.portfolio.php keeps it off while TFA_ENCRYPTION_KEY
+    # is not set, as the secrets could not be kept.
+    tfa.settings:
+      simpleConfigUpdate:
+        enabled: true
+        required_roles:
+          owner: owner
+          assistant: assistant
+        encryption: tfa
+        default_validation_plugin: tfa_totp
+        allowed_validation_plugins:
+          tfa_totp: tfa_totp
+          tfa_recovery_code: tfa_recovery_code
+        validation_plugin_settings:
+          tfa_totp:
+            time_skew: 2
+            site_name_prefix: 1
+            name_prefix: ''
+            # What the authenticator app shows, beside the site name.
+            issuer: 'Domain Investors'
+          tfa_recovery_code:
+            recovery_codes_amount: 10
+        validation_skip: 3
+        users_without_tfa_redirect: true
+    # The CAPTCHA in plain words.
+    captcha.settings:
+      simpleConfigUpdate:
+        title: 'Are you a person?'
+        description: 'Type the characters in the image. It keeps automated sign-ups out.'
+    antibot.settings:
+      simpleConfigUpdate:
+        form_ids:
+          - commerce_domains_offer_form
+          - 'contact_message_*'
+          - user_login_form
+          - user_pass
+          - user_register_form

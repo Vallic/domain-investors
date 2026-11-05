@@ -1,0 +1,110 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_agree_terms
+    - commerce_domains_checkout
+    - commerce_payment
+    - commerce_promotion
+id: domain
+label: Domain
+plugin: commerce_domains
+configuration:
+  display_checkout_progress: true
+  display_checkout_progress_breadcrumb_links: true
+  display_sidebar_checkout_complete: true
+  # Buyers check out as guests; checkout makes their account, so they can see
+  # their order and its handover later.
+  guest_order_assign: true
+  guest_new_account: true
+  guest_new_account_notify: true
+  panes:
+    contact_information:
+      display_label: null
+      step: order_information
+      weight: 0
+      wrapper_element: fieldset
+      double_entry: true
+      always_display: false
+    billing_information:
+      display_label: null
+      step: order_information
+      weight: 1
+      wrapper_element: fieldset
+    commerce_domains_transfer:
+      display_label: null
+      step: transfer
+      weight: 3
+      wrapper_element: container
+    payment_information:
+      display_label: null
+      step: transfer
+      weight: 4
+      wrapper_element: container
+      always_display: true
+      require_payment_method: true
+    review:
+      display_label: null
+      step: review
+      weight: 3
+      wrapper_element: container
+    # The installer links the terms page and moves this to the review step;
+    # without a page it stays off, rather than linking nowhere.
+    agree_terms:
+      display_label: null
+      step: _disabled
+      weight: 6
+      wrapper_element: container
+      nid: null
+      link_text: 'terms and conditions'
+      prefix_text: 'I agree with the %terms'
+      description: ''
+      invalid_text: 'You must agree with the %terms before continuing'
+      new_window: 1
+    payment_process:
+      display_label: null
+      step: payment
+      weight: 4
+      wrapper_element: container
+      capture: true
+    completion_message:
+      display_label: null
+      step: complete
+      weight: 5
+      wrapper_element: null
+      message:
+        value: "<p>Thank you for your purchase. Your order number is [commerce_order:order_number].</p>\r\n<p>We will email you as the domain is handed over to you.</p>"
+        format: basic_html
+      display_pane_summaries: false
+    order_summary:
+      display_label: null
+      step: _sidebar
+      weight: 6
+      wrapper_element: container
+      # The theme's summary (commerce-checkout-order-summary.html.twig)
+      # rather than the view, which shows a domain's price without its name.
+      view: ''
+    coupon_redemption:
+      display_label: null
+      step: _disabled
+      weight: 8
+      wrapper_element: container
+      allow_multiple: false
+    customer_comments:
+      display_label: null
+      step: _disabled
+      weight: 9
+      wrapper_element: fieldset
+    login:
+      display_label: null
+      step: _disabled
+      weight: 10
+      wrapper_element: container
+      allow_guest_checkout: true
+      allow_registration: false
+      registration_form_mode: register
+    completion_register:
+      display_label: null
+      step: _disabled
+      weight: 11
+      wrapper_element: null

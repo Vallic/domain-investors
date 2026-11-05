@@ -1,0 +1,98 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.domain
+    - field.field.commerce_product_variation.domain.sale_buy_now
+    - field.field.commerce_product_variation.domain.sale_floor_price
+    - field.field.commerce_product_variation.domain.sale_lease_down_payment
+    - field.field.commerce_product_variation.domain.sale_lease_months
+    - field.field.commerce_product_variation.domain.sale_marketplaces
+    - field.field.commerce_product_variation.domain.sale_minimum_offer
+    - field.field.commerce_product_variation.domain.sale_not_listed_on
+    - field.field.commerce_product_variation.domain.sale_offers
+  module:
+    - commerce_price
+id: commerce_product_variation.domain.default
+targetEntityType: commerce_product_variation
+bundle: domain
+mode: default
+content:
+  price:
+    type: commerce_price_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  sale_buy_now:
+    type: boolean_checkbox
+    weight: 20
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  sale_floor_price:
+    type: commerce_price_default
+    weight: 23
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  sale_lease_down_payment:
+    type: number
+    weight: 24
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  sale_lease_months:
+    type: number
+    weight: 24
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  sale_marketplaces:
+    type: boolean_checkbox
+    weight: 25
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  sale_minimum_offer:
+    type: commerce_price_default
+    weight: 22
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  sale_not_listed_on:
+    type: options_buttons
+    weight: 26
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  sale_offers:
+    type: boolean_checkbox
+    weight: 21
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  sku:
+    type: string_textfield
+    weight: -4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 90
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+hidden:
+  created: true
+  list_price: true
+  uid: true

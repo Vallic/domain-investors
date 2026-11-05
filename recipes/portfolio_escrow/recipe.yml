@@ -1,0 +1,115 @@
+name: 'Domain Investors: Escrow.com'
+description: 'Buy now through Escrow.com (Escrow Pay), and offers negotiated on Escrow.com (Escrow Offer), for prices in USD, EUR, GBP, AUD or CAD. Adds the Escrow item fields to domains and the Escrow workflow to orders. The account comes from ESCROW_API_KEY and ESCROW_EMAIL (settings.portfolio.php); both gateways start disabled and in sandbox mode.'
+type: 'Domain Investors'
+install:
+  - commerce_escrow
+  - commerce_domains_offer_escrow
+config:
+  strict: false
+  import:
+    commerce_domains_offer_escrow: '*'
+  actions:
+    # The Escrow item fields (escrow item type, fees, inspection period, in
+    # stock) on domain variations; their storage and fields are in config/.
+    commerce_product.commerce_product_variation_type.domain:
+      setProperties:
+        traits:
+          - commerce_domains_sale_terms
+          - purchasable_entity_escrow_item
+    core.entity_form_display.commerce_product_variation.domain.default:
+      setComponents:
+        -
+          name: in_stock
+          options:
+            type: boolean_checkbox
+            weight: 30
+            region: content
+            settings:
+              display_label: true
+        -
+          name: escrow_type
+          options:
+            type: options_select
+            weight: 40
+            region: content
+        -
+          name: inspection_period
+          options:
+            type: number
+            weight: 41
+            region: content
+        -
+          name: escrow_fee
+          options:
+            type: options_select
+            weight: 42
+            region: content
+        -
+          name: display_fee
+          options:
+            type: boolean_checkbox
+            weight: 43
+            region: content
+            settings:
+              display_label: true
+      # Brokering for other sellers is not what a portfolio site does.
+      hideComponents:
+        - brokered
+        - broker_fee
+        - broker_fee_split
+        - extra_attributes
+        - single_item
+    # Escrow.com moves its orders through these states with its webhook, set
+    # in the Escrow.com account to the URL under Commerce > Configuration >
+    # Payment > Escrow settings.
+    # Orders paid otherwise wait in Validation until you complete them.
+    commerce_order.commerce_order_type.default:
+      setProperties:
+        workflow: escrow_workflow
+    # A domain with Commerce Escrow's "In stock" field is for sale only while
+    # that is set, so the domain listings filter on it too. (The search, when
+    # recipes/portfolio_search was applied first; apply this recipe again
+    # after it otherwise.)
+    views.view.portfolio_domains:
+      setProperties:
+        display.default.display_options.filters.in_stock:
+          id: in_stock
+          table: commerce_product_variation__in_stock
+          field: in_stock_value
+          relationship: variations_target_id
+          group_type: group
+          admin_label: 'In stock'
+          plugin_id: boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+    ?search_api.index.domains:
+      setProperties:
+        field_settings.in_stock:
+          label: 'In stock'
+          datasource_id: 'entity:commerce_product'
+          property_path: 'variations:entity:in_stock'
+          type: boolean
+          dependencies:
+            config:
+              - field.storage.commerce_product_variation.in_stock
+    ?views.view.portfolio_domain_search:
+      setProperties:
+        display.default.display_options.filters.in_stock:
+          id: in_stock
+          table: search_api_index_domains
+          field: in_stock
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api_boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+    # The offer form's "Negotiate on Escrow.com" choice.
+    commerce_domains_offer_escrow.settings:
+      simpleConfigUpdate:
+        gateway: escrow_offer
+        preselect: false

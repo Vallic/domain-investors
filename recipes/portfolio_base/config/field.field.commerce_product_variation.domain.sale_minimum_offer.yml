@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.domain
+    - field.storage.commerce_product_variation.sale_minimum_offer
+  module:
+    - commerce_price
+id: commerce_product_variation.domain.sale_minimum_offer
+field_name: sale_minimum_offer
+entity_type: commerce_product_variation
+bundle: domain
+label: 'Minimum offer'
+description: 'The lowest offer taken, before any marketplace price factor. Leave empty to work it out from the price.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  available_currencies: {  }
+  allow_negative: false
+field_type: commerce_price

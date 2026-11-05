@@ -1,0 +1,15 @@
+langcode: en
+status: true
+dependencies: {  }
+id: domain
+label: Domain
+description: 'A domain name for sale: one product per domain, titled with the name as buyers should see it, such as LearnPhpOnline.com.'
+traits:
+  - commerce_domains_atom_premium
+  - commerce_domains_domain
+  - commerce_domains_owner_costs
+locked: false
+variationTypes:
+  - domain
+multipleVariations: false
+injectVariationFields: true

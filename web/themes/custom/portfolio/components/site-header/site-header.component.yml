@@ -1,0 +1,22 @@
+name: Site header
+status: stable
+description: 'The owner''s name in plain type, a few links, the currency.'
+props:
+  type: object
+  required: [brand, home]
+  properties:
+    brand:
+      type: string
+    home:
+      type: string
+    links:
+      type: array
+      items:
+        type: object
+        properties:
+          label: { type: string }
+          url: { type: string }
+          current: { type: boolean }
+slots:
+  currency:
+    title: 'The currency switch'

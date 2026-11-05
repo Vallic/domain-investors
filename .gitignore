@@ -1,0 +1,30 @@
+# What Composer installs: rebuilt from composer.lock by `composer install`,
+# locally and in the Vallic Cloud build.
+/vendor/
+/web/core/
+/web/modules/contrib/
+/web/themes/contrib/
+/web/profiles/contrib/
+/web/libraries/
+/drush/Commands/contrib/
+
+# Uploaded and private files: they live with each environment, never in git.
+/web/sites/*/files/
+/private/
+
+# Settings for one machine, and DDEV's own: never committed.
+/web/sites/*/settings.local.php
+/web/sites/*/settings.ddev.php
+/.ddev/.env
+/.ddev/.env.*
+/.env
+
+# Database dumps and local leftovers.
+*.sql
+*.sql.gz
+*.log
+.DS_Store
+/.idea/
+/.vscode/
+/.editorconfig
+/.gitattributes

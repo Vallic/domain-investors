@@ -1,0 +1,8 @@
+name: Domain Investors Installer
+type: theme
+description: 'The installer pages: Claro with the Vallic logo and a word about Vallic Cloud. Used only while installing, and never installed itself.'
+core_version_requirement: ^11.4
+hidden: true
+base theme: claro
+libraries:
+  - domain_investors_installer/installer

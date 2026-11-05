@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: portfolio-tasks
+label: 'Portfolio tasks'
+description: 'Links on the owner dashboard to the things done every week.'
+locked: true

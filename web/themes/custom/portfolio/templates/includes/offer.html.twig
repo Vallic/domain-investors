@@ -1,0 +1,13 @@
+{# The offer form beside a line on how offers are answered. #}
+{% if offer_form %}
+  <section id="offer" class="pf-pair {{ section_class|default('pf-section pf-rule') }}">
+    <div class="pf-stack pf-gap-3">
+      <h2 class="{{ heading_class|default('ui-heading') }}">{{ 'Make an offer'|t }}</h2>
+      <p class="ui-body pf-muted">
+        {% if domain.minimum_offer %}{{ 'Offers from @amount.'|t({ '@amount': domain.minimum_offer }) }} {% endif %}
+        {{ 'Every offer is read and answered by email; a counter-offer can be accepted from that email.'|t }}
+      </p>
+    </div>
+    <div>{{ offer_form }}</div>
+  </section>
+{% endif %}

@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_domains
+    - commerce_product
+id: commerce_product.domain_sold_via
+field_name: domain_sold_via
+entity_type: commerce_product
+type: entity_reference
+settings:
+  target_type: commerce_domains_provider
+module: core
+locked: true
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

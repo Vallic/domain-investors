@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.domain
+    - field.storage.commerce_product.domain_sale_commission
+id: commerce_product.domain.domain_sale_commission
+field_name: domain_sale_commission
+entity_type: commerce_product
+bundle: domain
+label: Commission
+description: "The marketplace's share of the price, in percent: 0 for a sale on this site or in private. What you received is the price less it."
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: null
+settings:
+  min: 0.0
+  max: 100.0
+  prefix: ''
+  suffix: '%'
+field_type: decimal

@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.domain
+    - field.storage.commerce_product_variation.escrow_type
+  module:
+    - options
+id: commerce_product_variation.domain.escrow_type
+field_name: escrow_type
+entity_type: commerce_product_variation
+bundle: domain
+label: 'Escrow item type'
+description: 'What Escrow.com is told the buyer pays for: domain names, unless the sale is a lease.'
+required: true
+translatable: false
+default_value:
+  -
+    value: domain_name
+default_value_callback: ''
+settings: {  }
+field_type: list_string

@@ -1,0 +1,37 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 5d0a5d3e-9f53-4b8e-a3f0-6e1c2b7d9a41
+  bundle: page
+  default_langcode: en
+default:
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  title:
+    -
+      value: 'Terms and conditions'
+  path:
+    -
+      alias: /terms
+      langcode: en
+      pathauto: 0
+  body:
+    -
+      value: |
+        <p><strong>Replace these example terms with your own before you sell a domain.</strong> Buyers agree to this page at checkout.</p>
+        <h2>The sale</h2>
+        <p>The price on a domain's page is the price of the domain name, paid once. Offers become a sale only once we accept them and the buyer pays the agreed amount.</p>
+        <h2>Payment</h2>
+        <p>Payment is due in full at checkout. A bank transfer must reach us within seven days, or the order may be canceled and the domain offered for sale again.</p>
+        <h2>Handing the domain over</h2>
+        <p>Once the payment has arrived, we push the domain to the buyer's account at its registrar, or unlock it and send the transfer code to the buyer's email address, as the buyer chose at checkout. The buyer is responsible for accepting the push, or for starting the transfer and paying the receiving registrar's fee.</p>
+        <h2>Refunds</h2>
+        <p>Once a domain has left our account, the sale is final.</p>
+        <h2>Contact</h2>
+        <p>Questions about an order go to the address in the order email.</p>
+      format: basic_html
+      summary: ''

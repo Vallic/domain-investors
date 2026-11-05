@@ -1,0 +1,22 @@
+name: 'Domain Investors: Vallic Cloud'
+description: 'Runs the site on Vallic Cloud: the Redis module for the cache that settings.vallic.php puts in Valkey, and Purge clearing Varnish (Vinyl Cache) and the Vallic CDN by cache tag as domains and pages change. settings.vallic.php points the purgers at the stack; elsewhere they find no Varnish, and the CDN purger sends nothing.'
+type: 'Domain Investors'
+install:
+  - redis
+  - purge
+  - purge_tokens
+  - purge_ui
+  - purge_queuer_coretags
+  - purge_processor_cron
+  - purge_processor_lateruntime
+  - varnish_purger
+  - varnish_purge_tags
+  - vallic_purge
+config:
+  strict: false
+  actions:
+    # Varnish and the CDN keep pages only as long as Drupal says they may;
+    # purging by tag keeps them current. Signed-in pages are never cached.
+    system.performance:
+      simpleConfigUpdate:
+        cache.page.max_age: 3600

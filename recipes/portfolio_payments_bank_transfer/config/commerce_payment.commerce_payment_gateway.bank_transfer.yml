@@ -1,0 +1,21 @@
+langcode: en
+# Enable it once the instructions below hold your bank details.
+status: false
+dependencies:
+  module:
+    - commerce_payment
+id: bank_transfer
+label: 'Bank transfer'
+weight: 5
+plugin: manual
+configuration:
+  display_label: 'Bank transfer'
+  mode: n/a
+  payment_method_types:
+    - credit_card
+  collect_billing_information: false
+  instructions:
+    value: "<p>Please transfer [commerce_order:total_price:formatted] to the account below, with <strong>[commerce_order:order_number]</strong> as the payment reference.</p>\r\n<p>Account holder: YOUR NAME<br>IBAN: YOUR IBAN<br>BIC/SWIFT: YOUR BIC<br>Bank: YOUR BANK</p>\r\n<p>The domain is handed over to you as soon as the payment arrives.</p>"
+    format: basic_html
+conditions: {  }
+conditionOperator: AND

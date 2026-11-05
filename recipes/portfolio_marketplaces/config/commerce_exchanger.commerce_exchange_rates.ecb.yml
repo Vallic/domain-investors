@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies: {  }
+id: ecb
+label: 'European Central Bank'
+plugin: ecb
+# Refreshed once a day on cron; the ECB publishes new rates once a working day.
+configuration:
+  cron: 1
+  api_key: ''
+  auth: {  }
+  use_cross_sync: true
+  enterprise: false
+  demo_amount: 100
+  base_currency: EUR
+  refresh_once: true
+  manual: false
+  mode: live
+  transform_rates: false

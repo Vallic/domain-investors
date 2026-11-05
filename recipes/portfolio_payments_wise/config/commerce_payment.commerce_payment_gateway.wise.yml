@@ -1,0 +1,26 @@
+langcode: en
+# Enabled once the Wise tag and public key are set (the installer does it
+# when they already are).
+status: false
+dependencies:
+  module:
+    - commerce_wise
+id: wise
+label: Wise
+weight: -3
+plugin: wise_quick_pay
+configuration:
+  display_label: Wise
+  # PAYMENT_MODE, or a Vallic Cloud production environment, makes it live.
+  mode: test
+  payment_method_types:
+    - credit_card
+  collect_billing_information: false
+  # Never here: WISE_TAG and WISE_PUBLIC_KEY, read by settings.portfolio.php.
+  # Wise reports deposits to /payment/notify/wise: see docs/payments.md.
+  wise_tag: ''
+  public_key: ''
+  account_type: business
+  logging: false
+conditions: {  }
+conditionOperator: AND

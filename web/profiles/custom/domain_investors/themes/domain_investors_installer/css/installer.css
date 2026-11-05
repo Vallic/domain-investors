@@ -1,0 +1,82 @@
+/**
+ * @file
+ * The Vallic logo and Vallic Cloud card, on Claro's installer pages.
+ *
+ * Colours from Vallic's design system: its ink, and its blue for dark grounds.
+ */
+
+.dp-installer-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  justify-content: space-between;
+}
+
+.dp-installer-by {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--color-gray);
+  font-size: var(--font-size-s);
+  text-decoration: none;
+}
+
+.dp-installer-by img {
+  display: block;
+  height: 2rem;
+  width: auto;
+}
+
+.dp-installer-cloud {
+  margin-block-start: 2rem;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  background: #0c0b0b;
+  color: #fff;
+  font-size: var(--font-size-s);
+  line-height: 1.5;
+}
+
+.dp-installer-cloud img {
+  display: block;
+  height: 2rem;
+  width: auto;
+  margin-block-end: 0.75rem;
+}
+
+.install-page .dp-installer-cloud h2 {
+  margin: 0 0 0.5rem;
+  color: #fff;
+  font-size: var(--font-size-base);
+  line-height: 1.3;
+}
+
+.dp-installer-cloud p {
+  margin: 0 0 0.75rem;
+  color: #fff;
+}
+
+.dp-installer-cloud .dp-installer-cloud__label {
+  margin-block-end: 0.25rem;
+  color: #7fc4e8;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+
+.dp-installer-cloud .dp-installer-cloud__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin-block-end: 0;
+}
+
+.dp-installer-cloud a {
+  color: #7fc4e8;
+  font-weight: 600;
+}
+
+.dp-installer-cloud a:hover,
+.dp-installer-cloud a:focus {
+  color: #fff;
+}

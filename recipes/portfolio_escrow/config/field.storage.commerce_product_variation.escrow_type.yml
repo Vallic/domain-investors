@@ -1,0 +1,35 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+    - options
+id: commerce_product_variation.escrow_type
+field_name: escrow_type
+entity_type: commerce_product_variation
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: domain_name
+      label: 'Domain names'
+    -
+      value: domain_name_holding
+      label: 'Domain names (lease)'
+    -
+      value: general_merchandise
+      label: 'General Merchandise'
+    -
+      value: milestone
+      label: Services
+    -
+      value: motor_vehicle
+      label: 'Motor Vehicles'
+  allowed_values_function: ''
+module: options
+locked: true
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

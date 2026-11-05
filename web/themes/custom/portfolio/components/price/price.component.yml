@@ -1,0 +1,22 @@
+name: Price
+status: stable
+description: 'A price in the mono face, with the monthly lease-to-own figure under it. Amounts arrive formatted in the visitor''s currency.'
+props:
+  type: object
+  properties:
+    amount:
+      type: [string, 'null']
+      title: 'Formatted amount; empty for a name without a price'
+      examples: ['$18,000']
+    lease:
+      type: [string, 'null']
+      title: 'Lease-to-own line'
+      examples: ['or $750/mo for 24 months']
+    size:
+      type: string
+      enum: [sm, md, xl]
+      default: md
+    fallback:
+      type: string
+      title: 'Shown without an amount'
+      default: 'Make an offer'

@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.domain
+    - field.storage.commerce_product_variation.sale_lease_down_payment
+id: commerce_product_variation.domain.sale_lease_down_payment
+field_name: sale_lease_down_payment
+entity_type: commerce_product_variation
+bundle: domain
+label: 'Lease down payment'
+description: 'The share of the price paid at checkout for a lease-to-own on this site; the rest is paid monthly. Leave empty for the default in the lease settings.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: 90
+  prefix: ''
+  suffix: '%'
+field_type: integer
+

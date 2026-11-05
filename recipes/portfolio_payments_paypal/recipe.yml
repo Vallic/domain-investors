@@ -1,0 +1,7 @@
+name: 'Domain Investors: PayPal'
+description: 'PayPal payment links: the buyer pays on a PayPal page and comes back to checkout. The credentials come from PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET and PAYPAL_WEBHOOK_ID (settings.portfolio.php); the gateway starts disabled and in sandbox mode.'
+type: 'Domain Investors'
+install:
+  - commerce_paypal_link
+config:
+  strict: false

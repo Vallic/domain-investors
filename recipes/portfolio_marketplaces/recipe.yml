@@ -1,0 +1,9 @@
+name: 'Domain Investors: marketplaces'
+description: 'Listing on marketplaces: US dollars, which most marketplaces list in, and daily exchange rates from the European Central Bank (no key needed) for converting prices in other currencies. Add each marketplace with `drush domain-investors:provider afternic` and so on, which the installer does for the ones you chose; syncs only push once you turn automatic pushes on, after a dry run.'
+type: 'Domain Investors'
+install:
+  - commerce_exchanger
+  - commerce_domains_marketplace
+  - domain_portfolio_tools
+config:
+  strict: false

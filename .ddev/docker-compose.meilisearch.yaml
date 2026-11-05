@@ -1,0 +1,27 @@
+# Meilisearch for the domain search (recipes/portfolio_search_meilisearch),
+# the version Vallic Cloud runs by default. The site finds it at
+# MEILISEARCH_HOST with MEILI_MASTER_KEY, set for the web container in
+# config.yaml; from your computer, at https://domain-investors.ddev.site:7701.
+services:
+  meilisearch:
+    container_name: ddev-${DDEV_SITENAME}-meilisearch
+    image: getmeili/meilisearch:v1.53.3
+    restart: "no"
+    expose:
+      - "7700"
+    environment:
+      MEILI_MASTER_KEY: ddev-meilisearch-master-key
+      MEILI_ENV: development
+      MEILI_NO_ANALYTICS: "true"
+      VIRTUAL_HOST: $DDEV_HOSTNAME
+      HTTP_EXPOSE: "7702:7700"
+      HTTPS_EXPOSE: "7701:7700"
+    labels:
+      com.ddev.site-name: ${DDEV_SITENAME}
+      com.ddev.approot: ${DDEV_APPROOT}
+    volumes:
+      - meilisearch:/meili_data
+      - ".:/mnt/ddev_config"
+
+volumes:
+  meilisearch:

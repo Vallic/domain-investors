@@ -1,0 +1,29 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+    - options
+id: commerce_product_variation.extra_attributes
+field_name: extra_attributes
+entity_type: commerce_product_variation
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: concierge
+      label: 'Concierge service'
+    -
+      value: title_collection
+      label: 'Title collection service'
+    -
+      value: lien_holder_payoff
+      label: 'Lien holder payoff service'
+  allowed_values_function: ''
+module: options
+locked: true
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

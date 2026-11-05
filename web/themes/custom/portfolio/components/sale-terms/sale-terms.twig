@@ -1,0 +1,10 @@
+<span class="dp-terms">
+  {% if status == 'sold' %}
+    <span class="dp-badge dp-badge-neutral">{{ 'Sold'|t }}</span>
+  {% else %}
+    {% if status == 'pending' %}<span class="dp-badge dp-badge-notice">{{ 'Offer pending'|t }}</span>{% endif %}
+    {% if buy_now %}<span class="dp-badge dp-badge-accent">{{ 'Buy now'|t }}</span>{% endif %}
+    {% if offers %}<span class="dp-badge dp-badge-neutral">{{ 'Offers'|t }}</span>{% endif %}
+    {% if lease %}<span class="dp-badge dp-badge-neutral">{{ 'Lease-to-own'|t }}</span>{% endif %}
+  {% endif %}
+</span>

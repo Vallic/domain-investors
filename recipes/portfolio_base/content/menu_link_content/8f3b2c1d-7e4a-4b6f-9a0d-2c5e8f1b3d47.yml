@@ -1,0 +1,33 @@
+_meta:
+  version: '1.0'
+  entity_type: menu_link_content
+  uuid: 8f3b2c1d-7e4a-4b6f-9a0d-2c5e8f1b3d47
+  bundle: menu_link_content
+  default_langcode: en
+default:
+  enabled:
+    -
+      value: true
+  title:
+    -
+      value: 'Terms and conditions'
+  menu_name:
+    -
+      value: footer
+  link:
+    -
+      uri: 'internal:/terms'
+      title: ''
+      options: {  }
+  external:
+    -
+      value: false
+  rediscover:
+    -
+      value: true
+  weight:
+    -
+      value: 40
+  expanded:
+    -
+      value: false

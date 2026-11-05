@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.domain
+    - field.storage.commerce_product.domain_appraisal_score
+id: commerce_product.domain.domain_appraisal_score
+field_name: domain_appraisal_score
+entity_type: commerce_product
+bundle: domain
+label: 'Appraisal score'
+description: "The appraisal service's score of the name, out of 10."
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: null
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

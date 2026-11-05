@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.domain
+    - field.storage.commerce_product.domain_renewal_cost
+  module:
+    - commerce_price
+id: commerce_product.domain.domain_renewal_cost
+field_name: domain_renewal_cost
+entity_type: commerce_product
+bundle: domain
+label: 'Renewal cost'
+description: 'What renewing the domain for a year costs at its registrar.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  available_currencies: {  }
+  allow_negative: false
+field_type: commerce_price

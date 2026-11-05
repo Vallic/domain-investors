@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies: {  }
+id: european_union_vat
+label: 'EU VAT'
+plugin: european_union_vat
+# Prices are shown without VAT, which checkout adds where it applies.
+configuration:
+  display_inclusive: false
+  display_tax_rate_in_label: true
+conditions: {  }
+conditionOperator: AND

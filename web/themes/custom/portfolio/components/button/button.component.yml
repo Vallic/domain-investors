@@ -1,0 +1,24 @@
+name: Button
+status: stable
+description: 'A link drawn as a button. Form buttons get the same classes from the theme.'
+props:
+  type: object
+  required: [label, href]
+  properties:
+    label:
+      type: string
+    href:
+      type: string
+    variant:
+      type: string
+      enum: [primary, secondary, quiet]
+      default: secondary
+    size:
+      type: string
+      enum: [sm, md, lg]
+      default: md
+    block:
+      type: boolean
+      default: false
+    aria_label:
+      type: string

@@ -1,0 +1,14 @@
+{#
+/**
+ * @file
+ * The checkout's steps: done, current and to come, numbered.
+ */
+#}
+<ol class="pf-steps-progress" aria-label="{{ 'Checkout steps'|t }}">
+  {% for step in steps %}
+    <li class="is-{{ step.position }}"{{ step.position == 'current' ? ' aria-current="step"' }}>
+      <span class="pf-steps-progress-n fig-data" aria-hidden="true">{{ loop.index }}</span>
+      <span class="ui-body-sm">{{ step.label }}</span>
+    </li>
+  {% endfor %}
+</ol>

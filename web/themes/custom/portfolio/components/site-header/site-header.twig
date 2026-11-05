@@ -1,0 +1,9 @@
+<header class="dp-header">
+  <a class="dp-header-brand" href="{{ home }}">{{ brand }}</a>
+  <nav class="dp-header-nav ui-body-sm" aria-label="{{ 'Main'|t }}">
+    {% for link in links %}
+      <a href="{{ link.url }}"{{ link.current ? ' aria-current="page"' }}>{{ link.label }}</a>
+    {% endfor %}
+  </nav>
+  {% block currency %}{% endblock %}
+</header>

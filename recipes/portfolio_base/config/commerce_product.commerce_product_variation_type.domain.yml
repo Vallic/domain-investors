@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_order.commerce_order_item_type.default
+id: domain
+label: Domain
+traits:
+  - commerce_domains_sale_terms
+locked: false
+orderItemType: default
+generateTitle: true

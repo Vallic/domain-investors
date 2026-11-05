@@ -1,0 +1,43 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+    - options
+id: commerce_product.page_scheme
+field_name: page_scheme
+entity_type: commerce_product
+type: list_string
+settings:
+  # The colour schemes of the design system, and the owner's own (Custom,
+  # set under Appearance). A domain without one uses the site's.
+  allowed_values:
+    -
+      value: light
+      label: Verdigris
+    -
+      value: dark
+      label: 'Verdigris Night'
+    -
+      value: brass
+      label: Brass
+    -
+      value: brass-night
+      label: 'Brass Night'
+    -
+      value: mono
+      label: Mono
+    -
+      value: cobalt
+      label: Cobalt
+    -
+      value: custom
+      label: Custom
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

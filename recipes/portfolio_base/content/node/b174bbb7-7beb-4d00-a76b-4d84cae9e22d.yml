@@ -1,0 +1,27 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: b174bbb7-7beb-4d00-a76b-4d84cae9e22d
+  bundle: page
+  default_langcode: en
+default:
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  title:
+    -
+      value: 'Contact'
+  path:
+    -
+      alias: /contact
+      langcode: en
+      pathauto: 0
+  body:
+    -
+      value: |
+        <p>Ask about a domain, an offer or an order, and we will answer by email. If you are writing about an order, please include its number.</p>
+      format: basic_html
+      summary: ''

@@ -1,0 +1,56 @@
+{#
+/**
+ * @file
+ * A domain's page in the Standard template: the name large, the buy box
+ * beside what there is to know about it, the offer form, similar names.
+ */
+#}
+<article{{ attributes.addClass('pf-domain') }}>
+  <div class="pf-container">
+    <nav aria-label="{{ 'Breadcrumb'|t }}" class="pf-crumb ui-body-sm" style="padding-top: var(--space-5);"><a href="{{ path('<front>') }}">{{ 'All names'|t }}</a> / {{ domain.name }}</nav>
+    <section class="pf-stack pf-gap-4" style="padding-block: var(--space-6) var(--space-7);">
+      {{ include('portfolio:domain-name', { name: domain.name, size: 'hero', tag: 'h1' }, with_context = false) }}
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4);">
+        <span class="fig-data pf-muted">{{ domain.meta|join(' · ') }}</span>
+        {{ include('portfolio:sale-terms', { buy_now: domain.buy_now, offers: domain.offers, lease: domain.lease_months > 0, status: domain.status }, with_context = false) }}
+      </div>
+    </section>
+    <div class="pf-split" style="padding-bottom: var(--space-8);">
+      <div class="pf-split-aside">
+        {% if domain.status != 'sold' %}
+          {% embed 'portfolio:buy-box' with { domain: domain, points: points, buy_form: buy_form } only %}
+            {% block buy %}{{ buy_form }}{% endblock %}
+          {% endembed %}
+        {% endif %}
+      </div>
+      <div class="pf-split-main pf-stack pf-gap-7">
+        {% if story|render|striptags|trim %}
+          <section class="pf-stack pf-gap-3">
+            <h2 class="ui-heading">{{ 'About this name'|t }}</h2>
+            <div class="ui-body pf-prose">{{ story }}</div>
+          </section>
+        {% endif %}
+        {% if facts %}
+          <dl class="pf-facts">
+            {% for label, value in facts %}
+              <div><dt class="ui-label">{{ label }}</dt><dd class="fig-price">{{ value }}</dd></div>
+            {% endfor %}
+          </dl>
+        {% endif %}
+        <section id="how" class="pf-stack pf-gap-5">
+          <h2 class="ui-heading">{{ 'How buying works'|t }}</h2>
+          {{ include('portfolio:transfer-steps', {}, with_context = false) }}
+        </section>
+      </div>
+    </div>
+    {% include '@portfolio/includes/offer.html.twig' %}
+    {% if similar %}
+      <section class="pf-section pf-rule pf-stack pf-gap-5">
+        <h2 class="ui-heading">{{ 'Similar names'|t }}</h2>
+        <div class="pf-cards">
+          {% for item in similar %}{{ include('portfolio:domain-card', { domain: item }, with_context = false) }}{% endfor %}
+        </div>
+      </section>
+    {% endif %}
+  </div>
+</article>

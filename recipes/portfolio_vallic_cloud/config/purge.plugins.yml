@@ -1,0 +1,38 @@
+# Two purgers for the stack's Varnish (by cache tag, and everything, for
+# `drush cache:rebuild-external`), and one for the Vallic CDN. Tags are queued
+# as Drupal invalidates them, and processed at the end of each request and on
+# cron; Drush can process them too.
+purgers:
+  -
+    instance_id: varnish_tags
+    plugin_id: varnish
+    order_index: 1
+  -
+    instance_id: varnish_all
+    plugin_id: varnish
+    order_index: 2
+  -
+    instance_id: vallic_cdn
+    plugin_id: vallic
+    order_index: 3
+processors:
+  -
+    plugin_id: drush_purge_invalidate
+    status: true
+  -
+    plugin_id: drush_purge_queue_work
+    status: true
+  -
+    plugin_id: lateruntime
+    status: true
+  -
+    plugin_id: cron
+    status: true
+queuers:
+  -
+    plugin_id: drush_purge_queue_add
+    status: true
+  -
+    plugin_id: coretags
+    status: true
+queue: database

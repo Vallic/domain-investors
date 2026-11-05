@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.domain
+    - field.storage.commerce_product.domain_purchase_price
+  module:
+    - commerce_price
+id: commerce_product.domain.domain_purchase_price
+field_name: domain_purchase_price
+entity_type: commerce_product
+bundle: domain
+label: 'Purchase price'
+description: 'What the domain cost you: the registration fee, or what you paid for it.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  available_currencies: {  }
+  allow_negative: false
+field_type: commerce_price

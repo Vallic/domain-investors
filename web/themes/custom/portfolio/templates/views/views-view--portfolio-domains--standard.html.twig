@@ -1,0 +1,35 @@
+{#
+/**
+ * @file
+ * The portfolio in the Standard template: search, endings and cards.
+ */
+#}
+<div{{ attributes.addClass('pf-portfolio') }}>
+  <div class="pf-container">
+    <section class="pf-hero pf-stack pf-gap-4">
+      <h1 class="ui-title">{{ 'Domain names for sale'|t }}</h1>
+      <p class="ui-body pf-muted">{{ 'Names I own and sell myself. Most have a price you can pay today; every name takes offers.'|t }}</p>
+      {% if exposed %}<div>{{ exposed }}</div>{% endif %}
+    </section>
+    <div class="pf-browse">
+      {% if endings|length > 1 %}
+        <aside aria-label="{{ 'Filters'|t }}" class="pf-browse-aside">{% include '@portfolio/includes/ending-chips.html.twig' %}</aside>
+      {% endif %}
+      <div class="pf-browse-main pf-stack pf-gap-5">
+        <div class="pf-toolbar">
+          <p class="fig-data pf-muted">{{ '@count names'|t({ '@count': total }) }}</p>
+          {% include '@portfolio/includes/sort-select.html.twig' %}
+        </div>
+        {% if domains %}
+          <div class="pf-cards">
+            {% for domain in domains %}{{ include('portfolio:domain-card', { domain: domain }, with_context = false) }}{% endfor %}
+          </div>
+        {% else %}
+          {% include '@portfolio/includes/empty.html.twig' %}
+        {% endif %}
+        {% if pager %}<nav class="pf-pager" aria-label="{{ 'Pages'|t }}">{{ pager }}</nav>{% endif %}
+      </div>
+    </div>
+  </div>
+  {% include '@portfolio/includes/how.html.twig' with { intro: 'Every name here is registered to me, so I hand it over myself as soon as the payment arrives.'|t } %}
+</div>

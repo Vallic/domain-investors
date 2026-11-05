@@ -1,0 +1,7 @@
+name: 'Domain Investors: bank transfer'
+description: 'Payment by bank transfer, with your bank details in the instructions buyers see after placing the order. Starts disabled: add the details, then enable it. The handover starts once you record the payment on the order.'
+type: 'Domain Investors'
+install:
+  - commerce_payment
+config:
+  strict: false

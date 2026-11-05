@@ -1,0 +1,44 @@
+name: Domain Investors
+type: profile
+description: 'A site that sells your own domain names: the catalog, buy now and offers, checkout and handover, kept in line with your registrars and marketplaces. Asks a few questions, then applies the Domain Investors recipes.'
+core_version_requirement: ^11.4
+
+# Skips the installer's profile choice: this is the profile the project is for.
+distribution:
+  name: Domain Investors
+  install:
+    # The installer's pages, with the Vallic logo and a word about Vallic Cloud.
+    # Remove this line for core's plain ones.
+    theme: domain_investors_installer
+    # The owner's dashboard, which recipes/portfolio_base sets up.
+    finish_url: 'admin/dashboard'
+
+# Core modules installed the usual way, with their default configuration
+# (the content and people overviews, menus, the log). Everything else comes
+# from the recipes, which also list these, so they work without the profile.
+install:
+  - block
+  - big_pipe
+  - config
+  - contact
+  - contextual
+  - datetime
+  - dblog
+  - dynamic_page_cache
+  - field_ui
+  - file
+  - link
+  - menu_link_content
+  - menu_ui
+  - navigation
+  - node
+  - options
+  - path
+  - text
+  - views
+  - views_ui
+
+# No themes here: recipes/portfolio_base installs Portfolio for visitors and
+# Default Admin for the admin pages. An empty list keeps the installer from
+# adding Stark.
+themes: []

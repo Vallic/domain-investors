@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+    - options
+id: commerce_product.domain_renewal
+field_name: domain_renewal
+entity_type: commerce_product
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: keep
+      label: Keep
+    -
+      value: expire
+      label: 'Let it expire'
+  allowed_values_function: ''
+module: options
+locked: true
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

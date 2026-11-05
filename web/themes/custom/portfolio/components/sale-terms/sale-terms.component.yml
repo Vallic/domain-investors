@@ -1,0 +1,15 @@
+name: Sale terms
+status: stable
+description: 'The ways a name can be bought, as badges. The words are fixed so every template says the same thing.'
+props:
+  type: object
+  properties:
+    buy_now:
+      type: boolean
+    offers:
+      type: boolean
+    lease:
+      type: boolean
+    status:
+      type: string
+      enum: ['', available, pending, sold]

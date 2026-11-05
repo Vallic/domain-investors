@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies: {  }
+id: commerce_product__domain
+label: 'Product: Domain'
+tags:
+  title: '[commerce_product:title] is for sale | [site:name]'
+  description: '[commerce_product:title] is for sale. Buy it now or make an offer.'
+  canonical_url: '[commerce_product:url:absolute]'
+  og_type: product
+  og_title: '[commerce_product:title] is for sale'
+  og_description: '[commerce_product:title] is for sale. Buy it now or make an offer.'
+  og_url: '[commerce_product:url:absolute]'
+  og_site_name: '[site:name]'
+  # Structured data for the domain as a product, with the price the visitor
+  # sees (Commerce Domains' price tokens).
+  schema_product_type: Product
+  schema_product_name: '[commerce_product:title]'
+  schema_product_description: '[commerce_product:title] is for sale.'
+  schema_product_url: '[commerce_product:url:absolute]'
+  schema_product_category: 'Domain names'
+  schema_product_offers: 'a:6:{s:5:"@type";s:5:"Offer";s:5:"price";s:32:"[commerce_product:current_price]";s:13:"priceCurrency";s:35:"[commerce_product:current_currency]";s:3:"url";s:31:"[commerce_product:url:absolute]";s:12:"availability";s:7:"InStock";s:13:"itemCondition";s:12:"NewCondition";}'

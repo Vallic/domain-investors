@@ -1,0 +1,12 @@
+name: 'Domain Investors tools'
+type: module
+description: 'What a Domain Investors site adds to Commerce Domains: the owner dashboard on the admin landing page, registrars and marketplaces set up with keys that read environment variables, and payment gateway forms that keep credentials out of configuration.'
+package: 'Domain Investors'
+core_version_requirement: ^11.4
+dependencies:
+  - commerce:commerce_payment
+  - commerce_domains:commerce_domains
+  - commerce_domains:commerce_domains_handover
+  - commerce_domains:commerce_domains_import
+  - commerce_domains:commerce_domains_owner
+  - key:key

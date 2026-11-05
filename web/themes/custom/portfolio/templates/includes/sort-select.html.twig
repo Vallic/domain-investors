@@ -1,0 +1,8 @@
+{# The sort as a select that follows its option's link; links without JavaScript. #}
+{{ attach_library('portfolio/sort-select') }}
+<label class="ui-body-sm pf-muted" style="display: flex; align-items: center; gap: var(--space-2);">{{ 'Sort'|t }}
+  <select data-follow class="ui-body-sm" style="height: var(--control-sm); padding: 0 var(--space-2); border: 1px solid var(--line-strong); border-radius: var(--radius-sm); background: var(--surface-raised); color: var(--ink);">
+    {% for sort in sorts %}<option value="{{ sort.url }}"{{ sort.selected ? ' selected' }}>{{ sort.label }}</option>{% endfor %}
+  </select>
+</label>
+<noscript><p class="ui-body-sm">{% for sort in sorts %}<a href="{{ sort.url }}">{{ sort.label }}</a>{{ not loop.last ? ' · ' }}{% endfor %}</p></noscript>

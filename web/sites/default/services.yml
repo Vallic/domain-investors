@@ -1,0 +1,37 @@
+# What the site runs with on Vallic Cloud: production, and the staging and
+# preview environments that should behave like it. settings.vallic.php loads
+# this file; DDEV and other machines never do. Debug settings for one machine
+# go in settings.local.php, with sites/development.services.yml.
+#
+# Each parameter below replaces core's whole value, so each is listed in full.
+# Anything not here is core's default (default.services.yml).
+parameters:
+  session.storage.options:
+    gc_probability: 1
+    gc_divisor: 100
+    gc_maxlifetime: 200000
+    cookie_lifetime: 2000000
+    # Not Strict: buyers come back from Stripe, PayPal and Escrow.com by a link
+    # on another site, and have to arrive signed in, with their checkout.
+    cookie_samesite: Lax
+    name_suffix: ''
+  # Templates only change with a release, and a deploy rebuilds the caches, so
+  # Twig has no reason to check them for changes on each request.
+  twig.config:
+    debug: false
+    auto_reload: false
+    cache: true
+    allowed_file_extensions:
+      - css
+      - html
+      - js
+      - svg
+      - twig
+  renderer.config:
+    required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions']
+    auto_placeholder_conditions:
+      max-age: 0
+      contexts: ['session', 'user']
+      tags: []
+    debug: false
+  http.response.debug_cacheability_headers: false

@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.domain
+    - field.storage.commerce_product.domain_registrar
+id: commerce_product.domain.domain_registrar
+field_name: domain_registrar
+entity_type: commerce_product
+bundle: domain
+label: Registrar
+description: 'Where the domain is registered.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'commerce_domains:registrar'
+  handler_settings: {  }
+field_type: entity_reference

@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+id: commerce_product.search_result
+label: 'Search result'
+description: 'A domain in the search results: its name and price.'
+targetEntityType: commerce_product
+cache: true

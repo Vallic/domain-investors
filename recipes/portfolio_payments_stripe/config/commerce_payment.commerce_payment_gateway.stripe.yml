@@ -1,0 +1,40 @@
+langcode: en
+# Enabled once the keys are set (the installer does it when they already are).
+status: false
+dependencies:
+  module:
+    - commerce_stripe
+id: stripe
+label: Stripe
+weight: -10
+plugin: stripe_payment_element
+configuration:
+  display_label: 'Credit or debit card'
+  # PAYMENT_MODE, or a Vallic Cloud production environment, makes it live.
+  mode: test
+  payment_method_types:
+    - stripe_default
+  collect_billing_information: false
+  api_version: null
+  authentication_method: api_keys
+  access_token: ''
+  stripe_user_id: ''
+  # Never here: STRIPE_PUBLISHABLE_KEY, STRIPE_SECRET_KEY and
+  # STRIPE_WEBHOOK_SIGNING_SECRET, read by settings.portfolio.php.
+  publishable_key: ''
+  secret_key: ''
+  webhook_signing_secret: ''
+  express_checkout:
+    enable_on_cart: false
+    allowed_payment_method_types: {  }
+  payment_method_usage: on_session
+  capture_method: automatic
+  style:
+    theme: stripe
+    layout: tabs
+  checkout_form_display_label:
+    custom_label: ''
+    show_payment_method_logos: 'no'
+    include_logos: {  }
+conditions: {  }
+conditionOperator: AND

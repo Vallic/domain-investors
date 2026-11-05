@@ -1,0 +1,9 @@
+{% set size = size|default('md') %}
+<span class="dp-price dp-price-{{ size }}">
+  {% if amount %}
+    <span class="dp-price-amount {{ size == 'xl' ? 'fig-price-xl' : 'fig-price' }}">{{ amount }}</span>
+    {% if lease %}<span class="dp-price-lease fig-data">{{ lease }}</span>{% endif %}
+  {% else %}
+    <span class="dp-price-amount fig-price dp-price-none">{{ fallback|default('Make an offer'|t) }}</span>
+  {% endif %}
+</span>

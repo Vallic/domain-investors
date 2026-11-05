@@ -1,0 +1,15 @@
+name: Domain list
+status: stable
+description: 'Minimal''s price list: the name, leader dots, the price.'
+props:
+  type: object
+  required: [items]
+  properties:
+    items:
+      type: array
+      items:
+        type: object
+    size:
+      type: string
+      enum: [md, lg]
+      default: md

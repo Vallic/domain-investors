@@ -1,0 +1,31 @@
+name: 'Domain Investors: lease to own'
+description: 'Leases to own on the site: the buyer chooses a term at checkout and pays a down payment, then the rest monthly until the domain is theirs: charged to the card saved with Stripe, or paid by bank transfer or Wise against a request mailed each month. The handover starts with the last payment. Leases need an account, so visitors can sign up.'
+type: 'Domain Investors'
+# Leases are paid through the payment recipes applied with it: Stripe charges
+# a saved card; bank transfer and Wise are paid by the buyer each month.
+install:
+  - commerce_domains_lease
+config:
+  strict: false
+  import:
+    # The queue that charges the monthly payments on cron.
+    commerce_domains_lease: '*'
+  actions:
+    # "Pay in full" or a lease, on the first step, so the payment step offers
+    # only the gateways a lease can be paid with.
+    commerce_checkout.commerce_checkout_flow.domain:
+      setProperties:
+        configuration.panes.commerce_domains_lease:
+          # The pane's own question heads it; a fieldset would ask it twice.
+          display_label: null
+          step: order_information
+          weight: 2
+          wrapper_element: container
+    # A lease keeps the card on the buyer's account, so the lease pane sends
+    # buyers without one to sign up and back. Signing up logs them straight
+    # in, without a mail to confirm first, which would take them out of
+    # checkout; Antibot keeps bots off the form.
+    user.settings:
+      simpleConfigUpdate:
+        register: visitors
+        verify_mail: false

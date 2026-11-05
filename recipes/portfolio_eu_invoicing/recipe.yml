@@ -1,0 +1,44 @@
+name: 'Domain Investors: EU VAT and invoices'
+description: "EU VAT on orders, which Commerce works out from the store's registrations and the buyer's country and VAT number, and an invoice for every order: created when the order is placed, marked paid with it, and downloadable as a PDF. Before selling, set the store's tax registrations and put your company details in the invoice footer; ask your accountant which VAT applies to your sales."
+type: 'Domain Investors'
+install:
+  - commerce_tax
+  - commerce_invoice
+  - entity_print
+config:
+  strict: false
+  import:
+    commerce_invoice: '*'
+    entity_print: '*'
+  actions:
+    # An invoice for every order of the default type, as soon as it is placed.
+    commerce_order.commerce_order_type.default:
+      setThirdPartySettings:
+        -
+          module: commerce_invoice
+          key: invoice_type
+          value: default
+        -
+          module: commerce_invoice
+          key: order_placed_generation
+          value: true
+    # A domain is an electronic service: VAT follows the buyer's country.
+    commerce_order.commerce_order_item_type.default:
+      setThirdPartySetting:
+        module: commerce_tax
+        key: taxable_type
+        value: digital_goods
+    # Business buyers give their VAT number, which is checked with VIES.
+    core.entity_form_display.profile.customer.default:
+      setComponent:
+        name: tax_number
+        options:
+          type: commerce_tax_number_default
+          weight: 5
+          region: content
+          settings: {  }
+          third_party_settings: {  }
+    user.role.authenticated:
+      grantPermission: 'view own commerce_invoice'
+    ?user.role.assistant:
+      grantPermission: 'view commerce_invoice'

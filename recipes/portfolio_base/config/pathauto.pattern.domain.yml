@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.domain
+  module:
+    - commerce_product
+id: domain
+label: Domains
+type: 'canonical_entities:commerce_product'
+# The domain's own name, such as /domain/example.co.uk. Some extensions are
+# ones web servers refuse to serve as files (.sh, .md, .inc): see
+# .vallic/nginx/server.conf, which hands every /domain/ path to Drupal.
+pattern: '/domain/[commerce_product:domain_label].[commerce_product:domain_extension]'
+selection_criteria:
+  2b6f3c7d-3f0e-4a59-8d16-6c4f0e9a7b21:
+    id: 'entity_bundle:commerce_product'
+    negate: false
+    context_mapping:
+      commerce_product: commerce_product
+    bundles:
+      domain: domain
+selection_logic: and
+weight: -5
+relationships: {  }

@@ -1,0 +1,46 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 226667bf-843d-45b8-a1b6-54cd74ac91c0
+  bundle: page
+  default_langcode: en
+default:
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  title:
+    -
+      value: 'Privacy policy'
+  path:
+    -
+      alias: /privacy-policy
+      langcode: en
+      pathauto: 0
+  body:
+    -
+      value: |
+        <p><strong>Replace this example policy with your own before you open the site, and have it checked for the laws that apply to you.</strong> It describes what this site does when set up as it comes; add anything you connect yourself.</p>
+        <h2>Who is responsible</h2>
+        <p>The owner of this site is responsible for your personal data. Name your business and address here. To reach us, use the <a href="/contact">contact form</a>.</p>
+        <h2>What we collect</h2>
+        <ul>
+          <li><strong>When you buy or make an offer:</strong> your name, email address, billing details, the domain, the amount, and where the domain should go, such as your account at a registrar.</li>
+          <li><strong>When you write to us:</strong> your name, email address and message.</li>
+          <li><strong>When you create an account:</strong> your username, email address and password, stored in a form that cannot be read back.</li>
+          <li><strong>When you browse:</strong> technical records such as your IP address, kept to protect and run the site.</li>
+        </ul>
+        <h2>Why we use it</h2>
+        <p>To sell you the domain and hand it over, answer you, keep the accounting records the law requires, and protect the site from abuse.</p>
+        <h2>Who we share it with</h2>
+        <p>Only those who need it to do this: the payment provider you choose, the registrar and any marketplace involved in the sale, and the companies that host this site and send its email. List yours here. Pages load their fonts from Google Fonts, so Google sees visitors' IP addresses.</p>
+        <h2>Cookies</h2>
+        <p>This site uses cookies to keep you signed in and to keep your order while you check out. If you turn on analytics, say so here, and name the provider.</p>
+        <h2>How long we keep it</h2>
+        <p>Order records for as long as tax law requires, and other data only as long as we need it. State your periods here.</p>
+        <h2>Your rights</h2>
+        <p>You can ask us for a copy of your data, or to correct or delete it, and you may be able to complain to your data protection authority. <a href="/contact">Contact us</a> to ask.</p>
+      format: basic_html
+      summary: ''

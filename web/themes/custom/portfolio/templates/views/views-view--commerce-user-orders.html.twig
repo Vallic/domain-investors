@@ -1,0 +1,38 @@
+{#
+/**
+ * @file
+ * A buyer's orders, the latest first: the domains in each, and where it
+ * stands.
+ */
+#}
+<div{{ attributes.addClass('pf-orders') }}>
+  {% if orders %}
+    <ul class="pf-order-list">
+      {% for order in orders %}
+        <li>
+          <a href="{{ order.url }}" class="pf-order-link">
+            <span class="pf-order-domains">
+              {% for item in order.items %}{{ include('portfolio:domain-name', { name: item.name, size: 'md' }, with_context = false) }}{% endfor %}
+            </span>
+            <span class="fig-data pf-muted">{{ 'Order @number · @date'|t({ '@number': order.number, '@date': order.placed }) }}</span>
+          </a>
+          <span class="fig-price">{{ order.total }}</span>
+          {% if order.paid %}
+            <span class="dp-badge dp-badge-accent">{{ 'Paid'|t }}</span>
+          {% elseif order.balance %}
+            <span class="dp-badge dp-badge-notice">{{ '@amount due'|t({ '@amount': order.balance }) }}</span>
+          {% else %}
+            <span class="dp-badge dp-badge-neutral">{{ order.state }}</span>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+    {% if pager %}<nav class="pf-pager" aria-label="{{ 'Pages'|t }}">{{ pager }}</nav>{% endif %}
+  {% else %}
+    <div class="pf-empty">
+      <p class="ui-heading">{{ 'No orders yet'|t }}</p>
+      <p class="ui-body pf-muted">{{ 'The domains you buy appear here, with what is paid and what is due.'|t }}</p>
+      {{ include('portfolio:button', { label: 'See the names'|t, href: path('<front>') }, with_context = false) }}
+    </div>
+  {% endif %}
+</div>

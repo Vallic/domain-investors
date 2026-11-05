@@ -1,0 +1,15 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - search_api_meilisearch
+id: meilisearch
+name: Meilisearch
+description: 'Meilisearch, at MEILISEARCH_HOST: DDEV and Vallic Cloud run it beside the site.'
+backend: search_api_meilisearch
+backend_config:
+  # Never here: MEILISEARCH_HOST, MEILISEARCH_PORT and MEILI_MASTER_KEY, read
+  # by settings.portfolio.php.
+  meilisearch_host_address: 'http://127.0.0.1'
+  meilisearch_host_port: '7700'
+  meilisearch_master_key: ''

@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.domain
+    - field.storage.commerce_product.domain_sold_via
+id: commerce_product.domain.domain_sold_via
+field_name: domain_sold_via
+entity_type: commerce_product
+bundle: domain
+label: 'Sold through'
+description: 'The marketplace that sold the domain; empty for sales on this site or in private.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'commerce_domains_listing:provider'
+  handler_settings: {  }
+field_type: entity_reference

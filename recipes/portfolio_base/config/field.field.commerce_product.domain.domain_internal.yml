@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.domain
+    - field.storage.commerce_product.domain_internal
+id: commerce_product.domain.domain_internal
+field_name: domain_internal
+entity_type: commerce_product
+bundle: domain
+label: Internal
+description: 'A domain you keep for your own use: never for sale, on this site or on marketplaces, so it stays unpublished. Renewals and registrar checks still count it.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: null
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,8 @@
+name: 'Domain Investors: search'
+description: 'A domain search at /search, by words in the name and the description, on Search API with the database backend: nothing else to run. Domains are indexed as they are saved, and on cron.'
+type: 'Domain Investors'
+install:
+  - search_api
+  - search_api_db
+config:
+  strict: false

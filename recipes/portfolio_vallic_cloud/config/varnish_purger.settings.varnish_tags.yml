@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies: {  }
+id: varnish_tags
+name: 'Varnish: cache tags'
+invalidationtype: tag
+# settings.vallic.php sets the hostname and port from VARNISH_HOST, and the
+# X-VC-Purge-Key header from VARNISH_PURGE_KEY. "varnish" is the DDEV
+# Varnish add-on's name, for testing purges locally.
+hostname: varnish
+port: 6081
+path: /
+request_method: BAN
+scheme: http
+verify: '0'
+headers:
+  -
+    field: Cache-Tags
+    value: '[invalidation:expression]'
+  -
+    field: X-VC-Purge-Key
+    value: ''
+body: null
+body_content_type: null
+runtime_measurement: true
+timeout: 1.0
+connect_timeout: 1.0
+cooldown_time: 0.0
+max_requests: 1000
+http_errors: true

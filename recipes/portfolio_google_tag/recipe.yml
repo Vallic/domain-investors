@@ -1,0 +1,11 @@
+name: 'Domain Investors: Google Tag'
+description: 'Google Tag Manager or Google Analytics on the visitor pages, with ecommerce events: a domain viewed, the list viewed, Buy now, checkout, payment, purchase, a search and an offer sent. The tag IDs come from GOOGLE_TAG_ID (settings.portfolio.php); without it nothing is added to the pages.'
+type: 'Domain Investors'
+install:
+  - google_tag
+config:
+  strict: false
+  actions:
+    google_tag.settings:
+      simpleConfigUpdate:
+        default_google_tag_entity: portfolio

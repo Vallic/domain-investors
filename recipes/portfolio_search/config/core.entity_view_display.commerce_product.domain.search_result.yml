@@ -1,0 +1,47 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.domain
+    - core.entity_view_mode.commerce_product.search_result
+  module:
+    - commerce_product
+id: commerce_product.domain.search_result
+targetEntityType: commerce_product
+bundle: domain
+mode: search_result
+# The price comes from the domain's variation, which Commerce shows with the
+# product (injected variation fields).
+content:
+  title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  atom_premium: true
+  body: true
+  created: true
+  domain: true
+  domain_auto_renew: true
+  domain_expires: true
+  domain_extension: true
+  domain_label: true
+  domain_purchase_date: true
+  domain_purchase_price: true
+  domain_registrar: true
+  domain_renewal: true
+  domain_renewal_cost: true
+  domain_sale_commission: true
+  domain_sale_order: true
+  domain_sale_price: true
+  domain_sold: true
+  domain_sold_via: true
+  domain_verified: true
+  search_api_excerpt: true
+  stores: true
+  uid: true
+  variations: true

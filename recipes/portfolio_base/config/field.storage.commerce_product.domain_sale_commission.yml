@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+id: commerce_product.domain_sale_commission
+field_name: domain_sale_commission
+entity_type: commerce_product
+type: decimal
+settings:
+  precision: 5
+  scale: 2
+module: core
+locked: true
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

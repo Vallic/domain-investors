@@ -1,0 +1,143 @@
+{
+    "name": "vallic/domain-investors",
+    "description": "Sell your own domain names from your own site: a Drupal Commerce starter for one domain owner, ready for Vallic Cloud.",
+    "type": "project",
+    "license": "GPL-2.0-or-later",
+    "keywords": [
+        "drupal",
+        "commerce",
+        "domains",
+        "domain-names",
+        "vallic"
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    ],
+    "require": {
+        "composer/installers": "^2.3",
+        "cweagans/composer-patches": "^1.7",
+        "drupal/advancedqueue": "^1.7",
+        "drupal/antibot": "^2.0",
+        "drupal/captcha": "^2.0",
+        "drupal/coffee": "^2.0",
+        "drupal/commerce": "^3.3",
+        "drupal/commerce_agree_terms": "^2.0",
+        "drupal/commerce_currency_resolver": "^2.1",
+        "drupal/commerce_domains": "^1.0",
+        "drupal/commerce_escrow": "^2.0",
+        "drupal/commerce_exchanger": "^2.0",
+        "drupal/commerce_invoice": "^2.3",
+        "drupal/commerce_paypal_link": "^1.0",
+        "drupal/commerce_pricelist": "^2.16",
+        "drupal/commerce_stripe": "^2.2",
+        "drupal/commerce_wise": "^1.0",
+        "drupal/core-composer-scaffold": "^11.4",
+        "drupal/core-project-message": "^11.4",
+        "drupal/core-recipe-unpack": "^11.4",
+        "drupal/core-recommended": "^11.4",
+        "drupal/dashboard": "^2.2",
+        "drupal/encrypt": "^3.3",
+        "drupal/field_group": "^4.0",
+        "drupal/google_tag": "^2.0",
+        "drupal/key": "^1.22",
+        "drupal/metatag": "^2.2",
+        "drupal/pathauto": "^1.15",
+        "drupal/purge": "^3.7",
+        "drupal/real_aes": "^2.6",
+        "drupal/redirect": "^1.13",
+        "drupal/redis": "^1.11",
+        "drupal/schema_metatag": "^3.1",
+        "drupal/search_api": "^1.43",
+        "drupal/search_api_meilisearch": "^2.1",
+        "drupal/simple_sitemap": "^4.2",
+        "drupal/symfony_mailer": "^2.0",
+        "drupal/tfa": "^1.13",
+        "drupal/token": "^1.17",
+        "drupal/vallic_purge": "^1.0",
+        "drupal/varnish_purge": "^2.3",
+        "drush/drush": "^13.6"
+    },
+    "conflict": {
+        "drupal/drupal": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "cweagans/composer-patches": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "drupal/core-composer-scaffold": true,
+            "drupal/core-project-message": true,
+            "drupal/core-recipe-unpack": true,
+            "php-http/discovery": true,
+            "php-tuf/composer-integration": true,
+            "phpstan/extension-installer": true,
+            "symfony/runtime": true,
+            "tbachert/spi": true
+        },
+        "sort-packages": true
+    },
+    "extra": {
+        "drupal-scaffold": {
+            "locations": {
+                "web-root": "web/"
+            }
+        },
+        "installer-paths": {
+            "web/core": [
+                "type:drupal-core"
+            ],
+            "web/libraries/{$name}": [
+                "type:drupal-library"
+            ],
+            "web/modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "web/profiles/contrib/{$name}": [
+                "type:drupal-profile"
+            ],
+            "web/themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ],
+            "drush/Commands/contrib/{$name}": [
+                "type:drupal-drush"
+            ],
+            "web/modules/custom/{$name}": [
+                "type:drupal-custom-module"
+            ],
+            "web/profiles/custom/{$name}": [
+                "type:drupal-custom-profile"
+            ],
+            "web/themes/custom/{$name}": [
+                "type:drupal-custom-theme"
+            ],
+            "recipes/{$name}": [
+                "type:drupal-recipe"
+            ]
+        },
+        "patches": {},
+        "composer-exit-on-patch-failure": true,
+        "drupal-core-project-message": {
+            "post-create-project-cmd-message": [
+                "<bg=blue;fg=white>                                                      </>",
+                "<bg=blue;fg=white>  Your Domain Investors codebase is ready.             </>",
+                "<bg=blue;fg=white>                                                      </>",
+                "",
+                "<bg=yellow;fg=black>Next steps</>:",
+                "  * Read README.md and docs/: install, connect a registrar and marketplaces,",
+                "    import your domains, and deploy on Vallic Cloud - https://vallic.com/cloud.",
+                "  * Install locally:",
+                "      vendor/bin/drush site:install domain_investors",
+                "    or open /core/install.php and answer the questions.",
+                "  * Commit composer.lock and config/sync with the rest."
+            ]
+        }
+    },
+    "require-dev": {
+        "drupal/coder": "^8.3"
+    }
+}

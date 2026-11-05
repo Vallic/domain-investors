@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.domain
+    - field.storage.commerce_product.domain_sold
+id: commerce_product.domain.domain_sold
+field_name: domain_sold
+entity_type: commerce_product
+bundle: domain
+label: Sold
+description: 'Filled in when the domain sells on this site or a marketplace reports it sold.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: timestamp

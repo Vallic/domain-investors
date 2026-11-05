@@ -1,0 +1,16 @@
+{% set steps = steps|default([
+  { title: 'Pay'|t, text: 'By card, bank transfer or Escrow.com, in your currency.'|t },
+  { title: 'Get the domain'|t, text: 'It is pushed to your account at its registrar, or you get a code to move it to yours.'|t },
+  { title: 'Use it'|t, text: 'Most handovers finish within a few days. Point it wherever you like.'|t },
+]) %}
+<ol class="dp-steps">
+  {% for step in steps %}
+    <li class="dp-step">
+      <span class="dp-step-n fig-data" aria-hidden="true">{{ loop.index }}</span>
+      <div>
+        <h3 class="dp-step-title ui-heading">{{ step.title }}</h3>
+        <p class="dp-step-text ui-body-sm">{{ step.text }}</p>
+      </div>
+    </li>
+  {% endfor %}
+</ol>

@@ -1,0 +1,13 @@
+{#
+/**
+ * @file
+ * One tab: the current one marked, for the eye and for screen readers.
+ */
+#}
+<li{{ attributes.addClass(is_active ? 'is-active') }}>
+  {%- if is_active -%}
+    {{ link|merge({ '#attributes': { 'aria-current': 'page' } }) }}
+  {%- else -%}
+    {{ link }}
+  {%- endif -%}
+</li>

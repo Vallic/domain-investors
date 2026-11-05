@@ -1,0 +1,23 @@
+{% set buy_now = domain.buy_now and domain.price %}
+<section class="dp-buybox" aria-label="{{ 'Buy @name'|t({ '@name': domain.name }) }}">
+  <p class="dp-label ui-label">{{ buy_now ? 'Buy now price'|t : 'Price on request'|t }}</p>
+  {% if buy_now %}
+    {{ include('portfolio:price', { amount: domain.price, lease: domain.lease_line, size: 'xl' }, with_context = false) }}
+  {% else %}
+    <p class="dp-buybox-lead ui-heading">{{ 'Make the owner an offer.'|t }}</p>
+  {% endif %}
+  <div class="dp-buybox-actions">
+    {% if buy_now %}{% block buy %}{% endblock %}{% endif %}
+    {% if domain.offers %}
+      {{ include('portfolio:button', { label: 'Make an offer'|t, href: '#offer', variant: buy_now ? 'secondary' : 'primary', size: 'lg', block: true }, with_context = false) }}
+    {% endif %}
+  </div>
+  {% if domain.offers and domain.minimum_offer %}
+    <p class="dp-field-hint ui-body-sm">{{ 'Offers from @amount'|t({ '@amount': domain.minimum_offer }) }}</p>
+  {% endif %}
+  {% if points %}
+    <ul class="dp-buybox-points ui-body-sm">
+      {% for point in points %}<li>{{ point }}</li>{% endfor %}
+    </ul>
+  {% endif %}
+</section>

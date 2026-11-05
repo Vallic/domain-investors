@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.domain
+    - field.storage.commerce_product_variation.display_fee
+id: commerce_product_variation.domain.display_fee
+field_name: display_fee
+entity_type: commerce_product_variation
+bundle: domain
+label: 'Display Escrow fee information'
+description: 'Informational estimates about potential escrow fees information within Drupal order based of split logic who pays which fee.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,41 @@
+langcode: en
+# Enabled once ESCROW_API_KEY and ESCROW_EMAIL are set (the installer does it
+# when they already are).
+status: false
+dependencies:
+  module:
+    - commerce_domains_offer_escrow
+    - commerce_escrow
+    - commerce_order
+id: escrow_pay
+label: 'Escrow.com'
+weight: 0
+plugin: escrow_pay
+configuration:
+  display_label: 'Escrow.com'
+  # PAYMENT_MODE, or a Vallic Cloud production environment, makes it live.
+  mode: test
+  payment_method_types:
+    - credit_card
+  collect_billing_information: false
+  # Never here: ESCROW_API_KEY and ESCROW_EMAIL, read by settings.portfolio.php.
+  api_key: ''
+  email: ''
+  logging: false
+conditions:
+  -
+    plugin: order_currency
+    configuration:
+      currencies:
+        - AUD
+        - CAD
+        - EUR
+        - GBP
+        - USD
+  # Not for offers being negotiated on Escrow.com: those pay through Escrow
+  # Offer.
+  -
+    plugin: commerce_domains_order_escrow_offer
+    configuration:
+      escrow_offer: false
+conditionOperator: AND

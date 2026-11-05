@@ -1,0 +1,211 @@
+# Checks the project on every push and pull request: the custom code meets
+# Drupal's coding standards, and the profile installs, with its recipes, into
+# a site whose visitor and admin pages work. Every Monday it does the same with
+# the newest Commerce Domains release, which can be ahead of composer.lock, so
+# what an update will need shows up before the update.
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '17 5 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  PHP_VERSION: '8.5'
+  PHP_EXTENSIONS: gd, pdo_mysql, mbstring, intl, bcmath, zip, opcache
+
+jobs:
+  standards:
+    name: Coding standards
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          tools: composer:v2
+          coverage: none
+
+      - name: Cache Composer downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/composer
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - name: Validate composer.json
+        run: composer validate --no-check-publish
+
+      - name: Install
+        run: composer install --no-interaction --no-progress
+
+      - name: PHP syntax
+        run: |
+          find web/profiles/custom web/modules/custom web/themes/custom web/sites/default scripts \
+            -type f \( -name '*.php' -o -name '*.module' -o -name '*.install' -o -name '*.profile' -o -name '*.theme' -o -name '*.inc' \) \
+            -print0 | xargs -0 -n1 php -l > /dev/null
+
+      - name: Drupal coding standards
+        run: vendor/bin/phpcs
+
+  install:
+    name: Install (${{ matrix.name }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # What a new owner most likely picks.
+          - name: basic
+            answers: >-
+              domain_investors_setup.payments=bank_transfer
+              domain_investors_setup.extras=search
+              domain_investors_setup.template=standard
+              domain_investors_setup.scheme=light
+            # No key: two-factor authentication stays off.
+            tfa_key: ''
+          # Every optional recipe at once.
+          - name: everything
+            answers: >-
+              domain_investors_setup.country=NL
+              domain_investors_setup.currency=EUR
+              domain_investors_setup.payments=stripe,paypal,wise,bank_transfer,escrow,lease
+              domain_investors_setup.registrars=dynadot,namecheap
+              domain_investors_setup.other_registrars=Hover
+              domain_investors_setup.marketplaces=afternic,sedo
+              domain_investors_setup.other_marketplaces=Squadhelp
+              domain_investors_setup.extras=search,meilisearch,vallic_cloud,eu_invoicing,google_tag
+              domain_investors_setup.template=showcase
+              domain_investors_setup.scheme=custom
+            # A throwaway key, for this run only: two-factor authentication on.
+            tfa_key: 'Y2ktb25seS10ZmEta2V5LW5vdC1hLXNlY3JldC0wMDE='
+    services:
+      # As vallic.yaml asks for.
+      mariadb:
+        image: mariadb:11.8
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: drupal
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+      # The version vallic.yaml and DDEV run.
+      meilisearch:
+        image: getmeili/meilisearch:v1.53.3
+        env:
+          MEILI_MASTER_KEY: ci-meilisearch-master-key
+          MEILI_ENV: development
+          MEILI_NO_ANALYTICS: 'true'
+        ports:
+          - 7700:7700
+    env:
+      MEILISEARCH_HOST: 127.0.0.1
+      MEILI_MASTER_KEY: ci-meilisearch-master-key
+      TFA_ENCRYPTION_KEY: ${{ matrix.tfa_key }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          ini-values: memory_limit=512M
+          tools: composer:v2
+          coverage: none
+
+      - name: Cache Composer downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/composer
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --no-dev
+
+      - name: Latest Commerce Domains
+        if: github.event_name == 'schedule'
+        run: composer update drupal/commerce_domains --no-interaction --no-progress --no-dev
+
+      - name: Install the site
+        run: |
+          # The private files directory is outside git.
+          mkdir -p private
+          vendor/bin/drush site:install domain_investors --yes \
+            --db-url=mysql://root:root@127.0.0.1:3306/drupal \
+            --site-name="Domain Investors CI" \
+            --account-name=owner --account-pass=owner --account-mail=owner@example.com \
+            domain_investors_setup.store_email=sales@example.com \
+            ${{ matrix.answers }}
+
+      - name: Recipe fields match Commerce Domains
+        run: vendor/bin/drush php:script scripts/ci/recipe-fields.php
+
+      - name: Add domains
+        run: |
+          vendor/bin/drush php:script scripts/ci/seed.php
+          vendor/bin/drush search-api:index
+          vendor/bin/drush simple-sitemap:generate
+
+      - name: Two-factor authentication
+        run: |
+          enabled="$(vendor/bin/drush php:eval 'echo (int) \Drupal::config("tfa.settings")->get("enabled");')"
+          if [ -n "$TFA_ENCRYPTION_KEY" ]; then
+            test "$enabled" = 1
+            # The secrets it keeps can be encrypted and read back.
+            back="$(vendor/bin/drush php:eval '$p = \Drupal\encrypt\Entity\EncryptionProfile::load("tfa"); $e = \Drupal::service("encryption"); echo $e->decrypt($e->encrypt("check", $p), $p);')"
+            test "$back" = check
+          else
+            test "$enabled" = 0
+          fi
+
+      - name: Visitor pages
+        run: |
+          # From the web root: Drupal finds templates and include files
+          # relative to it.
+          (cd web && php -S 127.0.0.1:8888 .ht.router.php > /tmp/php-server.log 2>&1 &)
+          for i in $(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:8888/user/login && break; sleep 1; done
+          scripts/ci/smoke.sh http://127.0.0.1:8888
+
+      - name: Admin pages
+        run: |
+          base=http://127.0.0.1:8888
+          scripts/ci/admin-smoke.sh "$base" "$(vendor/bin/drush user:login --uri="$base" --no-browser)"
+
+      - name: Demo domains
+        if: matrix.name == 'basic'
+        run: |
+          count() { vendor/bin/drush sql:query "SELECT COUNT(*) FROM commerce_product"; }
+          before="$(count)"
+          vendor/bin/drush domain-investors:demo
+          test "$(count)" = "$((before + 200))"
+          vendor/bin/drush domain-investors:demo --remove
+          test "$(count)" = "$before"
+
+      - name: No errors logged
+        run: |
+          count="$(vendor/bin/drush sql:query "SELECT COUNT(*) FROM watchdog WHERE severity <= 3")"
+          if [ "$count" != "0" ]; then
+            vendor/bin/drush watchdog:show --severity-min=Error --count=50 --extended
+            exit 1
+          fi
+
+      - name: Server log
+        if: failure()
+        run: cat /tmp/php-server.log || true

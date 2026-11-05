@@ -1,0 +1,20 @@
+# The design system: fonts, tokens and the components' classes. The
+# components under components/ use these classes and add no CSS of their own,
+# so one stylesheet holds the whole look.
+global:
+  css:
+    base:
+      'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap': { type: external }
+      css/tokens.css: {}
+    component:
+      css/components.css: {}
+    layout:
+      css/layout.css: {}
+
+# Standard's sort select, which follows the link of the chosen option.
+sort-select:
+  js:
+    js/sort-select.js: {}
+  dependencies:
+    - core/drupal
+    - core/once

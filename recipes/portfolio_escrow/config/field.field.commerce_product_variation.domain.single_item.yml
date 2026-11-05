@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.domain
+    - field.storage.commerce_product_variation.single_item
+id: commerce_product_variation.domain.single_item
+field_name: single_item
+entity_type: commerce_product_variation
+bundle: domain
+label: 'Single item'
+description: 'This variation has always quantity of 1.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

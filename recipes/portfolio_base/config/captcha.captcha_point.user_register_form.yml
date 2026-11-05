@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - image_captcha
+formId: user_register_form
+# An image to read, made on the site: no outside service sees the visitor.
+captchaType: image_captcha/Image
+label: 'Create an account'

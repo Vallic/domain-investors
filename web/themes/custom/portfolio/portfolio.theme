@@ -1,0 +1,755 @@
+<?php
+
+/**
+ * @file
+ * Portfolio: the Domain Investors design system, for visitors.
+ *
+ * The templates ask for facts about a domain: its price in the visitor's
+ * currency, its sale terms, how long the name is, when it was registered.
+ * Working those out is this file's job, so a template draws a card or a buy
+ * box without reaching through the product, its variation and three
+ * services. Which template and colour scheme a page uses is Appearance's.
+ */
+
+declare(strict_types=1);
+
+use Drupal\commerce\Context;
+use Drupal\commerce_domains\Availability;
+use Drupal\commerce_domains\SaleTerms;
+use Drupal\commerce_domains_lease\LeaseCalculator;
+use Drupal\commerce_domains_lease\LeaseManager;
+use Drupal\commerce_domains_offer\Entity\OfferInterface;
+use Drupal\commerce_domains_offer\Form\OfferForm;
+use Drupal\commerce_domains_offer\OfferPolicy;
+use Drupal\commerce_order\Entity\OrderInterface;
+use Drupal\commerce_price\Price;
+use Drupal\commerce_product\Entity\ProductInterface;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
+use Drupal\portfolio\Appearance;
+use Drupal\portfolio\Palette;
+use Drupal\views\ViewExecutable;
+
+/**
+ * The domain a page is about, on a domain's own page.
+ */
+function portfolio_route_domain(): ?ProductInterface {
+  $product = \Drupal::routeMatch()->getParameter('commerce_product');
+  return $product instanceof ProductInterface && $product->bundle() === 'domain' ? $product : NULL;
+}
+
+/**
+ * Formats an amount as the design system does: whole units, with the symbol.
+ *
+ * An amount with cents, such as a lease's monthly payment, keeps them, so it
+ * reads the same as at checkout.
+ */
+function portfolio_money(Price $price): string {
+  $whole = fmod((float) $price->getNumber(), 1.0) === 0.0;
+  return (string) \Drupal::service('commerce_price.currency_formatter')->format(
+    $price->getNumber(),
+    $price->getCurrencyCode(),
+    $whole ? ['minimum_fraction_digits' => 0, 'maximum_fraction_digits' => 0] : [],
+  );
+}
+
+/**
+ * Works out what the templates show about a domain.
+ *
+ * @param \Drupal\commerce_product\Entity\ProductInterface $product
+ *   The domain.
+ * @param \Drupal\Core\Cache\CacheableMetadata $cache
+ *   Collects what the facts depend on: the domain, its variation, the
+ *   visitor's currency and the offer settings.
+ *
+ * @return array<string, mixed>
+ *   name, url, label, extension, letters, registered (a year), expires,
+ *   registrar, price, lease_line, lease_months, buy_now, offers,
+ *   minimum_offer, status (available or sold), featured, summary, meta.
+ */
+function portfolio_domain_facts(ProductInterface $product, CacheableMetadata $cache): array {
+  $cache->addCacheableDependency($product);
+  $cache->addCacheContexts(['user.permissions']);
+  if (\Drupal::hasService('cache_context.currency_resolver')) {
+    $cache->addCacheContexts(['currency_resolver']);
+  }
+
+  $name = mb_strtolower((string) ($product->hasField('domain') && !$product->get('domain')->isEmpty() ? $product->get('domain')->value : $product->label()));
+  [$label, $extension] = array_pad(explode('.', $name, 2), 2, '');
+  $date = fn(string $field): ?int => $product->hasField($field) && !$product->get($field)->isEmpty() ? (int) $product->get($field)->value : NULL;
+
+  $facts = [
+    'name' => $name,
+    'url' => $product->toUrl()->toString(),
+    'label' => $label,
+    'extension' => $extension,
+    // Letters of the label, the way buyers count them: mb_strlen, so an
+    // internationalised name counts its characters, not its bytes.
+    'letters' => mb_strlen($label),
+    'registered' => ($registered = $date('domain_registered')) ? date('Y', $registered) : NULL,
+    'expires' => ($expires = $date('domain_expires'))
+      ? \Drupal::service('date.formatter')->format($expires, 'custom', 'F Y')
+      : NULL,
+    'registrar' => $product->hasField('domain_registrar') ? $product->get('domain_registrar')->entity?->label() : NULL,
+    'price' => NULL,
+    'lease_line' => NULL,
+    'lease_months' => 0,
+    'buy_now' => FALSE,
+    'offers' => FALSE,
+    'minimum_offer' => NULL,
+    'status' => Availability::isSold($product) ? 'sold' : 'available',
+    'featured' => $product->hasField('page_featured') && (bool) $product->get('page_featured')->value,
+    'summary' => NULL,
+  ];
+
+  if ($product->hasField('body') && !$product->get('body')->isEmpty()) {
+    $body = $product->get('body')->first();
+    // The summary when there is one, else the first paragraph: a line for
+    // a card or Showcase's feature, not the whole story.
+    $summary = trim(strip_tags((string) $body->summary));
+    if ($summary === '' && preg_match('#<p[^>]*>(.*?)</p>#si', (string) $body->value, $match)) {
+      $summary = trim(strip_tags($match[1]));
+    }
+    $facts['summary'] = $summary !== '' ? $summary : NULL;
+  }
+
+  $variation = $product->getDefaultVariation();
+  if ($variation && $facts['status'] !== 'sold') {
+    $cache->addCacheableDependency($variation);
+    $terms = SaleTerms::fromVariation($variation);
+    $context = new Context(\Drupal::currentUser(), \Drupal::service('commerce_store.current_store')->getStore());
+    // Resolved rather than read: the currency resolver and price lists
+    // decide what this visitor pays.
+    $price = \Drupal::service('commerce_price.chain_price_resolver')->resolve($variation, '1', $context);
+    $for_sale = \Drupal::service(Availability::class)->isForSale($product, $variation);
+    if ($price && (float) $price->getNumber() > 0 && $for_sale) {
+      $facts['price'] = portfolio_money($price);
+      $facts['buy_now'] = $terms->buyNow;
+      // Lease to own only where the site offers it (recipes/portfolio_lease)
+      // and a card gateway can take it: the checkout's longest term, with
+      // the down payment the lease would ask for.
+      $months = $terms->buyNow ? $terms->leaseMonthsAt((float) $price->getNumber()) : 0;
+      if ($months >= 2 && \Drupal::hasService(LeaseCalculator::class) && \Drupal::service(LeaseCalculator::class)->gateways()) {
+        $lease = \Drupal::config('commerce_domains_lease.settings');
+        $cache->addCacheableDependency($lease)->addCacheTags(['config:commerce_payment_gateway_list']);
+        $percent = max(1, min(90, $terms->leaseDownPayment ?? (int) $lease->get('default_down_payment')));
+        $plan = LeaseCalculator::planFor($price, $months, $percent, \Drupal::service('commerce_price.rounder'));
+        $facts['lease_months'] = $months;
+        $facts['lease_line'] = (string) t('or @down down, then @amount/mo for @months months', [
+          '@down' => portfolio_money($plan->downPayment),
+          '@amount' => portfolio_money($plan->installment),
+          '@months' => $months,
+        ]);
+      }
+    }
+    if (\Drupal::hasService(OfferPolicy::class)) {
+      /** @var \Drupal\commerce_domains_offer\OfferPolicy $policy */
+      $policy = \Drupal::service(OfferPolicy::class);
+      $cache->addCacheableDependency($policy->cacheability());
+      $facts['offers'] = $policy->allows($variation)
+        && \Drupal::currentUser()->hasPermission('make domain offers');
+      if ($facts['offers'] && $price && (float) $price->getNumber() > 0) {
+        $facts['minimum_offer'] = portfolio_money($policy->minimum($variation, $price));
+      }
+    }
+  }
+
+  $meta = [(string) \Drupal::translation()->formatPlural($facts['letters'], '1 letter', '@count letters')];
+  if ($facts['registered']) {
+    $meta[] = (string) t('Registered @year', ['@year' => $facts['registered']]);
+  }
+  $facts['meta'] = $meta;
+  return $facts;
+}
+
+/**
+ * The header's links, as each template's design names them.
+ *
+ * @return array<int, array{label: string, url: string, current: bool}>
+ *   The links.
+ */
+function portfolio_nav(string $template): array {
+  $front = \Drupal::service('path.matcher')->isFrontPage();
+  $route = \Drupal::routeMatch()->getRouteName();
+  $home = Url::fromRoute('<front>')->toString();
+  $all = $template === 'showcase' ? t('Featured') : ($template === 'minimal' ? t('Names') : t('All names'));
+  $links = [
+    [
+      'label' => (string) $all,
+      'url' => $home,
+      'current' => $front || $route === 'view.' . Appearance::VIEW . '.page_1' || $route === 'entity.commerce_product.canonical',
+    ],
+  ];
+  if ($template === 'showcase') {
+    $links[] = ['label' => (string) t('More names'), 'url' => $home . '#more', 'current' => FALSE];
+  }
+  // The pages recipes/portfolio_base adds, while they are at these addresses.
+  $aliases = \Drupal::service('path_alias.manager');
+  $current = $aliases->getAliasByPath(\Drupal::service('path.current')->getPath());
+  foreach (['/how-it-works' => t('How it works'), '/about' => t('About')] as $alias => $label) {
+    if ($aliases->getPathByAlias($alias) !== $alias) {
+      $links[] = [
+        'label' => (string) $label,
+        'url' => Url::fromUserInput($alias)->toString(),
+        'current' => $current === $alias,
+      ];
+    }
+  }
+  if (\Drupal::currentUser()->hasPermission('access site-wide contact form')) {
+    $links[] = [
+      'label' => (string) t('Contact'),
+      'url' => Url::fromRoute('contact.site_page')->toString(),
+      'current' => $route === 'contact.site_page' || $current === '/contact',
+    ];
+  }
+  return $links;
+}
+
+/**
+ * The currency switch, when Commerce Currency Resolver offers one.
+ *
+ * @return array<mixed>
+ *   A render array, empty without the block.
+ */
+function portfolio_currency_switch(): array {
+  $manager = \Drupal::service('plugin.manager.block');
+  if (!$manager->hasDefinition('commerce_currency_resolver_cookie')) {
+    return [];
+  }
+  return $manager->createInstance('commerce_currency_resolver_cookie', [])->build();
+}
+
+/**
+ * The template and colour scheme of the page being viewed.
+ *
+ * @return array{0: string, 1: string}
+ *   The template and the scheme: a domain's own on its page, else the
+ *   site's.
+ */
+function portfolio_page_appearance(): array {
+  $product = portfolio_route_domain();
+  return $product
+    ? [Appearance::template($product), Appearance::scheme($product)]
+    : [Appearance::siteTemplate(), Appearance::siteScheme()];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for html.
+ *
+ * The colour scheme goes on <html>, so everything on the page, the body's
+ * background too, takes its tokens.
+ */
+function portfolio_preprocess_html(array &$variables): void {
+  [, $scheme] = portfolio_page_appearance();
+  $variables['html_attributes']->setAttribute('data-theme', $scheme);
+  if ($scheme === 'custom') {
+    // The owner's scheme, defined where the page uses it.
+    $variables['#attached']['html_head'][] = [
+      ['#tag' => 'style', '#value' => Palette::css(Appearance::customColours())],
+      'portfolio_custom_scheme',
+    ];
+  }
+  $variables['#cache']['contexts'][] = 'route';
+  $variables['#cache']['tags'][] = 'config:portfolio.settings';
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for page.
+ */
+function portfolio_preprocess_page(array &$variables): void {
+  [$template] = portfolio_page_appearance();
+  $site = \Drupal::config('system.site');
+  $variables['portfolio_template'] = $template;
+  $variables['brand'] = $site->get('name');
+  $variables['home'] = Url::fromRoute('<front>')->toString();
+  $variables['nav'] = portfolio_nav($template);
+  $variables['currency_switch'] = portfolio_currency_switch();
+  // The store's address, which buyers write to; the site's otherwise.
+  $store = \Drupal::service('commerce_store.current_store')->getStore();
+  $variables['site_mail'] = $store->getEmail() ?: $site->get('mail');
+
+  // The domain page and the portfolio draw their own heading.
+  $route = \Drupal::routeMatch()->getRouteName();
+  // A visitor on a dead link is offered the names instead.
+  $variables['not_found'] = $route === 'system.404';
+  $variables['own_title'] = portfolio_route_domain() !== NULL || $route === 'view.' . Appearance::VIEW . '.page_1';
+  if ($variables['own_title']) {
+    unset($variables['page']['content']['portfolio_page_title']);
+  }
+
+  CacheableMetadata::createFromRenderArray($variables)
+    ->addCacheContexts(['route', 'url.path.is_front', 'user.permissions'])
+    ->addCacheableDependency($site)
+    ->addCacheTags(['config:portfolio.settings'])
+    ->applyTo($variables);
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter() for commerce_product.
+ *
+ * A domain's full page by its template:
+ * commerce-product--domain--full--showcase.html.twig and so on.
+ */
+function portfolio_theme_suggestions_commerce_product_alter(array &$suggestions, array $variables): void {
+  $product = $variables['elements']['#commerce_product'] ?? NULL;
+  $mode = $variables['elements']['#view_mode'] ?? 'full';
+  if ($product instanceof ProductInterface && $product->bundle() === 'domain' && in_array($mode, ['full', 'default'], TRUE)) {
+    $suggestions[] = 'commerce_product__domain__full__' . Appearance::template($product);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for commerce_product.
+ */
+function portfolio_preprocess_commerce_product(array &$variables): void {
+  $product = $variables['product_entity'] ?? NULL;
+  if (!$product instanceof ProductInterface || $product->bundle() !== 'domain') {
+    return;
+  }
+  $cache = CacheableMetadata::createFromRenderArray($variables);
+  $domain = portfolio_domain_facts($product, $cache);
+  $template = Appearance::template($product);
+  $variables['domain'] = $domain;
+  $variables['portfolio_template'] = $template;
+
+  // The Buy now form: Commerce Domains' add to cart form, which goes
+  // straight to checkout. The rest of the product's display is the story.
+  $variables['buy_form'] = $variables['product']['variations'] ?? [];
+  $variables['story'] = $variables['product']['body'] ?? [];
+
+  $variation = $product->getDefaultVariation();
+  $variables['offer_form'] = $domain['offers'] && $variation
+    ? \Drupal::formBuilder()->getForm(OfferForm::class, $variation)
+    : [];
+
+  // What the buy box promises, from what the site is set up to do.
+  $variables['points'] = portfolio_buy_points($domain);
+
+  // Names like this one: the same extension first, the most expensive
+  // first, as a buyer who looked at this price would compare.
+  $count = $template === 'catalog' ? 5 : 3;
+  $variables['similar'] = [];
+  if ($template !== 'minimal' && $template !== 'showcase') {
+    $storage = \Drupal::entityTypeManager()->getStorage('commerce_product');
+    $query = $storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'domain')
+      ->condition('status', 1)
+      ->condition('product_id', $product->id(), '<>')
+      ->sort('page_featured', 'DESC')
+      ->sort('changed', 'DESC')
+      ->range(0, $count);
+    if ($domain['extension'] !== '') {
+      $query->condition('domain_extension', $domain['extension']);
+    }
+    foreach ($storage->loadMultiple($query->execute()) as $similar) {
+      $variables['similar'][] = portfolio_domain_facts($similar, $cache);
+    }
+    $cache->addCacheTags(['commerce_product_list']);
+  }
+
+  $variables['facts'] = array_filter([
+    (string) t('Letters') => $domain['letters'],
+    (string) t('Ending') => $domain['extension'] !== '' ? '.' . $domain['extension'] : NULL,
+    (string) t('Registered') => $domain['registered'],
+    (string) t('Paid until') => $domain['expires'],
+    (string) t('Registrar') => $domain['registrar'],
+  ]);
+  $cache->addCacheTags(['config:portfolio.settings'])->applyTo($variables);
+}
+
+/**
+ * What the buy box lists under the buttons.
+ *
+ * @param array<string, mixed> $domain
+ *   The domain's facts.
+ *
+ * @return string[]
+ *   Short lines, each true of this site.
+ */
+function portfolio_buy_points(array $domain): array {
+  $points = [];
+  $gateways = \Drupal::entityTypeManager()->getStorage('commerce_payment_gateway')->loadByProperties(['status' => TRUE]);
+  $labels = array_map(static fn($gateway) => $gateway->label(), $gateways);
+  if ($labels) {
+    $points[] = (string) t('Pay by @methods', ['@methods' => implode(', ', $labels)]);
+  }
+  $points[] = $domain['registrar']
+    ? (string) t('Pushed to your @registrar account, or a transfer code for any registrar', ['@registrar' => $domain['registrar']])
+    : (string) t('A transfer code for any registrar, or a push within the same registrar');
+  return $points;
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for page_title.
+ *
+ * A buyer's order is titled by its number, in one line.
+ */
+function portfolio_preprocess_page_title(array &$variables): void {
+  $order = \Drupal::routeMatch()->getParameter('commerce_order');
+  if ($order instanceof OrderInterface && \Drupal::routeMatch()->getRouteName() === 'entity.commerce_order.user_view') {
+    $variables['title'] = t('Order @number', ['@number' => $order->getOrderNumber() ?: $order->id()]);
+  }
+}
+
+/**
+ * Returns what a buyer sees of an order.
+ *
+ * @return array<string, mixed>
+ *   number, url, placed, state, paid, balance, items (name, price), totals
+ *   (subtotal, adjustments, total), instructions (to pay a transfer that is
+ *   due) and lease (paid, remaining, next, made, months).
+ */
+function portfolio_order_facts(OrderInterface $order): array {
+  $money = fn($price) => $price ? portfolio_money($price) : '';
+  $items = [];
+  foreach ($order->getItems() as $item) {
+    $items[] = ['name' => (string) $item->label(), 'price' => $money($item->getTotalPrice())];
+  }
+  $adjustments = [];
+  foreach ($order->collectAdjustments() as $adjustment) {
+    $adjustments[] = ['label' => (string) $adjustment->getLabel(), 'amount' => $money($adjustment->getAmount())];
+  }
+  $balance = $order->getBalance();
+  $facts = [
+    'number' => $order->getOrderNumber() ?: (string) $order->id(),
+    'url' => Url::fromRoute('entity.commerce_order.user_view', [
+      'user' => $order->getCustomerId(),
+      'commerce_order' => $order->id(),
+    ])->toString(),
+    'placed' => $order->getPlacedTime() ? \Drupal::service('date.formatter')->format($order->getPlacedTime(), 'custom', 'j F Y') : '',
+    'state' => (string) $order->getState()->getLabel(),
+    'paid' => $order->isPaid(),
+    'balance' => $balance && $balance->isPositive() ? $money($balance) : '',
+    'items' => $items,
+    'subtotal' => $money($order->getSubtotalPrice()),
+    'adjustments' => $adjustments,
+    'total' => $money($order->getTotalPrice()),
+    'instructions' => NULL,
+    'lease' => NULL,
+  ];
+  // How to pay what is due by bank transfer, as the checkout said it.
+  $gateway = $order->get('payment_gateway')->entity;
+  if ($facts['balance'] && $gateway && $gateway->getPluginId() === 'manual') {
+    $instructions = $gateway->getPlugin()->getConfiguration()['instructions'] ?? [];
+    if (!empty($instructions['value'])) {
+      $facts['instructions'] = [
+        '#type' => 'processed_text',
+        '#text' => \Drupal::token()->replace($instructions['value'], ['commerce_order' => $order]),
+        '#format' => $instructions['format'] ?? 'plain_text',
+      ];
+    }
+  }
+  if (\Drupal::hasService(LeaseManager::class) && ($lease = \Drupal::service(LeaseManager::class)->forOrder($order))) {
+    $facts['lease'] = [
+      'paid' => $money($lease->getPaid()),
+      'remaining' => $money($lease->getRemaining()),
+      'next' => $lease->isOpen() ? $money($lease->getNextAmount()) : '',
+      'due' => $lease->isOpen() && $lease->getNextDue() ? \Drupal::service('date.formatter')->format($lease->getNextDue(), 'custom', 'j F Y') : '',
+      'made' => $lease->getPaymentsMade(),
+      'months' => $lease->getMonths(),
+      'state' => (string) ($lease::stateLabels()[$lease->getState()] ?? $lease->getState()),
+    ];
+  }
+  return $facts;
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for commerce_order.
+ */
+function portfolio_preprocess_commerce_order(array &$variables): void {
+  $order = $variables['order_entity'] ?? NULL;
+  if ($order instanceof OrderInterface && ($variables['elements']['#view_mode'] ?? '') === 'user') {
+    $variables['facts'] = portfolio_order_facts($order);
+    CacheableMetadata::createFromRenderArray($variables)->addCacheableDependency($order)->applyTo($variables);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for commerce_checkout_order_summary.
+ *
+ * The lease the buyer chose, in words, under the totals.
+ */
+function portfolio_preprocess_commerce_checkout_order_summary(array &$variables): void {
+  $variables['lease_line'] = NULL;
+  $order = $variables['order_entity'] ?? NULL;
+  if (!$order || !\Drupal::hasService(LeaseCalculator::class) || !($months = LeaseCalculator::chosenMonths($order))) {
+    return;
+  }
+  $plan = \Drupal::service(LeaseCalculator::class)->plan($order, $months);
+  if ($plan) {
+    $variables['lease_line'] = t('Lease to own: @down now, then @months monthly payments of @amount.', [
+      '@down' => portfolio_money($plan->downPayment),
+      '@months' => $plan->months,
+      '@amount' => portfolio_money($plan->installment),
+    ]);
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter() for views_view.
+ *
+ * The portfolio by the site's template:
+ * views-view--portfolio-domains--catalog.html.twig and so on.
+ */
+function portfolio_theme_suggestions_views_view_alter(array &$suggestions, array $variables): void {
+  if ($variables['view']->id() === Appearance::VIEW) {
+    $suggestions[] = 'views_view__' . Appearance::VIEW . '__' . Appearance::siteTemplate();
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for views_view.
+ *
+ * The portfolio's names as facts, for the components to draw. The view still
+ * decides which names, in which order, and on which page.
+ */
+function portfolio_preprocess_views_view(array &$variables): void {
+  $view = $variables['view'];
+  if ($view instanceof ViewExecutable && $view->id() === 'commerce_user_orders') {
+    $cache = CacheableMetadata::createFromRenderArray($variables);
+    $variables['orders'] = [];
+    foreach ($view->result as $row) {
+      if (($row->_entity ?? NULL) instanceof OrderInterface) {
+        $variables['orders'][] = portfolio_order_facts($row->_entity);
+        $cache->addCacheableDependency($row->_entity);
+      }
+    }
+    $cache->applyTo($variables);
+    return;
+  }
+  if ($view instanceof ViewExecutable && $view->id() === Appearance::SEARCH_VIEW) {
+    portfolio_preprocess_search_view($variables, $view);
+    return;
+  }
+  if (!$view instanceof ViewExecutable || $view->id() !== Appearance::VIEW) {
+    return;
+  }
+  $cache = CacheableMetadata::createFromRenderArray($variables);
+  $domains = [];
+  foreach ($view->result as $row) {
+    $product = $row->_entity ?? NULL;
+    // The view joins variations, so one domain can come back once per
+    // variation; it is listed once.
+    if ($product instanceof ProductInterface && !isset($domains[$product->id()])) {
+      $domains[$product->id()] = portfolio_domain_facts($product, $cache);
+    }
+  }
+  $domains = array_values($domains);
+  $variables['domains'] = $domains;
+  $variables['portfolio_template'] = Appearance::siteTemplate();
+  $variables['total'] = (int) ($view->total_rows ?? count($domains));
+
+  // Showcase tells the featured names' stories, then lists the rest in two
+  // columns.
+  $featured = array_values(array_filter($domains, static fn(array $d): bool => $d['featured']));
+  $rest = array_values(array_filter($domains, static fn(array $d): bool => !$d['featured']));
+  $half = (int) ceil(count($rest) / 2);
+  $variables['featured'] = $featured;
+  $variables['more'] = [array_slice($rest, 0, $half), array_slice($rest, $half)];
+
+  // Sorting: the table style's click sorts, ?order=title&sort=asc.
+  $query = \Drupal::request()->query->all();
+  $order = (string) ($query['order'] ?? '');
+  $dir = ($query['sort'] ?? 'asc') === 'desc' ? 'desc' : 'asc';
+  $sort_url = function (string $column) use ($query, $order, $dir): string {
+    $next = $order === $column && $dir === 'asc' ? 'desc' : 'asc';
+    unset($query['page']);
+    return Url::fromRoute('<current>', [], ['query' => ['order' => $column, 'sort' => $next] + $query])->toString();
+  };
+  $variables['columns'] = [
+    ['label' => (string) t('Domain'), 'url' => $sort_url('title'), 'active' => $order === 'title', 'dir' => $dir],
+    ['label' => (string) t('Letters')],
+    ['label' => (string) t('Ending')],
+    [
+      'label' => (string) t('Price'),
+      'url' => $sort_url('price__number'),
+      'active' => $order === 'price__number',
+      'dir' => $dir,
+      'numeric' => TRUE,
+    ],
+    ['label' => (string) t('Terms')],
+    ['label' => (string) t('Action'), 'hidden' => TRUE],
+  ];
+  // Standard's sort select: each choice is a link, which the select follows.
+  $current = $order === '' ? '' : $order . ':' . $dir;
+  $variables['sorts'] = [];
+  $choices = [
+    '' => t('Featured first'),
+    'price__number:desc' => t('Price, high to low'),
+    'price__number:asc' => t('Price, low to high'),
+    'title:asc' => t('Name, A to Z'),
+  ];
+  foreach ($choices as $key => $label) {
+    $next = $query;
+    unset($next['page'], $next['order'], $next['sort']);
+    if ($key !== '') {
+      [$next['order'], $next['sort']] = explode(':', $key);
+    }
+    $variables['sorts'][] = [
+      'label' => (string) $label,
+      'selected' => $key === $current,
+      'url' => Url::fromRoute('<current>', [], ['query' => $next])->toString(),
+    ];
+  }
+
+  // Endings as chips: the extensions there are, each a link that filters by
+  // it, with the selected one taking the filter off again.
+  $ending = (string) ($query['ending'] ?? '');
+  $variables['endings'] = [];
+  $extensions = \Drupal::database()->select('commerce_product__domain_extension', 'e');
+  $extensions->join('commerce_product_field_data', 'p', 'p.product_id = e.entity_id');
+  $extensions->addField('e', 'domain_extension_value', 'ext');
+  $extensions->addExpression('COUNT(*)', 'n');
+  $rows = $extensions->condition('p.status', 1)
+    ->condition('e.bundle', 'domain')
+    ->groupBy('e.domain_extension_value')
+    ->orderBy('n', 'DESC')
+    ->range(0, 8)
+    ->execute()
+    ->fetchAllKeyed();
+  foreach ($rows as $ext => $n) {
+    $next = $query;
+    unset($next['page']);
+    if ($ending === $ext) {
+      unset($next['ending']);
+    }
+    else {
+      $next['ending'] = $ext;
+    }
+    $variables['endings'][] = [
+      'label' => '.' . $ext,
+      'count' => (int) $n,
+      'selected' => $ending === $ext,
+      'url' => Url::fromRoute('<current>', [], ['query' => $next])->toString(),
+    ];
+  }
+  $variables['query'] = $query;
+  $cache->addCacheContexts(['url.query_args'])
+    ->addCacheTags(['commerce_product_list', 'config:portfolio.settings'])
+    ->applyTo($variables);
+}
+
+/**
+ * Prepares the domain search: its results as facts, for cards.
+ *
+ * @phpstan-param array<mixed> $variables
+ */
+function portfolio_preprocess_search_view(array &$variables, ViewExecutable $view): void {
+  $cache = CacheableMetadata::createFromRenderArray($variables);
+  $domains = [];
+  foreach ($view->result as $row) {
+    // Search API rows carry the item rather than an entity.
+    $product = isset($row->_object) ? $row->_object->getValue() : ($row->_entity ?? NULL);
+    if ($product instanceof ProductInterface && !isset($domains[$product->id()])) {
+      $domains[$product->id()] = portfolio_domain_facts($product, $cache);
+    }
+  }
+  $variables['domains'] = array_values($domains);
+  $variables['total'] = (int) ($view->total_rows ?? count($domains));
+  $variables['searched'] = trim((string) (\Drupal::request()->query->get('keys') ?? '')) !== '';
+  $cache->addCacheContexts(['url.query_args'])
+    ->addCacheTags(['commerce_product_list', 'config:portfolio.settings'])
+    ->applyTo($variables);
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Drupal's forms in the design system's controls: buttons as its buttons,
+ * fields in its inputs.
+ */
+function portfolio_form_alter(array &$form, FormStateInterface $form_state, string $form_id): void {
+  $form['#attributes']['class'][] = 'pf-form';
+  $primary = str_starts_with($form_id, 'commerce_order_item_add_to_cart_form') || $form_id === 'commerce_domains_offer_form';
+  if (!isset($form['actions']) || !is_array($form['actions'])) {
+    return;
+  }
+  foreach (Element::children($form['actions']) as $name) {
+    $button = &$form['actions'][$name];
+    if (!in_array($button['#type'] ?? '', ['submit', 'button'], TRUE)) {
+      continue;
+    }
+    $button['#attributes']['class'][] = 'dp-btn';
+    $button['#attributes']['class'][] = 'ui-button';
+    // A form's own button ("submit", or checkout's "next") is its primary
+    // one, as is any a form marks so; preview, reset and the like are not.
+    $is_primary = in_array($name, ['submit', 'next'], TRUE) || ($button['#button_type'] ?? '') === 'primary';
+    $button['#attributes']['class'][] = $is_primary ? 'dp-btn-primary' : 'dp-btn-secondary';
+    if ($primary) {
+      $button['#attributes']['class'][] = 'dp-btn-lg';
+      $button['#attributes']['class'][] = 'dp-btn-block';
+    }
+    unset($button);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for commerce_domains_offer_buyer_form.
+ *
+ * The buyer's page of an offer: where it stands, and what paying is.
+ */
+function portfolio_form_commerce_domains_offer_buyer_form_alter(array &$form, FormStateInterface $form_state): void {
+  $offer = $form_state->get('offer');
+  if (!$offer instanceof OfferInterface) {
+    return;
+  }
+  $form['#attributes']['class'][] = 'pf-offer-status';
+  if (isset($form['status']['#markup'])) {
+    $form['status']['#markup'] = str_replace('<p>', '<p class="ui-body-lg">', (string) $form['status']['#markup']);
+  }
+  // Paid through a marketplace's link: the buyer leaves the site.
+  if (isset($form['actions']['pay']) && ($provider = $offer->getPaymentLinkProvider())) {
+    $form['link_note'] = [
+      '#markup' => '<p class="ui-body-sm pf-muted">' . t('You pay on @provider, which holds the payment and hands the domain over to you.', ['@provider' => $provider->label()]) . '</p>',
+      '#weight' => 110,
+    ];
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for views_exposed_form.
+ *
+ * The portfolio's search: the ending is chosen with the chips, so its field
+ * is carried along hidden, and the sort with the select beside the results.
+ */
+function portfolio_form_views_exposed_form_alter(array &$form, FormStateInterface $form_state): void {
+  $view = $form_state->get('view');
+  if ($view instanceof ViewExecutable && $view->id() === Appearance::SEARCH_VIEW && isset($form['keys'])) {
+    $form['#attributes']['class'][] = 'dp-search';
+    $form['#attributes']['role'] = 'search';
+    $form['keys']['#title_display'] = 'invisible';
+    $form['keys']['#attributes']['class'][] = 'dp-search-input';
+    $form['keys']['#attributes']['class'][] = 'ui-body';
+    $form['keys']['#attributes']['placeholder'] = t('Words in the name or the description');
+    $form['keys']['#type'] = 'search';
+    $form['actions']['submit']['#attributes']['class'][] = 'dp-btn-sm';
+    return;
+  }
+  if (!$view instanceof ViewExecutable || $view->id() !== Appearance::VIEW) {
+    return;
+  }
+  $form['#attributes']['class'][] = 'dp-search';
+  $form['#attributes']['role'] = 'search';
+  if (isset($form['name'])) {
+    $form['name']['#title_display'] = 'invisible';
+    $form['name']['#attributes']['class'][] = 'dp-search-input';
+    $form['name']['#attributes']['class'][] = 'ui-body';
+    $form['name']['#attributes']['placeholder'] = t('Search names');
+    $form['name']['#type'] = 'search';
+  }
+  if (isset($form['ending'])) {
+    $form['ending']['#type'] = 'hidden';
+  }
+  unset($form['actions']['reset']);
+  $form['actions']['submit']['#attributes']['class'][] = 'dp-btn-sm';
+  // The table's sort, kept when searching.
+  foreach (['order', 'sort'] as $key) {
+    $value = \Drupal::request()->query->get($key);
+    if (is_string($value) && $value !== '') {
+      $form[$key] = ['#type' => 'hidden', '#value' => $value];
+    }
+  }
+}

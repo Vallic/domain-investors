@@ -1,0 +1,21 @@
+name: Domain name
+status: stable
+description: 'A domain in the display face: the label, then the extension quieter with the dot in the accent colour.'
+props:
+  type: object
+  required: [name]
+  properties:
+    name:
+      type: string
+      title: Domain
+      examples: ['orbel.com']
+    size:
+      type: string
+      title: Size
+      enum: [md, lg, xl, hero]
+      default: md
+    tag:
+      type: string
+      title: Element
+      enum: [span, h1, h2, h3, p]
+      default: span

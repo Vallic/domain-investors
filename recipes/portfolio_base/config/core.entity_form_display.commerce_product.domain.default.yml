@@ -1,0 +1,279 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.domain
+    - field.field.commerce_product.domain.atom_premium
+    - field.field.commerce_product.domain.body
+    - field.field.commerce_product.domain.domain
+    - field.field.commerce_product.domain.domain_appraisal
+    - field.field.commerce_product.domain.domain_appraisal_notes
+    - field.field.commerce_product.domain.domain_appraisal_score
+    - field.field.commerce_product.domain.domain_appraised
+    - field.field.commerce_product.domain.domain_auto_renew
+    - field.field.commerce_product.domain.domain_expires
+    - field.field.commerce_product.domain.domain_extension
+    - field.field.commerce_product.domain.domain_internal
+    - field.field.commerce_product.domain.domain_label
+    - field.field.commerce_product.domain.domain_lease_months
+    - field.field.commerce_product.domain.domain_purchase_date
+    - field.field.commerce_product.domain.domain_purchase_price
+    - field.field.commerce_product.domain.domain_registered
+    - field.field.commerce_product.domain.domain_registrar
+    - field.field.commerce_product.domain.domain_renewal
+    - field.field.commerce_product.domain.domain_renewal_cost
+    - field.field.commerce_product.domain.domain_sale_commission
+    - field.field.commerce_product.domain.domain_sale_order
+    - field.field.commerce_product.domain.domain_sale_price
+    - field.field.commerce_product.domain.domain_sold
+    - field.field.commerce_product.domain.domain_sold_via
+    - field.field.commerce_product.domain.domain_tld_count
+    - field.field.commerce_product.domain.domain_verified
+    - field.field.commerce_product.domain.page_featured
+    - field.field.commerce_product.domain.page_scheme
+    - field.field.commerce_product.domain.page_template
+  module:
+    - commerce
+    - commerce_domains
+    - commerce_price
+    - commerce_product
+    - field_group
+    - path
+    - text
+third_party_settings:
+  field_group:
+    # Commerce Domains groups the registration, cost, sale and valuation
+    # fields in vertical tabs of its own; this group holds what the Portfolio
+    # theme adds.
+    group_page:
+      children:
+        - page_template
+        - page_scheme
+        - page_featured
+      label: 'Page'
+      region: content
+      parent_name: ''
+      weight: 7
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        label_as_html: false
+        open: false
+        description: 'How this domain''s page looks. Change the site''s template and colours under Appearance.'
+        required_fields: true
+id: commerce_product.domain.default
+targetEntityType: commerce_product
+bundle: domain
+mode: default
+content:
+  atom_premium:
+    type: boolean_checkbox
+    weight: 13
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  body:
+    type: text_textarea_with_summary
+    weight: 3
+    region: content
+    settings:
+      rows: 6
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  domain_appraisal:
+    type: commerce_price_default
+    weight: 40
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  domain_appraisal_notes:
+    type: string_textarea
+    weight: 44
+    region: content
+    settings:
+      rows: 4
+      placeholder: ''
+    third_party_settings: {  }
+  domain_appraisal_score:
+    type: number
+    weight: 41
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  domain_appraised:
+    type: commerce_domains_optional_timestamp
+    weight: 43
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  domain_auto_renew:
+    type: boolean_checkbox
+    weight: 33
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  domain_expires:
+    type: commerce_domains_optional_timestamp
+    weight: 11
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  domain_internal:
+    type: boolean_checkbox
+    weight: 12
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  domain_lease_months:
+    type: number
+    weight: 38
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  domain_purchase_date:
+    type: commerce_domains_optional_timestamp
+    weight: 31
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  domain_purchase_price:
+    type: commerce_price_default
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  domain_registered:
+    type: commerce_domains_optional_timestamp
+    weight: 11
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  domain_registrar:
+    type: options_select
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  domain_renewal:
+    type: options_select
+    weight: 34
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  domain_renewal_cost:
+    type: commerce_price_default
+    weight: 32
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  domain_sale_commission:
+    type: number
+    weight: 36
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  domain_sale_price:
+    type: commerce_price_default
+    weight: 35
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  domain_sold:
+    type: commerce_domains_optional_timestamp
+    weight: 36
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  domain_sold_via:
+    type: options_select
+    weight: 37
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  domain_tld_count:
+    type: number
+    weight: 42
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  domain_verified:
+    type: boolean_checkbox
+    weight: 12
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  page_featured:
+    type: boolean_checkbox
+    weight: 52
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  page_scheme:
+    type: options_select
+    weight: 51
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  page_template:
+    type: options_select
+    weight: 50
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 60
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 90
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  stores:
+    type: commerce_entity_select
+    weight: -10
+    region: content
+    settings:
+      hide_single_entity: true
+      autocomplete_threshold: 7
+      autocomplete_size: 60
+      autocomplete_placeholder: ''
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: 'LearnPhpOnline.com'
+    third_party_settings: {  }
+  variations:
+    type: commerce_product_single_variation
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  domain: true
+  domain_extension: true
+  domain_label: true
+  domain_sale_order: true
+  uid: true

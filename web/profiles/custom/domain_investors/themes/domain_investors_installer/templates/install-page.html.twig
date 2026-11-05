@@ -1,0 +1,76 @@
+{#
+/**
+ * @file
+ * The installation page: Claro's, with the Vallic logo and a word about Vallic
+ * Cloud under the list of steps.
+ *
+ * Added variables:
+ * - vallic_pitch: the title and text to show at this step.
+ * - vallic_hosted: whether this is already running on Vallic Cloud.
+ *
+ * @see core/themes/claro/templates/install-page.html.twig
+ * @see domain_investors_installer_preprocess_install_page()
+ */
+#}
+{% set new_tab %}<span class="visually-hidden"> ({{ 'opens in a new tab'|t }})</span>{% endset %}
+<div class="layout-container">
+
+  <header class="dp-installer-header">
+    {% if site_name %}
+      <h1 class="site-name">
+        {{ site_name }}
+        {% if site_version %}
+          <span class="site-version">{{ site_version }}</span>
+        {% endif %}
+      </h1>
+    {% endif %}
+    <a class="dp-installer-by" href="https://vallic.com" target="_blank" rel="noopener">
+      <span>{{ 'by'|t({}, {context: 'made by'}) }}</span>
+      <img src="{{ base_path ~ directory }}/images/logo-vallic.svg" alt="Vallic" width="79" height="32">
+      {{- new_tab -}}
+    </a>
+  </header>
+
+  <aside class="layout-sidebar-first">
+    {{ page.sidebar_first }}
+    <section class="dp-installer-cloud" aria-label="{{ 'Vallic Cloud'|t }}">
+      <img src="{{ base_path ~ directory }}/images/logo-vallic-reversed.svg" alt="" width="79" height="32">
+      {% if vallic_hosted %}
+        <h2>{{ 'Running on Vallic Cloud'|t }}</h2>
+        <p>{{ 'This site is already on Vallic Cloud. The handbook covers deploys, backups and domains.'|t }}</p>
+        <p class="dp-installer-cloud__links">
+          <a href="https://docs.vallic.com" target="_blank" rel="noopener">{{ 'Read the handbook'|t }}{{ new_tab }}</a>
+        </p>
+      {% else %}
+        <p class="dp-installer-cloud__label">{{ 'Vallic Cloud hosting'|t }}</p>
+        <h2>{{ vallic_pitch.title }}</h2>
+        <p>{{ vallic_pitch.text }}</p>
+        <p class="dp-installer-cloud__links">
+          <a href="https://vallic.com/cloud" target="_blank" rel="noopener">{{ 'See Vallic Cloud'|t }}{{ new_tab }}</a>
+          <a href="https://vallic.com/cloud/pricing" target="_blank" rel="noopener">{{ 'Prices'|t }}{{ new_tab }}</a>
+        </p>
+      {% endif %}
+    </section>
+  </aside>{# /.layout-sidebar-first #}
+
+  <main class="main-content">
+    {% if title %}
+      <h2 class="heading-c">{{ title }}</h2>
+    {% endif %}
+    {{ page.highlighted }}
+    {{ page.content }}
+  </main>
+
+  {% if page.sidebar_second %}
+    <aside class="layout-sidebar-second" >
+      {{ page.sidebar_second }}
+    </aside>{# /.layout-sidebar-second #}
+  {% endif %}
+
+  {% if page.page_bottom %}
+    <footer>
+      {{ page.page_bottom }}
+    </footer>
+  {% endif %}
+
+</div>{# /.layout-container #}

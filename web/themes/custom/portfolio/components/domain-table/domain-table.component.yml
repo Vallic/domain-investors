@@ -1,0 +1,18 @@
+name: Domain table
+status: stable
+description: 'Catalog''s dense list. Column headings are links that sort the view; on phones each row becomes a block.'
+props:
+  type: object
+  required: [rows]
+  properties:
+    caption:
+      type: string
+    rows:
+      type: array
+      items:
+        type: object
+    columns:
+      type: array
+      title: 'Headings: label, and for a sortable one url, active and dir'
+      items:
+        type: object

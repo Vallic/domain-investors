@@ -1,0 +1,6 @@
+<footer class="pf-footer" id="contact">
+  <div class="pf-container pf-footer-inner">
+    <p class="ui-body-sm">{{ brand }}{% if site_mail %} · <a href="mailto:{{ site_mail }}">{{ site_mail }}</a>{% endif %}</p>
+    {% if page.footer %}<div class="pf-footer-menu ui-body-sm">{{ page.footer }}</div>{% endif %}
+  </div>
+</footer>

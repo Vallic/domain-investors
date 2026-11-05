@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - key.key.tfa
+  module:
+    - real_aes
+id: tfa
+label: 'Two-factor authentication'
+encryption_method: real_aes
+encryption_method_configuration: {  }
+encryption_key: tfa

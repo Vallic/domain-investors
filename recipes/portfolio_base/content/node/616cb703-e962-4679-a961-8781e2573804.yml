@@ -1,0 +1,40 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 616cb703-e962-4679-a961-8781e2573804
+  bundle: page
+  default_langcode: en
+default:
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  title:
+    -
+      value: 'How it works'
+  path:
+    -
+      alias: /how-it-works
+      langcode: en
+      pathauto: 0
+  body:
+    -
+      value: |
+        <p>Every domain here is ours, and we sell it directly: there is no broker between you and the owner.</p>
+        <h2>Buy at the listed price</h2>
+        <p>A domain's page shows its price. Choose <strong>Buy now</strong>, enter your details, say where the domain should go, and pay by one of the methods offered at checkout. Where a page also shows a monthly price, you can lease the domain to own it, paying part of the price now and the rest month by month.</p>
+        <h2>Or make an offer</h2>
+        <p>Where a domain takes offers, send yours from its page. We accept it, answer with a counter-offer, or decline, and you hear from us by email. An accepted offer comes with a way to pay the agreed price.</p>
+        <h2>Getting the domain</h2>
+        <p>Once your payment has arrived, we hand the domain over the way you chose at checkout:</p>
+        <ul>
+          <li><strong>A push:</strong> we move it to your account at the registrar that holds it now, and you accept it there.</li>
+          <li><strong>A transfer:</strong> we unlock it and email you a transfer code, and you start the transfer at your own registrar, which may charge its own fee.</li>
+        </ul>
+        <p>We email you at each step. The domain is yours when it reaches your account, and you can point it wherever you like.</p>
+        <h2>Questions</h2>
+        <p>The <a href="/terms">terms and conditions</a> cover the details. For anything else, <a href="/contact">contact us</a>.</p>
+      format: basic_html
+      summary: ''

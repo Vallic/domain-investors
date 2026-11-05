@@ -1,0 +1,161 @@
+/* Domain Investors tokens: the design system's six colour schemes, spacing,
+ * radii and type. Copied from the design system's tokens.json; change them
+ * there and copy them here again, so the canvas and the site stay one. */
+:root, [data-theme="light"] {
+  --surface: #f4f5f1;
+  --surface-raised: #ffffff;
+  --surface-sunken: #e9ece6;
+  --line: #d9ddd5;
+  --line-strong: #7f8a82;
+  --ink: #151a19;
+  --ink-muted: #505b57;
+  --accent: #0b6656;
+  --accent-strong: #08503f;
+  --accent-soft: #d8ece5;
+  --on-accent: #ffffff;
+  --notice: #8a5300;
+  --notice-soft: #f8e8cc;
+  --danger: #b42318;
+  --danger-soft: #fbe1dd;
+  --focus: var(--accent);
+  --link: var(--accent);
+  --shadow-pop: 0 12px 32px rgba(17, 26, 24, 0.14), 0 1px 3px rgba(17, 26, 24, 0.10);
+}
+[data-theme="dark"] {
+  --surface: #0e1312;
+  --surface-raised: #161c1b;
+  --surface-sunken: #0a0e0d;
+  --line: #26302d;
+  --line-strong: #64716d;
+  --ink: #edf2ef;
+  --ink-muted: #a2ada9;
+  --accent: #5ccfb4;
+  --accent-strong: #8ae0cb;
+  --accent-soft: #12342c;
+  --on-accent: #03211a;
+  --notice: #f2b84f;
+  --notice-soft: #3a290a;
+  --danger: #ff8b7c;
+  --danger-soft: #3f1611;
+  --focus: var(--accent);
+  --link: var(--accent);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.40);
+}
+[data-theme="brass"] {
+  --surface: #f2f3f7;
+  --surface-raised: #ffffff;
+  --surface-sunken: #e7e9f0;
+  --line: #d8dbe5;
+  --line-strong: #80869c;
+  --ink: #111833;
+  --ink-muted: #4d5470;
+  --accent: #865a00;
+  --accent-strong: #6b4700;
+  --accent-soft: #f2e5c4;
+  --on-accent: #ffffff;
+  --notice: #8a4b00;
+  --notice-soft: #f6e4cc;
+  --danger: #b42318;
+  --danger-soft: #fbe1dd;
+  --focus: var(--accent);
+  --link: var(--accent);
+  --shadow-pop: 0 12px 32px rgba(17, 24, 51, 0.14), 0 1px 3px rgba(17, 24, 51, 0.10);
+}
+[data-theme="brass-night"] {
+  --surface: #0c132e;
+  --surface-raised: #131b3b;
+  --surface-sunken: #090f25;
+  --line: #252e54;
+  --line-strong: #626b92;
+  --ink: #eef0f8;
+  --ink-muted: #a8adca;
+  --accent: #e3b75a;
+  --accent-strong: #f0cd82;
+  --accent-soft: #2f2a1c;
+  --on-accent: #1d1503;
+  --notice: #f2b84f;
+  --notice-soft: #3a290a;
+  --danger: #ff8b7c;
+  --danger-soft: #3f1611;
+  --focus: var(--accent);
+  --link: var(--accent);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.40);
+}
+[data-theme="mono"] {
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-sunken: #f2f2f2;
+  --line: #e2e2e2;
+  --line-strong: #858585;
+  --ink: #111111;
+  --ink-muted: #595959;
+  --accent: #111111;
+  --accent-strong: #000000;
+  --accent-soft: #ededed;
+  --on-accent: #ffffff;
+  --notice: #7a4d00;
+  --notice-soft: #f5e7cf;
+  --danger: #b42318;
+  --danger-soft: #fbe1dd;
+  --focus: var(--accent);
+  --link: var(--accent);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.14), 0 1px 3px rgba(0, 0, 0, 0.10);
+}
+[data-theme="cobalt"] {
+  --surface: #fafbfd;
+  --surface-raised: #ffffff;
+  --surface-sunken: #eef0f6;
+  --line: #dfe2ec;
+  --line-strong: #8288a3;
+  --ink: #0b1022;
+  --ink-muted: #4b5170;
+  --accent: #2541d4;
+  --accent-strong: #1b31a8;
+  --accent-soft: #e2e7ff;
+  --on-accent: #ffffff;
+  --notice: #8a5300;
+  --notice-soft: #f8e8cc;
+  --danger: #b42318;
+  --danger-soft: #fbe1dd;
+  --focus: var(--accent);
+  --link: var(--accent);
+  --shadow-pop: 0 12px 32px rgba(11, 16, 34, 0.14), 0 1px 3px rgba(11, 16, 34, 0.10);
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-pill: 999px;
+  --control-sm: 32px;
+  --control-md: 40px;
+  --control-lg: 52px;
+  --container: 1200px;
+  --font-display: "Bricolage Grotesque", "Hanken Grotesk", system-ui, sans-serif;
+  --font-sans: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-serif: Newsreader, "Iowan Old Style", Georgia, serif;
+}
+.domain-hero { font-family: var(--font-display); font-size: 96px; line-height: 0.95; font-weight: 640; letter-spacing: -0.035em; font-variation-settings: 'opsz' 96; }
+.domain-xl { font-family: var(--font-display); font-size: 56px; line-height: 1; font-weight: 620; letter-spacing: -0.03em; font-variation-settings: 'opsz' 72; }
+.domain-lg { font-family: var(--font-display); font-size: 30px; line-height: 1.1; font-weight: 600; letter-spacing: -0.02em; font-variation-settings: 'opsz' 36; }
+.domain-md { font-family: var(--font-display); font-size: 20px; line-height: 1.25; font-weight: 560; letter-spacing: -0.01em; font-variation-settings: 'opsz' 24; }
+.ui-title { font-family: var(--font-sans); font-size: 32px; line-height: 40px; font-weight: 650; letter-spacing: -0.01em; }
+.ui-heading { font-family: var(--font-sans); font-size: 20px; line-height: 28px; font-weight: 600; }
+.ui-body { font-family: var(--font-sans); font-size: 16px; line-height: 26px; font-weight: 400; }
+.ui-body-sm { font-family: var(--font-sans); font-size: 14px; line-height: 22px; font-weight: 400; }
+.ui-label { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.08em; }
+.ui-button { font-family: var(--font-sans); font-size: 15px; line-height: 20px; font-weight: 600; }
+.fig-price-xl { font-family: var(--font-mono); font-size: 40px; line-height: 44px; font-weight: 500; letter-spacing: -0.02em; }
+.fig-price { font-family: var(--font-mono); font-size: 17px; line-height: 24px; font-weight: 500; }
+.fig-data { font-family: var(--font-mono); font-size: 13px; line-height: 20px; font-weight: 400; }
+.ed-title { font-family: var(--font-serif); font-size: 44px; line-height: 1.1; font-weight: 400; font-variation-settings: 'opsz' 60; }
+.ed-story { font-family: var(--font-serif); font-size: 19px; line-height: 30px; font-weight: 400; font-variation-settings: 'opsz' 16; }

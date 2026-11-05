@@ -1,0 +1,13 @@
+{# Endings as chips: links that filter the portfolio, and take the filter off again. #}
+{% if endings|length > 1 %}
+  <div class="dp-filters">
+    <div class="dp-filter-group">
+      <p class="dp-label ui-label">{{ 'Ending'|t }}</p>
+      <div class="dp-chips">
+        {% for chip in endings %}
+          <a href="{{ chip.url }}" class="dp-chip ui-button{{ chip.selected ? ' is-selected' }}" aria-current="{{ chip.selected ? 'true' : 'false' }}" style="text-decoration: none;">{{ chip.label }}<span class="dp-chip-count fig-data">{{ chip.count }}</span></a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}

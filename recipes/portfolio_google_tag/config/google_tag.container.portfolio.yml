@@ -1,0 +1,34 @@
+langcode: en
+# On once GOOGLE_TAG_ID is set: settings.portfolio.php sets the IDs and turns
+# it on, so a development copy with no ID sends nothing.
+status: false
+dependencies:
+  module:
+    - google_tag
+id: portfolio
+label: 'Google Tag'
+weight: 0
+# Never here: GOOGLE_TAG_ID, such as GTM-ABC1234 or G-ABC1234, or several
+# separated by commas.
+tag_container_ids: {  }
+advanced_settings:
+  consent_mode: false
+dimensions_metrics: {  }
+# Not on the admin pages: only what visitors and buyers do.
+conditions:
+  request_path:
+    id: request_path
+    negate: true
+    pages: "/admin\r\n/admin/*\r\n/batch\r\n/node/add*\r\n/node/*/edit\r\n/node/*/delete\r\n/product/*/edit\r\n/product/*/delete\r\n/user/*/edit*\r\n/user/*/cancel*"
+events:
+  commerce_view_item: {  }
+  commerce_view_item_list: {  }
+  commerce_add_to_cart: {  }
+  commerce_begin_checkout: {  }
+  commerce_add_payment_info: {  }
+  commerce_purchase: {  }
+  search: {  }
+  # An offer sent from a domain page, with its amount (domain_portfolio_tools).
+  generate_lead:
+    currency: ''
+    value: ''

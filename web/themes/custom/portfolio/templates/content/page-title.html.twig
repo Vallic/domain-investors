@@ -1,0 +1,10 @@
+{#
+/**
+ * @file
+ * The page title, on the pages the theme does not draw itself: contact,
+ * the account pages, checkout, plain pages.
+ */
+#}
+{% if title %}
+  <h1{{ title_attributes.addClass('ui-title', 'pf-page-title') }}>{{ title }}</h1>
+{% endif %}

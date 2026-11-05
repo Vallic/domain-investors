@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.domain
+    - field.storage.commerce_product.domain_sale_price
+  module:
+    - commerce_price
+id: commerce_product.domain.domain_sale_price
+field_name: domain_sale_price
+entity_type: commerce_product
+bundle: domain
+label: 'Sold for'
+description: "What the buyer paid, before any commission: filled in from the order when the domain sells on this site, or from the marketplace's sales report."
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  available_currencies: {  }
+  allow_negative: false
+field_type: commerce_price

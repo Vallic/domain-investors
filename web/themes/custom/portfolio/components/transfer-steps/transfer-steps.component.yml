@@ -1,0 +1,13 @@
+name: Transfer steps
+status: stable
+description: 'How buying works: a real sequence, so it is numbered.'
+props:
+  type: object
+  properties:
+    steps:
+      type: array
+      items:
+        type: object
+        properties:
+          title: { type: string }
+          text: { type: string }

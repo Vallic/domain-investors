@@ -1,0 +1,20 @@
+name: 'Domain Investors: Stripe'
+description: 'Card payments through Stripe (Payment Element) on the review step of the domain checkout. The keys come from STRIPE_PUBLISHABLE_KEY, STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SIGNING_SECRET (settings.portfolio.php); the gateway starts disabled and in test mode.'
+type: 'Domain Investors'
+install:
+  - commerce_stripe
+config:
+  strict: false
+  actions:
+    # Stripe needs a page between choosing a card and being charged, to run
+    # the card's authentication: the domain checkout's review step.
+    commerce_checkout.commerce_checkout_flow.domain:
+      setProperties:
+        configuration.panes.stripe_review:
+          display_label: 'Card details'
+          step: review
+          weight: 4
+          wrapper_element: fieldset
+          button_id: edit-actions-next
+          auto_submit_review_form: false
+          setup_future_usage: ''

@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.domain
+    - field.storage.commerce_product.domain_lease_months
+id: commerce_product.domain.domain_lease_months
+field_name: domain_lease_months
+entity_type: commerce_product
+bundle: domain
+label: 'Lease to own'
+description: 'For a lease to own, the number of monthly payments; Sold for is then what they add up to. Empty for a sale paid at once.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: null
+settings:
+  min: 1
+  max: 120
+  prefix: ''
+  suffix: ' months'
+field_type: integer

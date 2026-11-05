@@ -1,0 +1,373 @@
+
+/* Domain Investors components. Every colour, space and radius is a token. */
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--surface);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+.dp-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.dp-muted { color: var(--ink-muted); }
+
+.dp-label {
+  margin: 0;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.dp-meta {
+  margin: 0;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+:where(.dp-btn, .dp-chip, .dp-sort, .dp-input, .dp-search-input, .dp-header select, .dp-card-link, .dp-list-name, .dp-table-name, .dp-header a):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* DomainName: the label in the display face, the extension quieter, the dot in the owner's colour. */
+.dp-domain {
+  font-family: var(--font-display);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.dp-domain-ext { color: var(--ink-muted); }
+.dp-domain-dot { color: var(--accent); }
+/* Phones: the hero name drops to 56px and featured names to 40px. */
+@media (max-width: 640px) {
+  .dp-domain.domain-hero { font-size: 56px; }
+  .dp-domain.domain-xl { font-size: 40px; }
+}
+
+/* Price */
+.dp-price {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.dp-price-amount {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.dp-price-none { color: var(--ink-muted); font-family: var(--font-sans); }
+.dp-price-sm .dp-price-amount { font-size: 15px; }
+.dp-price-lease { color: var(--ink-muted); font-family: var(--font-mono); }
+
+/* Button */
+.dp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--control-md);
+  padding: 0 var(--space-5);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 120ms ease-out, border-color 120ms ease-out, color 120ms ease-out;
+}
+.dp-btn:hover { border-color: var(--ink); }
+.dp-btn-primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.dp-btn-primary:hover { border-color: var(--accent-strong); background: var(--accent-strong); }
+.dp-btn-quiet {
+  border-color: transparent;
+  background: transparent;
+  color: var(--link);
+  padding: 0 var(--space-2);
+}
+.dp-btn-quiet:hover { color: var(--accent-strong); border-color: transparent; text-decoration: underline; }
+.dp-btn-sm { height: var(--control-sm); padding: 0 var(--space-3); font-size: 14px; }
+.dp-btn-lg { height: var(--control-lg); padding: 0 var(--space-6); font-size: 16px; }
+.dp-btn-block { display: flex; width: 100%; box-sizing: border-box; }
+.dp-btn[disabled] {
+  cursor: not-allowed;
+  border-color: var(--line);
+  background: var(--surface-sunken);
+  color: var(--ink-muted);
+}
+
+/* Badge and SaleTerms */
+.dp-terms {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.dp-badge {
+  display: inline-block;
+  padding: 2px var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xs);
+  background: var(--surface-raised);
+  color: var(--ink-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  white-space: nowrap;
+}
+.dp-badge-accent { border-color: var(--accent-soft); background: var(--accent-soft); color: var(--ink); }
+.dp-badge-notice { border-color: var(--notice-soft); background: var(--notice-soft); color: var(--notice); }
+.dp-badge-danger { border-color: var(--danger-soft); background: var(--danger-soft); color: var(--danger); }
+
+/* Field */
+.dp-field { display: grid; gap: var(--space-2); }
+.dp-field-label { color: var(--ink); font-weight: 600; }
+.dp-input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--control-md);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+textarea.dp-input { min-height: 96px; resize: vertical; }
+.dp-input-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+}
+.dp-input-group:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+.dp-input-group .dp-input { border: 0; min-width: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.dp-input-group .dp-input:focus-visible { outline: none; }
+.dp-input-affix { padding: 0 var(--space-3); color: var(--ink-muted); }
+.dp-field-hint { margin: 0; color: var(--ink-muted); }
+.dp-field-error { margin: 0; padding: var(--space-1) var(--space-2); border-radius: var(--radius-xs); background: var(--danger-soft); color: var(--danger); }
+.dp-field.is-invalid .dp-input,
+.dp-field.is-invalid .dp-input-group { border-color: var(--danger); }
+.dp-field.is-invalid .dp-input-group .dp-input { border: 0; }
+
+/* SearchBar */
+.dp-search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: var(--control-lg);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+}
+.dp-search:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+.dp-search-input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+.dp-search-input:focus-visible { outline: none; }
+.dp-search-input::placeholder { color: var(--ink-muted); opacity: 1; }
+.dp-search-count { color: var(--ink-muted); white-space: nowrap; }
+
+/* FilterChips */
+.dp-filters { display: grid; gap: var(--space-4); }
+.dp-filter-group { margin: 0; padding: 0; border: 0; display: grid; gap: var(--space-2); }
+.dp-chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.dp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--control-sm);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--surface-raised);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  cursor: pointer;
+}
+.dp-chip:hover { border-color: var(--ink); }
+.dp-chip.is-selected { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); }
+.dp-chip-count { color: var(--ink-muted); }
+
+/* DomainCard: the whole card is the link to the domain page. */
+.dp-card {
+  position: relative;
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+  padding: var(--space-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  transition: border-color 120ms ease-out;
+}
+.dp-card:hover { border-color: var(--line-strong); }
+.dp-card-link { color: inherit; text-decoration: none; }
+.dp-card-link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-md); }
+.dp-card-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+.dp-card.is-sold .dp-domain-label { color: var(--ink-muted); }
+
+/* DomainList: Minimal's price list, with leader dots between name and price. */
+.dp-list { list-style: none; margin: 0; padding: 0; }
+.dp-list-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--line);
+}
+.dp-list-name { flex: 0 1 auto; min-width: 0; color: inherit; text-decoration: none; }
+.dp-list-name:hover .dp-domain-label { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.dp-list-leader { flex: 1 1 var(--space-6); min-width: var(--space-4); border-bottom: 2px dotted var(--line-strong); transform: translateY(-5px); }
+.dp-list-price, .dp-list-sold { flex: none; }
+.dp-list-sold { color: var(--ink-muted); }
+.dp-list-row.is-sold .dp-domain-label { color: var(--ink-muted); }
+
+/* DomainTable: Catalog's dense list. On phones each row becomes a block. */
+.dp-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-raised); }
+.dp-table { width: 100%; border-collapse: collapse; font-family: var(--font-sans); }
+.dp-table th, .dp-table td { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+.dp-table thead th { position: sticky; top: 0; background: var(--surface-sunken); color: var(--ink-muted); text-transform: uppercase; white-space: nowrap; }
+.dp-table tbody th { font-weight: inherit; }
+.dp-table tbody tr:last-child > * { border-bottom: 0; }
+.dp-table tbody tr:hover > * { background: var(--surface-sunken); }
+.dp-table .is-numeric { text-align: right; font-variant-numeric: tabular-nums; }
+.dp-table td.fig-data { color: var(--ink-muted); }
+.dp-table tr.is-sold .dp-domain-label { color: var(--ink-muted); }
+.dp-table-name { color: inherit; text-decoration: none; }
+.dp-table-name:hover .dp-domain-label { text-decoration: underline; text-underline-offset: 4px; }
+.dp-table-action { text-align: right; white-space: nowrap; }
+.dp-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+.dp-sort.is-active { color: var(--ink); }
+.dp-sort-mark { font-family: var(--font-mono); }
+@media (max-width: 640px) {
+  .dp-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .dp-table, .dp-table tbody, .dp-table tr, .dp-table th, .dp-table td { display: block; }
+  .dp-table tr { display: grid; grid-template-columns: 1fr auto; gap: var(--space-1) var(--space-3); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--line); }
+  .dp-table th, .dp-table td { padding: 0; border: 0; text-align: left; }
+  .dp-table td[data-label="Letters"], .dp-table td[data-label="Ending"] { display: none; }
+  .dp-table td[data-label="Price"] { text-align: right; }
+  .dp-table td[data-label="Terms"] { grid-column: 1; }
+  .dp-table .dp-table-action { grid-column: 2; grid-row: 2; }
+}
+
+/* BuyBox */
+.dp-buybox {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+}
+.dp-buybox-lead { margin: 0; }
+.dp-buybox-actions { display: grid; gap: var(--space-3); }
+.dp-buybox-points {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-4) 0 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+  color: var(--ink-muted);
+}
+.dp-buybox-points li { display: flex; gap: var(--space-2); }
+.dp-buybox-points li::before { content: "·"; color: var(--accent); font-weight: 700; }
+
+/* OfferForm */
+.dp-offer { display: grid; gap: var(--space-4); }
+.dp-offer-sent { padding: var(--space-5); border: 1px solid var(--accent); border-radius: var(--radius-md); background: var(--accent-soft); color: var(--ink); }
+.dp-offer-sent p { margin: 0; }
+
+/* TransferSteps: a real sequence, so it is numbered. */
+.dp-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-5); margin: 0; padding: 0; list-style: none; }
+.dp-step { display: grid; grid-template-columns: auto 1fr; gap: var(--space-3); align-items: start; }
+.dp-step-n {
+  display: inline-grid;
+  place-items: center;
+  width: var(--control-sm);
+  height: var(--control-sm);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-pill);
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+.dp-step-title { margin: 0 0 var(--space-1); color: var(--ink); }
+.dp-step-text { margin: 0; color: var(--ink-muted); }
+
+/* SiteHeader: the owner's name in plain type, a few links, the currency. */
+.dp-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-6);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--line);
+}
+.dp-header-brand {
+  margin-right: auto;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.dp-header-nav { display: flex; flex-wrap: wrap; gap: var(--space-5); }
+.dp-header-nav a { color: var(--ink-muted); text-decoration: none; }
+.dp-header-nav a:hover, .dp-header-nav a[aria-current="page"] { color: var(--ink); }
+.dp-header-nav a[aria-current="page"] { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.dp-header select {
+  height: var(--control-sm);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  color: var(--ink);
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .dp-btn, .dp-card { transition: none; }
+}

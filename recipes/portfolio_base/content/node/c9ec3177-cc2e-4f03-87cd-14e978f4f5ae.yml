@@ -1,0 +1,32 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: c9ec3177-cc2e-4f03-87cd-14e978f4f5ae
+  bundle: page
+  default_langcode: en
+default:
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  title:
+    -
+      value: 'About'
+  path:
+    -
+      alias: /about
+      langcode: en
+      pathauto: 0
+  body:
+    -
+      value: |
+        <p><strong>Replace this example text with your own before you open the site.</strong> Buyers read this page to decide whether to trust you, so say who you are.</p>
+        <p>We own the domain names on this site, and we sell them ourselves. When you write to us, you are writing to the owner.</p>
+        <h2>Who we are</h2>
+        <p>Tell buyers who is behind this portfolio, where you are based, and how long you have been holding domain names.</p>
+        <h2>Why buy here</h2>
+        <p>Prices are on each domain's page, and offers come straight to us. See <a href="/how-it-works">how it works</a>, or <a href="/contact">contact us</a> with a question.</p>
+      format: basic_html
+      summary: ''

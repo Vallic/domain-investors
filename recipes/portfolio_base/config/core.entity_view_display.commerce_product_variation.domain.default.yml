@@ -1,0 +1,43 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.domain
+    - field.field.commerce_product_variation.domain.sale_buy_now
+    - field.field.commerce_product_variation.domain.sale_floor_price
+    - field.field.commerce_product_variation.domain.sale_lease_down_payment
+    - field.field.commerce_product_variation.domain.sale_lease_months
+    - field.field.commerce_product_variation.domain.sale_marketplaces
+    - field.field.commerce_product_variation.domain.sale_minimum_offer
+    - field.field.commerce_product_variation.domain.sale_not_listed_on
+    - field.field.commerce_product_variation.domain.sale_offers
+  module:
+    - commerce_price
+id: commerce_product_variation.domain.default
+targetEntityType: commerce_product_variation
+bundle: domain
+mode: default
+content:
+  price:
+    type: commerce_price_calculated
+    label: hidden
+    settings:
+      strip_trailing_zeroes: true
+      currency_display: symbol
+      adjustment_types: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  list_price: true
+  product_id: true
+  sale_buy_now: true
+  sale_floor_price: true
+  sale_lease_down_payment: true
+  sale_lease_months: true
+  sale_marketplaces: true
+  sale_minimum_offer: true
+  sale_not_listed_on: true
+  sale_offers: true
+  sku: true
+  title: true

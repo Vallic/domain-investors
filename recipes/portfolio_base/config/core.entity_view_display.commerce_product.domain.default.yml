@@ -1,0 +1,90 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.domain
+    - field.field.commerce_product.domain.atom_premium
+    - field.field.commerce_product.domain.body
+    - field.field.commerce_product.domain.domain
+    - field.field.commerce_product.domain.domain_appraisal
+    - field.field.commerce_product.domain.domain_appraisal_notes
+    - field.field.commerce_product.domain.domain_appraisal_score
+    - field.field.commerce_product.domain.domain_appraised
+    - field.field.commerce_product.domain.domain_auto_renew
+    - field.field.commerce_product.domain.domain_expires
+    - field.field.commerce_product.domain.domain_extension
+    - field.field.commerce_product.domain.domain_internal
+    - field.field.commerce_product.domain.domain_label
+    - field.field.commerce_product.domain.domain_lease_months
+    - field.field.commerce_product.domain.domain_purchase_date
+    - field.field.commerce_product.domain.domain_purchase_price
+    - field.field.commerce_product.domain.domain_registered
+    - field.field.commerce_product.domain.domain_registrar
+    - field.field.commerce_product.domain.domain_renewal
+    - field.field.commerce_product.domain.domain_renewal_cost
+    - field.field.commerce_product.domain.domain_sale_commission
+    - field.field.commerce_product.domain.domain_sale_order
+    - field.field.commerce_product.domain.domain_sale_price
+    - field.field.commerce_product.domain.domain_sold
+    - field.field.commerce_product.domain.domain_sold_via
+    - field.field.commerce_product.domain.domain_tld_count
+    - field.field.commerce_product.domain.domain_verified
+    - field.field.commerce_product.domain.page_featured
+    - field.field.commerce_product.domain.page_scheme
+    - field.field.commerce_product.domain.page_template
+  module:
+    - commerce_product
+    - text
+id: commerce_product.domain.default
+targetEntityType: commerce_product
+bundle: domain
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  variations:
+    type: commerce_add_to_cart
+    label: hidden
+    settings:
+      combine: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+hidden:
+  atom_premium: true
+  created: true
+  domain: true
+  domain_appraisal: true
+  domain_appraisal_notes: true
+  domain_appraisal_score: true
+  domain_appraised: true
+  domain_auto_renew: true
+  domain_expires: true
+  domain_extension: true
+  domain_internal: true
+  domain_label: true
+  domain_lease_months: true
+  domain_purchase_date: true
+  domain_purchase_price: true
+  domain_registered: true
+  domain_registrar: true
+  domain_renewal: true
+  domain_renewal_cost: true
+  domain_sale_commission: true
+  domain_sale_order: true
+  domain_sale_price: true
+  domain_sold: true
+  domain_sold_via: true
+  domain_tld_count: true
+  domain_verified: true
+  page_featured: true
+  page_scheme: true
+  page_template: true
+  stores: true
+  title: true
+  uid: true

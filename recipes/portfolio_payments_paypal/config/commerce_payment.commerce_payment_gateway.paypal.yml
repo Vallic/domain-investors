@@ -1,0 +1,26 @@
+langcode: en
+# Enabled once the credentials are set (the installer does it when they
+# already are).
+status: false
+dependencies:
+  module:
+    - commerce_paypal_link
+id: paypal
+label: PayPal
+weight: -5
+plugin: paypal_link
+configuration:
+  display_label: PayPal
+  # PAYMENT_MODE, or a Vallic Cloud production environment, makes it live.
+  mode: test
+  payment_method_types:
+    - credit_card
+  collect_billing_information: false
+  # Never here: PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET and PAYPAL_WEBHOOK_ID,
+  # read by settings.portfolio.php.
+  client_id: ''
+  client_secret: ''
+  webhook_id: ''
+  logging: false
+conditions: {  }
+conditionOperator: AND

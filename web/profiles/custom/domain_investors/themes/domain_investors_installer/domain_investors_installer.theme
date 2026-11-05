@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * The installer's look: who made this, and what Vallic Cloud offers.
+ *
+ * Nothing here loads from elsewhere: the logo is in this theme, and links open
+ * in a new tab, so following one doesn't leave the installation.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_preprocess_HOOK() for install_page.
+ *
+ * @phpstan-param array<mixed> $variables
+ */
+function domain_investors_installer_preprocess_install_page(array &$variables): void {
+  // Claims from the handbook and the price list, without prices: those depend
+  // on the region and the machines, and would go stale here.
+  $pitches = [
+    [
+      'title' => t('Made for this site'),
+      'text' => t('Domain Investors comes ready for Vallic Cloud, with the database, cache and search it needs already set out.'),
+    ],
+    [
+      'title' => t('Deploys your visitors never notice'),
+      'text' => t('A new release goes live in one step, with no maintenance page, and you can go back to an earlier one.'),
+    ],
+    [
+      'title' => t('Backups come with it'),
+      'text' => t('Production is backed up every day, and the last four days are kept, ready to restore.'),
+    ],
+    [
+      'title' => t('An uptime promise'),
+      'text' => t('99.9% monthly availability, with service credits when it is missed, and basic WAF and bot management included.'),
+    ],
+  ];
+  // A different one at each step, the same while a step's batch runs.
+  $step = count($GLOBALS['install_state']['tasks_performed'] ?? []);
+  $variables['vallic_pitch'] = $pitches[$step % count($pitches)];
+  // Already there: nothing to sell.
+  $variables['vallic_hosted'] = getenv('VALLIC_ENVIRONMENT') !== FALSE;
+}

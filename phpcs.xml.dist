@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Drupal coding standards for the project's own code: the profile, the
+     module the recipes rely on, and the visitor theme. Run with
+     vendor/bin/phpcs; CI runs it on every push. -->
+<ruleset name="domain_investors">
+  <description>Drupal coding standards for Domain Investors's custom code.</description>
+
+  <file>web/profiles/custom</file>
+  <file>web/modules/custom</file>
+  <file>web/themes/custom</file>
+
+  <arg name="extensions" value="php,module,inc,install,profile,theme"/>
+  <arg name="colors"/>
+  <arg value="sp"/>
+
+  <!-- Warnings are reported, not failed on. -->
+  <config name="ignore_warnings_on_exit" value="1"/>
+
+  <rule ref="Drupal"/>
+  <rule ref="DrupalPractice"/>
+</ruleset>

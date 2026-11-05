@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.domain
+    - field.storage.commerce_product_variation.broker_fee_split
+  module:
+    - options
+id: commerce_product_variation.domain.broker_fee_split
+field_name: broker_fee_split
+entity_type: commerce_product_variation
+bundle: domain
+label: 'Broker Fee split'
+description: 'This field is used to set who should pay the broker fee. Seller part of broker fee is deducted from the price. The buyer one is added on top of the existing price.'
+required: false
+translatable: false
+default_value:
+  -
+    value: '1'
+default_value_callback: ''
+settings: {  }
+field_type: list_string

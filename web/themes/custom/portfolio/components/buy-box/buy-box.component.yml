@@ -1,0 +1,15 @@
+name: Buy box
+status: stable
+description: 'The price and the ways to buy, beside the domain page''s story.'
+props:
+  type: object
+  required: [domain]
+  properties:
+    domain:
+      type: object
+    points:
+      type: array
+      items: { type: string }
+slots:
+  buy:
+    title: 'The Buy now form'

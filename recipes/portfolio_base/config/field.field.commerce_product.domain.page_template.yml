@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.domain
+    - field.storage.commerce_product.page_template
+  module:
+    - options
+id: commerce_product.domain.page_template
+field_name: page_template
+entity_type: commerce_product
+bundle: domain
+label: Template
+description: 'How this domain''s page looks. Showcase suits a name with a story to tell; Minimal a name that speaks for itself. Empty: the site''s template, chosen under Appearance.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

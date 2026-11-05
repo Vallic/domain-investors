@@ -1,0 +1,13 @@
+{#
+  The first dot splits a registrable domain: example.co.uk is "example" and
+  "co.uk". The <wbr> lets a long name break before its extension.
+#}
+{% set name = name|lower|trim %}
+{% set dot = name|split('.', 2) %}
+{% set tag = tag|default('span') %}
+<{{ tag }} class="dp-domain domain-{{ size|default('md') }}">
+  <span class="dp-domain-label">{{ dot[0] }}</span>
+  {%- if dot[1] is defined -%}
+    <wbr><span class="dp-domain-ext"><span class="dp-domain-dot">.</span>{{ dot[1] }}</span>
+  {%- endif -%}
+</{{ tag }}>

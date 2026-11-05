@@ -1,0 +1,21 @@
+# DDEV, for trying the site on your own machine: `ddev start`, then see
+# docs/install.md. Credentials for payments, registrars and marketplaces go in
+# .ddev/.env (never committed), as NAME=value lines; `ddev restart` reads them.
+name: domain-investors
+type: drupal11
+docroot: web
+php_version: "8.5"
+webserver_type: nginx-fpm
+database:
+  type: mariadb
+  version: "11.8"
+
+# Meilisearch (docker-compose.meilisearch.yaml), named as Vallic Cloud names
+# it, so settings.portfolio.php finds it the same way in both.
+web_environment:
+  - MEILISEARCH_HOST=meilisearch
+  - MEILI_MASTER_KEY=ddev-meilisearch-master-key
+  # Two-factor authentication's encryption key (Key module, TFA): this copy
+  # only, never a real site's. On Vallic Cloud set your own, secret:
+  # vallic var set TFA_ENCRYPTION_KEY "$(openssl rand -base64 32)" production --secret
+  - TFA_ENCRYPTION_KEY=bR4FRv4kK8oL12zspi4qwxoFvwWdeSJUCfN+xXuEBDU=

@@ -1,0 +1,14 @@
+name: 'Domain Investors: search on Meilisearch'
+description: 'The domain search at /search on Meilisearch rather than the database: typo-tolerant, fast on large portfolios. Meilisearch is found at MEILISEARCH_HOST with MEILI_MASTER_KEY (settings.portfolio.php), as DDEV and Vallic Cloud set them; the database server stays, to switch back to.'
+type: 'Domain Investors'
+recipes:
+  - portfolio_search
+install:
+  - search_api_meilisearch
+config:
+  strict: false
+  actions:
+    # The domain index moves to Meilisearch; indexing it again fills it.
+    search_api.index.domains:
+      setProperties:
+        server: meilisearch

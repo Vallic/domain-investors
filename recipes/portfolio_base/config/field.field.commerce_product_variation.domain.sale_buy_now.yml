@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.domain
+    - field.storage.commerce_product_variation.sale_buy_now
+id: commerce_product_variation.domain.sale_buy_now
+field_name: sale_buy_now
+entity_type: commerce_product_variation
+bundle: domain
+label: 'Buy now'
+description: 'Sell at the price straight away. Without it, the domain only takes offers.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

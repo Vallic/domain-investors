@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies: {  }
+id: vallic
+label: 'Vallic Cloud mail relay'
+plugin: smtp
+# On Vallic Cloud, settings.vallic.php makes this the default transport and
+# sets the relay's host (SMTP_HOST, port 25 inside the stack, no login).
+# Elsewhere it is unused: the default stays Sendmail.
+configuration:
+  user: ''
+  pass: ''
+  host: localhost
+  port: 25
+  query:
+    verify_peer: true
+    local_domain: ''
+    restart_threshold: null
+    restart_threshold_sleep: null
+    ping_threshold: null

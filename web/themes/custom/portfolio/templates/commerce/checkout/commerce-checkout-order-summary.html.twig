@@ -1,0 +1,29 @@
+{#
+/**
+ * @file
+ * The order summary beside checkout: each domain, its price, the totals,
+ * and the lease when the buyer chose one.
+ */
+#}
+<div{{ attributes.addClass('pf-summary') }}>
+  <ul class="pf-summary-items">
+    {% for order_item in order_entity.getItems %}
+      <li>
+        {{ include('portfolio:domain-name', { name: order_item.label, size: 'md' }, with_context = false) }}
+        <span class="fig-price">{{ order_item.getTotalPrice|commerce_price_format }}</span>
+      </li>
+    {% endfor %}
+  </ul>
+  <dl class="pf-summary-totals">
+    {% if totals.adjustments %}
+      <div><dt>{{ 'Subtotal'|t }}</dt><dd class="fig-data">{{ totals.subtotal|commerce_price_format }}</dd></div>
+      {% for adjustment in totals.adjustments %}
+        <div><dt>{{ adjustment.label }}</dt><dd class="fig-data">{{ adjustment.total|commerce_price_format }}</dd></div>
+      {% endfor %}
+    {% endif %}
+    <div class="pf-summary-total"><dt>{{ 'Total'|t }}</dt><dd class="fig-price">{{ totals.total|commerce_price_format }}</dd></div>
+  </dl>
+  {% if lease_line %}
+    <p class="pf-summary-lease ui-body-sm">{{ lease_line }}</p>
+  {% endif %}
+</div>

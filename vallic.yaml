@@ -1,0 +1,75 @@
+# Vallic Cloud manifest: https://docs.vallic.com/configuration
+#
+# What the site needs to run. Machines, region and the database engine are
+# chosen in the console; the credentials of what you connect (payments,
+# registrars, marketplaces) are variables there too, marked secret. See
+# docs/variables.md for the names.
+version: 1
+type: drupal
+
+runtime:
+  php: '8.5'
+  drupal: '11'
+  # Installing applies a dozen recipes in one go, which 256M does not cover.
+  memory_limit: 512M
+
+services:
+  # Checked, not changed: this has to be the database the environment was
+  # created with.
+  - mariadb: '11.8'
+  # Cache, lock and flood, and the container cache (settings.vallic.php).
+  - valkey: '9.0'
+  # Whole pages for visitors, cleared by cache tag as domains change
+  # (recipes/portfolio_vallic_cloud). The site's own rules are in
+  # .vallic/varnish/; domain pages are routed by .vallic/nginx/server.conf.
+  - vinyl: '8.0'
+  # The domain search, with recipes/portfolio_search_meilisearch. The site
+  # finds it at MEILISEARCH_HOST with MEILI_MASTER_KEY, which the platform
+  # sets for each environment (settings.portfolio.php). Without that recipe
+  # the search runs on the database: remove this line to save the memory.
+  - meilisearch: 'v1.53.3'
+  # Mail leaves the platform through your mail provider. Uncomment, fill in
+  # the provider's relay, and add RELAY_PASSWORD as a secret variable in the
+  # console. settings.vallic.php already points Symfony Mailer at the relay.
+  # - opensmtpd:
+  #     version: '7.8'
+  #     environment:
+  #       RELAY_HOST: smtp.example.com
+  #       RELAY_USER: postmaster@example.com
+
+build:
+  steps:
+    # Composer is the whole build: the Portfolio theme is plain CSS, with
+    # nothing to compile.
+    - name: PHP dependencies
+      run: composer install --no-dev --optimize-autoloader --no-interaction
+  # What Composer installs, kept for the next build, which then only fetches
+  # what changed.
+  cache:
+    - vendor
+    - web/core
+    - web/modules/contrib
+    - web/themes/contrib
+    - web/profiles/contrib
+    - web/libraries
+
+deploy:
+  steps:
+    # drush deploy (updates, configuration, caches) once the site is
+    # installed and its configuration exported; then clears Varnish and the
+    # CDN. See the script for the first deploys.
+    - sh scripts/deploy.sh
+  on_failure: rollback
+
+# Every 15 minutes rather than the hourly default: queued marketplace pushes
+# and their retries, the hourly marketplace sale checks, offer expiry,
+# registrar refreshes, exchange rates, the sitemap and search indexing all
+# run on cron.
+cron:
+  - name: drupal
+    schedule: '*/15 * * * *'
+    command: 'drush cron'
+
+health:
+  path: /user/login
+  timeout: 120

@@ -1,0 +1,136 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.commerce_product.body
+    - field.storage.commerce_product.domain_extension
+    - field.storage.commerce_product.domain_label
+    - search_api.server.database
+  module:
+    - commerce_product
+id: domains
+name: Domains
+description: 'The domains, for the domain search at /search. Kept up to date as domains are saved.'
+read_only: false
+field_settings:
+  body:
+    label: Description
+    datasource_id: 'entity:commerce_product'
+    property_path: body
+    type: text
+    dependencies:
+      config:
+        - field.storage.commerce_product.body
+  created:
+    label: Added
+    datasource_id: 'entity:commerce_product'
+    property_path: created
+    type: date
+    dependencies:
+      module:
+        - commerce_product
+  domain_extension:
+    label: Extension
+    datasource_id: 'entity:commerce_product'
+    property_path: domain_extension
+    type: string
+    dependencies:
+      config:
+        - field.storage.commerce_product.domain_extension
+  domain_label:
+    label: 'Name without extension'
+    datasource_id: 'entity:commerce_product'
+    property_path: domain_label
+    type: text
+    boost: 5.0
+    dependencies:
+      config:
+        - field.storage.commerce_product.domain_label
+  for_sale:
+    label: 'For sale'
+    datasource_id: 'entity:commerce_product'
+    property_path: 'variations:entity:status'
+    type: boolean
+    dependencies:
+      module:
+        - commerce_product
+  price:
+    label: Price
+    datasource_id: 'entity:commerce_product'
+    property_path: 'variations:entity:price:number'
+    type: decimal
+    dependencies:
+      module:
+        - commerce_product
+  status:
+    label: Published
+    datasource_id: 'entity:commerce_product'
+    property_path: status
+    type: boolean
+    dependencies:
+      module:
+        - commerce_product
+  title:
+    label: Domain
+    datasource_id: 'entity:commerce_product'
+    property_path: title
+    type: text
+    boost: 8.0
+    dependencies:
+      module:
+        - commerce_product
+  title_sort:
+    label: 'Domain (sort)'
+    datasource_id: 'entity:commerce_product'
+    property_path: title
+    type: string
+    dependencies:
+      module:
+        - commerce_product
+datasource_settings:
+  'entity:commerce_product':
+    bundles:
+      default: false
+      selected:
+        - domain
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  custom_value: {  }
+  entity_status: {  }
+  entity_type: {  }
+  html_filter:
+    all_fields: false
+    fields:
+      - body
+    title: true
+    alt: true
+    tags:
+      b: 2.0
+      em: 1.5
+      h1: 5.0
+      h2: 3.0
+      h3: 2.0
+      strong: 2.0
+      u: 1.5
+  ignorecase:
+    all_fields: false
+    fields:
+      - body
+      - domain_extension
+      - domain_label
+      - title
+  language_with_fallback: {  }
+  rendered_item: {  }
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  cron_limit: 50
+  delete_on_fail: true
+  index_directly: true
+  track_changes_in_references: true
+server: database

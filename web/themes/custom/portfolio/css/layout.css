@@ -1,0 +1,261 @@
+/* The templates' page shells: containers, rows and sections, as the design
+ * system's template artboards lay them out. Every value is a token. */
+
+.pf-page {
+  min-height: 100vh;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+/* Links take the scheme's link colour; components set their own. */
+.pf-page :where(a) { color: var(--link); }
+.pf-page :where(a:hover) { color: var(--accent-strong); }
+
+.pf-container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding-inline: clamp(16px, 4vw, 24px);
+}
+.pf-stack { display: flex; flex-direction: column; }
+.pf-stack > * { margin: 0; }
+/* Headings and paragraphs take their spacing from the layout's gaps. */
+:where(.dp-domain, .ui-title, .ui-heading, .ed-title, .ed-story) { margin: 0; }
+.pf-gap-2 { gap: var(--space-2); }
+.pf-gap-3 { gap: var(--space-3); }
+.pf-gap-4 { gap: var(--space-4); }
+.pf-gap-5 { gap: var(--space-5); }
+.pf-gap-6 { gap: var(--space-6); }
+.pf-gap-7 { gap: var(--space-7); }
+.pf-muted { color: var(--ink-muted); }
+.pf-eyebrow { margin: 0; text-transform: uppercase; color: var(--ink-muted); }
+.pf-rule { border-top: 1px solid var(--line); }
+.pf-sunken { background: var(--surface-sunken); border-top: 1px solid var(--line); }
+.pf-sunken.pf-closed { border-bottom: 1px solid var(--line); }
+
+/* Hero and sections. */
+.pf-hero { padding-block: var(--space-7) var(--space-6); }
+.pf-hero-tall { padding-block: var(--space-9) var(--space-8); }
+.pf-section { padding-block: var(--space-7); }
+.pf-section-lg { padding-block: var(--space-8); }
+
+/* Story beside buy box: the buy box comes first in the markup, so phones
+ * show it before the story, and sits on the right from tablet width up. */
+.pf-split {
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  gap: var(--space-7);
+  align-items: flex-start;
+}
+.pf-split-aside { flex: 1 1 340px; }
+.pf-split-main { flex: 999 1 560px; min-width: 0; }
+
+/* Two columns that wrap: an intro beside a form. */
+.pf-pair { display: flex; flex-wrap: wrap; gap: var(--space-7); }
+.pf-pair > :first-child { flex: 1 1 280px; }
+.pf-pair > :last-child { flex: 1 1 360px; }
+
+/* Grids. */
+.pf-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-5); }
+.pf-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 0 var(--space-7); }
+
+/* Standard's sidebar of filters beside the grid. */
+.pf-browse { display: flex; flex-wrap: wrap; gap: var(--space-6); align-items: flex-start; padding-bottom: var(--space-8); }
+.pf-browse-aside { flex: 1 1 240px; }
+.pf-browse-main { flex: 999 1 560px; min-width: 0; }
+.pf-toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-3); }
+
+/* Facts: Standard's row of figures, Catalog's table. */
+.pf-facts { margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); border-top: 1px solid var(--line); }
+.pf-facts > div { padding: var(--space-4) var(--space-4) var(--space-4) 0; border-bottom: 1px solid var(--line); }
+.pf-facts dt { text-transform: uppercase; color: var(--ink-muted); }
+.pf-facts dd { margin: var(--space-1) 0 0; }
+.pf-facts-table { width: 100%; border-collapse: collapse; }
+.pf-facts-table caption { text-align: left; text-transform: uppercase; color: var(--ink-muted); padding: var(--space-3) var(--space-4); background: var(--surface-sunken); border-bottom: 1px solid var(--line); }
+.pf-facts-table th, .pf-facts-table td { text-align: left; padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--line); }
+.pf-facts-table th { font-weight: 600; width: 40%; }
+.pf-facts-table tr:last-child > * { border-bottom: 0; }
+
+/* Showcase: a featured name and its price card, alternating sides. */
+.pf-feature { display: flex; flex-wrap: wrap; gap: var(--space-7); align-items: flex-end; padding-block: 72px; border-top: 1px solid var(--line); }
+.pf-feature:nth-of-type(even) { flex-direction: row-reverse; }
+.pf-feature-story { flex: 999 1 520px; min-width: 0; }
+.pf-feature-card { flex: 1 1 260px; display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); padding: var(--space-5); border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-raised); }
+.pf-feature-link { color: inherit; text-decoration: none; }
+.ed-title.pf-title-lg { font-size: clamp(36px, 6vw, 56px); max-width: 18ch; text-wrap: balance; }
+.ed-title.pf-title-md { font-size: clamp(30px, 4vw, 40px); }
+
+/* Breadcrumb and back link. */
+.pf-crumb { color: var(--ink-muted); }
+.pf-crumb a, .pf-back { color: var(--link); }
+.pf-back { color: var(--ink-muted); text-decoration: none; }
+
+/* Footer. */
+.pf-footer { border-top: 1px solid var(--line); }
+.pf-footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-4); padding-block: var(--space-6); }
+.pf-footer p { margin: 0; color: var(--ink-muted); }
+.pf-footer a, .pf-prose a { color: var(--link); }
+.pf-footer-menu ul:not(.contextual-links) { display: flex; flex-wrap: wrap; gap: var(--space-4); margin: 0; padding: 0; list-style: none; }
+
+/* An empty result. */
+.pf-empty { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); padding: var(--space-6); border: 1px dashed var(--line-strong); border-radius: var(--radius-md); }
+.pf-empty > * { margin: 0; }
+
+/* Pager. */
+.pf-pager ul { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--space-3); margin: 0; padding: var(--space-2) 0 0; list-style: none; }
+
+/* Drupal's own output inside the templates: messages, tabs, forms. */
+.pf-prose :where(p, ul, ol) { font-size: 16px; line-height: 26px; }
+.pf-tabs ul:not(.contextual-links) { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-4) 0 0; padding: 0; list-style: none; }
+/* Tabs and the owner's actions as the design system's chips. */
+.pf-tabs :where(ul:not(.contextual-links) a, .action-links a) {
+  display: inline-flex;
+  align-items: center;
+  height: var(--control-sm);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--surface-raised);
+  color: var(--ink);
+  font: 600 14px/1 var(--font-sans);
+  text-decoration: none;
+}
+.pf-tabs :where(ul:not(.contextual-links) a:hover, .action-links a:hover) { border-color: var(--ink); }
+.pf-tabs :where(ul a.is-active, li.is-active > a) { border-color: var(--accent); background: var(--accent-soft); }
+.pf-tabs :where(ul:not(.contextual-links) a, .action-links a):focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+/* Status messages: the design system's soft accent, notice and danger. The
+ * placeholder Drupal keeps for messages added later stays out of sight. */
+.pf-messages [data-drupal-messages-fallback] { display: none; }
+.pf-messages :where([role="contentinfo"], .messages) { margin-top: var(--space-4); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--ink); font-size: 15px; line-height: 24px; }
+.pf-messages :where([role="contentinfo"], .messages) h2 { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.pf-messages :where([data-type="error"], .messages--error, [aria-label="Error message"]) { background: var(--danger-soft); color: var(--danger); }
+.pf-messages :where([data-type="warning"], .messages--warning, [aria-label="Warning message"]) { background: var(--notice-soft); color: var(--notice); }
+.pf-messages :where([role="contentinfo"], .messages) ul { margin: 0; padding-left: var(--space-5); }
+
+/* Pages the theme does not draw itself: a title, then text or a form. */
+.pf-page-title { margin: 0 0 var(--space-6); }
+.pf-prose-page { padding-block: var(--space-7) var(--space-8); }
+.pf-form :where(.form-item) { display: grid; gap: var(--space-2); margin: 0 0 var(--space-4); }
+.pf-form :where(label) { font-size: 14px; line-height: 22px; font-weight: 600; }
+.pf-form :where(input[type="text"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="password"], select, textarea) {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--control-md);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  color: var(--ink);
+  font: 16px/26px var(--font-sans);
+}
+.pf-form :where(.form-item:has(> .field-suffix)) { grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: var(--space-3); }
+.pf-form :where(.form-item:has(> .field-suffix) > :not(input, .field-suffix)) { grid-column: 1 / -1; }
+.pf-form :where(.field-suffix) { font: 13px/20px var(--font-mono); color: var(--ink-muted); }
+.pf-form :where(.form-type-radio, .form-type-checkbox) { grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: var(--space-2); margin-bottom: var(--space-2); }
+.pf-form :where(.form-type-radio, .form-type-checkbox) > label { font-weight: 400; font-size: 16px; line-height: 24px; }
+.pf-form :where(.form-type-radio, .form-type-checkbox) > .description { grid-column: 2; }
+.pf-form :where(.form-type-item) { display: block; }
+.pf-form :where(input[type="radio"], input[type="checkbox"]) { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
+.pf-form :where(fieldset) { margin: 0 0 var(--space-5); padding: var(--space-5); border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-raised); }
+.pf-form :where(legend) { padding: 0 var(--space-2); font-size: 16px; line-height: 24px; font-weight: 600; }
+.pf-form :where(fieldset fieldset) { padding: 0; border: 0; background: none; }
+.pf-form :where(fieldset fieldset > legend) { padding: 0; margin-bottom: var(--space-3); font-size: 14px; }
+.pf-form :where(.description) { margin: 0; font-size: 14px; line-height: 22px; color: var(--ink-muted); }
+.pf-form :where(input, select, textarea):focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+@media (max-width: 640px) {
+  .pf-hero-tall { padding-block: var(--space-8) var(--space-7); }
+  .pf-feature { padding-block: var(--space-7); }
+}
+
+/* The portfolio's search: Views wraps the field and the button in divs, which
+ * line up inside the design system's search bar. */
+.dp-search > div { display: flex; flex: 1; align-items: center; gap: var(--space-3); }
+.dp-search :where(.form-item, .form-actions) { margin: 0; }
+.dp-search .form-item { flex: 1; display: block; }
+/* The bar is one line: its placeholder says what the help would. */
+.dp-search .description { display: none; }
+.dp-search .dp-search-input { width: 100%; min-height: 0; border: 0; padding: 0; background: transparent; }
+
+/* Plain pages, such as the terms of sale: the design system's type scale. */
+.pf-prose-page article:not(.pf-order) { font-size: 16px; line-height: 26px; }
+.pf-prose-page article:not(.pf-order) :where(h2) { margin: var(--space-6) 0 var(--space-2); font: 600 20px/28px var(--font-sans); }
+.pf-prose-page article:not(.pf-order) :where(h3) { margin: var(--space-5) 0 var(--space-2); font: 600 17px/26px var(--font-sans); }
+.pf-prose-page article:not(.pf-order) :where(p, ul, ol) { margin: 0 0 var(--space-3); }
+.pf-prose-page article:not(.pf-order) :where(ul, ol) { padding-left: var(--space-5); }
+.pf-prose-page article:not(.pf-order) > :first-child, .pf-prose-page article :where(.field) > :first-child { margin-top: 0; }
+
+/* Checkout: the steps, and the summary beside the form. */
+.pf-steps-progress { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); margin: 0 0 var(--space-6); padding: 0; list-style: none; }
+.pf-steps-progress li { display: flex; align-items: center; gap: var(--space-2); color: var(--ink-muted); }
+.pf-steps-progress-n { display: inline-grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--line-strong); border-radius: var(--radius-pill); }
+.pf-steps-progress .is-current { color: var(--ink); font-weight: 600; }
+.pf-steps-progress .is-current .pf-steps-progress-n { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
+.pf-steps-progress .is-previous .pf-steps-progress-n { border-color: var(--accent); color: var(--accent); }
+.layout-region-checkout-secondary > h3 { margin: 0 0 var(--space-3); font: 600 14px/16px var(--font-sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); }
+.pf-summary { display: grid; gap: var(--space-4); padding: var(--space-5); border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-raised); }
+.pf-summary-items { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+.pf-summary-items li { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
+.pf-summary-totals { display: grid; gap: var(--space-2); margin: 0; padding-top: var(--space-4); border-top: 1px solid var(--line); }
+.pf-summary-totals div { display: flex; justify-content: space-between; gap: var(--space-3); color: var(--ink-muted); font-size: 14px; }
+.pf-summary-totals dd { margin: 0; }
+.pf-summary-totals .pf-summary-total { color: var(--ink); font-weight: 600; font-size: 16px; }
+.pf-summary-lease { margin: 0; padding: var(--space-3); border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--ink); }
+
+/* A form's buttons in a row, a "back" link quiet beside them. */
+.pf-form :where(.form-actions) { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-5); margin-top: var(--space-5); }
+.pf-form :where(.form-actions) > a { font-size: 15px; }
+/* Minimal's Buy now lines up with Make an offer beside it. */
+.pf-minimal-actions .form-actions { margin: 0; }
+
+/* Tables on plain pages, such as a buyer's orders: the design system's. */
+.pf-prose-page :where(table) { width: 100%; border-collapse: collapse; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-raised); font-size: 15px; }
+.pf-prose-page :where(th, td) { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--line); text-align: left; }
+.pf-prose-page :where(thead th) { background: var(--surface-sunken); color: var(--ink-muted); font: 600 12px/16px var(--font-sans); letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* Collapsible groups and fieldsets in forms. */
+.pf-form :where(details) { margin: 0 0 var(--space-5); padding: var(--space-4) var(--space-5); border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-raised); }
+.pf-form :where(summary) { cursor: pointer; font: 600 15px/22px var(--font-sans); }
+.pf-form :where(details[open] > summary) { margin-bottom: var(--space-4); }
+
+/* Password strength and confirmation, as sign-up and the account form show
+ * them. */
+.pf-form :where(.password-strength__meter) { height: 6px; margin-top: var(--space-2); border-radius: var(--radius-pill); background: var(--surface-sunken); overflow: hidden; }
+.pf-form :where(.password-strength__indicator) { height: 100%; border-radius: var(--radius-pill); background: var(--danger); transition: width 160ms ease-out; }
+.pf-form :where(.password-strength__indicator.is-weak) { background: var(--danger); }
+.pf-form :where(.password-strength__indicator.is-fair) { background: var(--notice); }
+.pf-form :where(.password-strength__indicator.is-good, .password-strength__indicator.is-strong) { background: var(--accent); }
+.pf-form :where(.password-strength__title, .password-confirm-message, .password-suggestions) { margin-top: var(--space-1); font-size: 13px; line-height: 20px; color: var(--ink-muted); }
+.pf-form :where(.password-suggestions) { padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); background: var(--surface-sunken); }
+.pf-form :where(.password-suggestions ul) { margin: var(--space-1) 0 0; padding-left: var(--space-5); }
+
+/* The CAPTCHA: the image beside its answer. */
+.pf-form :where(.captcha) :where(img) { border: 1px solid var(--line); border-radius: var(--radius-sm); background: #fff; }
+.pf-form :where(.captcha) > :where(.description, .details-description) { margin-top: var(--space-3); font-size: 13px; color: var(--ink-muted); }
+
+/* In the search bar the field grows and the button keeps its size, on one
+ * line, whatever the general form rules say. */
+.dp-search > .form-actions { flex: none; margin: 0; }
+.dp-search > .form-item { flex: 1 1 auto; margin: 0; }
+
+/* A buyer's orders and one order. */
+.pf-order-status { display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-7); margin: 0; }
+.pf-order-status dt { color: var(--ink-muted); text-transform: uppercase; }
+.pf-order-status dd { margin: var(--space-1) 0 0; font-size: 16px; }
+.pf-order-pay { padding: var(--space-5); border: 1px solid var(--notice-soft); border-radius: var(--radius-md); background: var(--surface-raised); }
+.pf-order-pay :where(p) { margin: 0; }
+.pf-order-pay :where(p + p) { margin-top: var(--space-3); }
+.pf-order-list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.pf-order-list li { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: var(--space-2) var(--space-5); padding: var(--space-4) 0; border-bottom: 1px solid var(--line); }
+.pf-order-link { display: grid; gap: var(--space-1); color: inherit; text-decoration: none; }
+.pf-order-link:hover .dp-domain-label { text-decoration: underline; text-underline-offset: 4px; }
+.pf-order-domains { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); }
+@media (max-width: 640px) {
+  .pf-order-list li { grid-template-columns: 1fr auto; }
+  .pf-order-link { grid-column: 1 / -1; }
+}
+
+/* The buyer's page of an offer. */
+.pf-offer-status { display: grid; gap: var(--space-4); }
+.pf-offer-status :where(p) { margin: 0; }
+.pf-offer-status .form-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: 0; }

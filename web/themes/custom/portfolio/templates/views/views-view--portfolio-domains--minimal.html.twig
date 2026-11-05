@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * The portfolio in the Minimal template: a price list, A to Z.
+ */
+#}
+<div{{ attributes.addClass('pf-portfolio') }}>
+  <div class="pf-container pf-stack pf-gap-7" style="padding-block: var(--space-6) var(--space-8);">
+    <section class="pf-stack pf-gap-3">
+      <h1 class="ui-title">{{ 'Domain names for sale'|t }}</h1>
+      <p class="ui-body pf-muted">{{ 'I own these names and sell them myself. Buy one at its price, or make me an offer on any name.'|t }}</p>
+    </section>
+    <section class="pf-stack pf-gap-2">
+      <p class="ui-label pf-eyebrow">{{ '@count names'|t({ '@count': total }) }}</p>
+      {% if domains %}
+        {{ include('portfolio:domain-list', { items: domains }, with_context = false) }}
+      {% else %}
+        {% include '@portfolio/includes/empty.html.twig' %}
+      {% endif %}
+      {% if pager %}<nav class="pf-pager" aria-label="{{ 'Pages'|t }}">{{ pager }}</nav>{% endif %}
+    </section>
+  </div>
+</div>

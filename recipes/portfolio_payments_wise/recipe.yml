@@ -1,0 +1,7 @@
+name: 'Domain Investors: Wise'
+description: 'Wise Quick Pay: the buyer pays into your Wise business account by bank transfer or card, and the payment is recorded when Wise reports the deposit. The Wise tag and public key come from WISE_TAG and WISE_PUBLIC_KEY (settings.portfolio.php); the gateway starts disabled and in test mode.'
+type: 'Domain Investors'
+install:
+  - commerce_wise
+config:
+  strict: false

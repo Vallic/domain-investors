@@ -1,0 +1,21 @@
+name: Portfolio
+type: theme
+description: 'The visitor theme of a Domain Investors site, built from the Domain Investors design system: four templates (Minimal, Standard, Showcase, Catalog) and six colour schemes, chosen for the site under Appearance and for each domain on its edit form.'
+package: 'Domain Investors'
+core_version_requirement: ^11.4
+
+# Plain markup underneath: the design system's components set every class, so
+# there is no base theme's look to undo one rule at a time.
+base theme: stable9
+
+libraries:
+  - portfolio/global
+
+# The regions the templates use. The domain and portfolio pages draw their
+# own header, buy box and footer; the regions carry what Drupal adds around
+# them: messages, tabs for the owner, and the content.
+regions:
+  header: Header
+  highlighted: Highlighted
+  content: Content
+  footer: Footer

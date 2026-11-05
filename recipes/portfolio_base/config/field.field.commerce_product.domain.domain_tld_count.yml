@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.domain
+    - field.storage.commerce_product.domain_tld_count
+id: commerce_product.domain.domain_tld_count
+field_name: domain_tld_count
+entity_type: commerce_product
+bundle: domain
+label: 'Extensions registered'
+description: 'How many extensions the same name is registered in, e.g. 8 when example.com, example.net and six more are taken.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: null
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

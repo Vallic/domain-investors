@@ -1,0 +1,51 @@
+# The "Tasks" menu on the dashboard (system.menu.portfolio-tasks, from
+# recipes/portfolio_base). Each link shows only to those who may follow it.
+domain_portfolio_tools.import:
+  title: 'Import domains'
+  description: 'From a list, a CSV file or a registrar account.'
+  route_name: commerce_domains_import.import
+  menu_name: portfolio-tasks
+  weight: 0
+domain_portfolio_tools.add_domain:
+  title: 'Add a domain'
+  route_name: entity.commerce_product.add_form
+  route_parameters:
+    commerce_product_type: domain
+  menu_name: portfolio-tasks
+  weight: 1
+domain_portfolio_tools.domains:
+  title: 'Domains'
+  description: 'Every domain, its registrar, expiry and marketplace listings.'
+  route_name: view.commerce_domains_overview.page_1
+  menu_name: portfolio-tasks
+  weight: 2
+domain_portfolio_tools.offers:
+  title: 'Answer offers'
+  route_name: entity.commerce_domains_offer.collection
+  menu_name: portfolio-tasks
+  weight: 3
+domain_portfolio_tools.orders:
+  title: 'Orders'
+  route_name: entity.commerce_order.collection
+  menu_name: portfolio-tasks
+  weight: 4
+domain_portfolio_tools.handovers:
+  title: 'Domain handovers'
+  route_name: entity.commerce_domains_handover.collection
+  menu_name: portfolio-tasks
+  weight: 5
+domain_portfolio_tools.providers:
+  title: 'Registrars and marketplaces'
+  route_name: entity.commerce_domains_provider.collection
+  menu_name: portfolio-tasks
+  weight: 6
+domain_portfolio_tools.gateways:
+  title: 'Payment gateways'
+  route_name: entity.commerce_payment_gateway.collection
+  menu_name: portfolio-tasks
+  weight: 7
+domain_portfolio_tools.pages:
+  title: 'Pages'
+  route_name: system.admin_content
+  menu_name: portfolio-tasks
+  weight: 8

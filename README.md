@@ -55,7 +55,6 @@ ddev launch $(ddev drush user:login)
 - Fewer options, or answer in the browser at `/core/install.php`:
   [Install](docs/install.md).
 
-
 - [Set it up with Claude](docs/setup-with-claude.md): no technical knowledge
   needed
 - [Install](docs/install.md): the installer's questions, locally with DDEV

@@ -372,9 +372,11 @@ function domain_investors_theme_preprocess_commerce_product(array &$variables): 
 function domain_investors_theme_buy_points(array $domain): array {
   $points = [];
   $gateways = \Drupal::entityTypeManager()->getStorage('commerce_payment_gateway')->loadByProperties(['status' => TRUE]);
-  $labels = array_map(static fn($gateway) => $gateway->label(), $gateways);
+  // As buyers see them in checkout. Escrow.com's two gateways show once: the
+  // offer one only pays for offers negotiated there.
+  $labels = array_unique(array_map(static fn($gateway) => (string) $gateway->getPlugin()->getDisplayLabel(), $gateways));
   if ($labels) {
-    $points[] = (string) t('Pay by @methods', ['@methods' => implode(', ', $labels)]);
+    $points[] = (string) t('Payment: @methods', ['@methods' => implode(', ', $labels)]);
   }
   $points[] = $domain['registrar']
     ? (string) t('Pushed to your @registrar account, or a transfer code for any registrar', ['@registrar' => $domain['registrar']])

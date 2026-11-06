@@ -1,5 +1,7 @@
 # Domain Investors
 
+![A domain's page on a desktop and a phone: its price, Buy now, Make an offer and lease to own](docs/images/domain-page.png)
+
 Your own site for selling your own domain names. Each domain gets a page with
 its price, a **Buy now** button and an offer form; buyers check out, say where
 the domain should go, and pay; you hand the domain over from the order. The
@@ -14,6 +16,18 @@ anywhere Drupal runs, and is set up for [Vallic Cloud](https://docs.vallic.com).
 
 Not technical? [Set it up with Claude](docs/setup-with-claude.md): it does the
 work on your own computer, and asks you whenever a decision or a password is yours.
+
+Four templates, from a short price list to a sortable table for thousands of
+names, and six colour schemes or your own. A domain can have its own too.
+
+<p>
+  <img src="docs/images/templates.gif" alt="The domain list in each template: Minimal, Standard, Showcase and Catalog" width="49%">
+  <img src="docs/images/colour-schemes.gif" alt="A domain's page in the Verdigris, Verdigris Night, Brass and Cobalt colour schemes" width="49%">
+</p>
+
+Offers, sales, profit and expiring domains wait for you on the dashboard.
+
+![The dashboard's offers: four waiting for an answer, with the domain, amount and buyer](docs/images/dashboard-offers.png)
 
 **Get it running**
 

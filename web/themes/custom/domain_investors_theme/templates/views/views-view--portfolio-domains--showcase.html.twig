@@ -11,7 +11,7 @@
     <section class="pf-hero-tall pf-stack pf-gap-5">
       <p class="ui-label pf-eyebrow">{{ featured ? 'A small collection'|t : 'Names for sale'|t }}</p>
       <h1 class="ed-title pf-title-lg">{{ 'A few short names, and why each one works.'|t }}</h1>
-      <p class="ui-body pf-muted">{{ 'Each has a price you can pay today, and room for an offer.'|t }}</p>
+      <p class="ui-body pf-muted">{{ 'Buy one today at its price, or make an offer where a name takes them.'|t }}</p>
     </section>
     {% for domain in featured %}
       <article class="pf-feature">
@@ -31,7 +31,6 @@
       <section id="more" class="pf-section-lg pf-rule pf-stack pf-gap-5">
         <div class="pf-stack pf-gap-2">
           <h2 class="ui-heading">{{ featured ? 'More names'|t : 'All names'|t }}</h2>
-          <p class="ui-body pf-muted">{{ 'Every name takes offers.'|t }}</p>
         </div>
         <div class="pf-columns">
           {% for column in more %}{{ include('domain_investors_theme:domain-list', { items: column }, with_context = false) }}{% endfor %}

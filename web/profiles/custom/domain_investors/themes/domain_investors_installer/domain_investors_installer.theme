@@ -10,6 +10,29 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\Render\Markup;
+
+/**
+ * Implements hook_preprocess_HOOK() for html.
+ *
+ * Once the base recipe has installed Metatag, its default title pattern
+ * replaces the browser title, and the installer has no route title for its
+ * page title token: the profile's own steps would read "| Domain Investors".
+ * This puts back core's title, from the step's #title.
+ *
+ * @phpstan-param array<mixed> $variables
+ */
+function domain_investors_installer_preprocess_html(array &$variables): void {
+  $title = trim(strip_tags((string) ($variables['page']['#title'] ?? '')));
+  $name = \Drupal::config('system.site')->get('name');
+  // Marked safe as core does: the tags are stripped, and escaping again would
+  // double-encode any entity left in the title.
+  $variables['head_title'] = array_filter([
+    'title' => $title === '' ? NULL : Markup::create($title),
+    'name' => $name,
+  ]);
+}
+
 /**
  * Implements hook_preprocess_HOOK() for install_page.
  *

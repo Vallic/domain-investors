@@ -31,6 +31,31 @@ Offers, sales, profit and expiring domains wait for you on the dashboard.
 
 **Get it running**
 
+Locally, with [DDEV](https://ddev.com):
+
+```sh
+composer create-project vallic/domain-investors my-portfolio
+cd my-portfolio
+ddev start
+ddev drush site:install domain_investors -y \
+  --site-name="My Domains" --account-name=me --account-mail=me@example.com \
+  domain_investors_setup.store_email=sales@example.com \
+  domain_investors_setup.payments=stripe,paypal,wise,bank_transfer,escrow,lease \
+  domain_investors_setup.registrars=dynadot,namecheap \
+  domain_investors_setup.marketplaces=afternic,sedo \
+  domain_investors_setup.extras=search,meilisearch,eu_invoicing,demo
+ddev drush search-api:index
+ddev launch $(ddev drush user:login)
+```
+
+- Every payment option, two registrars, two marketplaces, search on
+  Meilisearch, EU invoicing and [200 demo domains](docs/demo-content.md).
+- Keys are samples in `.env`: replace them there, one line each.
+- Remove the demo domains before you open your own store.
+- Fewer options, or answer in the browser at `/core/install.php`:
+  [Install](docs/install.md).
+
+
 - [Set it up with Claude](docs/setup-with-claude.md): no technical knowledge
   needed
 - [Install](docs/install.md): the installer's questions, locally with DDEV

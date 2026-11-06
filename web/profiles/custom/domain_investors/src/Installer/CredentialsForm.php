@@ -6,6 +6,8 @@ namespace Drupal\domain_investors\Installer;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\domain_investors_tools\Credentials;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -126,10 +128,17 @@ final class CredentialsForm extends FormBase {
     foreach (self::groups() as $group) {
       foreach (array_keys($group['variables']) as $variable) {
         if (Credentials::isSample((string) $form_state->getValue($variable, ''))) {
-          $form_state->setErrorByName($variable, $this->t('Leave %variable empty for a sample, or fill in your own.', ['%variable' => $variable]));
+          $form_state->setErrorByName($variable, $this->sampleError($variable));
         }
       }
     }
+  }
+
+  /**
+   * The error for a sample value typed into a field.
+   */
+  private function sampleError(string $variable): TranslatableMarkup {
+    return $this->t('Leave %variable empty for a sample, or fill in your own.', ['%variable' => $variable]);
   }
 
   /**
@@ -138,10 +147,11 @@ final class CredentialsForm extends FormBase {
    * @phpstan-param array<mixed> $form
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
+    $groups = self::groups();
+    $this->dropRejectedErrors($groups);
     if (!Credentials::writable()) {
       return;
     }
-    $groups = self::groups();
     $values = [];
     foreach ($groups as $group) {
       foreach (array_keys($group['variables']) as $variable) {
@@ -153,6 +163,36 @@ final class CredentialsForm extends FormBase {
     }
     catch (\RuntimeException $e) {
       $this->messenger()->addWarning($e->getMessage());
+    }
+  }
+
+  /**
+   * Drops the errors a rejected attempt left in the session.
+   *
+   * They are still there when the keys are accepted, and the batch pages that
+   * follow show no messages, so the dashboard would show them once the
+   * installation is done. Any other error stays.
+   *
+   * @param array<string, array{label: string, variables: array<string, bool>}> $groups
+   *   As groups() returns them.
+   */
+  private function dropRejectedErrors(array $groups): void {
+    $ours = [];
+    foreach ($groups as $group) {
+      foreach (array_keys($group['variables']) as $variable) {
+        $ours[] = (string) $this->sampleError($variable);
+      }
+    }
+    $messenger = $this->messenger();
+    $errors = $messenger->messagesByType(MessengerInterface::TYPE_ERROR);
+    if (!$errors) {
+      return;
+    }
+    $messenger->deleteByType(MessengerInterface::TYPE_ERROR);
+    foreach ($errors as $error) {
+      if (!in_array((string) $error, $ours, TRUE)) {
+        $messenger->addError($error);
+      }
     }
   }
 

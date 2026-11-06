@@ -38,7 +38,7 @@ install:
   - views
   - views_ui
 
-# No themes here: recipes/portfolio_base installs Portfolio for visitors and
+# No themes here: recipes/portfolio_base installs Domain Investors Theme for visitors and
 # Default Admin for the admin pages. An empty list keeps the installer from
 # adding Stark.
 themes: []

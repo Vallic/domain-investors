@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * The portfolio in the Catalog template: a table sorted by any column.
+ */
+#}
+<div{{ attributes.addClass('pf-portfolio') }}>
+  <div class="pf-container pf-stack pf-gap-6" style="padding-block: var(--space-4) var(--space-8);">
+    <section style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-4) var(--space-6);">
+      <div class="pf-stack pf-gap-2">
+        <h1 class="ui-title">{{ 'All names'|t }}</h1>
+        <p class="ui-body pf-muted">{{ 'Sort by any column. Every name takes offers.'|t }}</p>
+      </div>
+      {% if exposed %}<div style="flex: 1 1 360px; max-width: 520px;">{{ exposed }}</div>{% endif %}
+    </section>
+    <div style="padding-bottom: var(--space-1); border-bottom: 1px solid var(--line);">{% include '@domain_investors_theme/includes/ending-chips.html.twig' %}</div>
+    <p class="fig-data pf-muted">{{ '@count names'|t({ '@count': total }) }}</p>
+    {% if domains %}
+      {{ include('domain_investors_theme:domain-table', { caption: 'Names for sale'|t, rows: domains, columns: columns }, with_context = false) }}
+    {% else %}
+      {% include '@domain_investors_theme/includes/empty.html.twig' %}
+    {% endif %}
+    {% if pager %}<nav class="pf-pager" aria-label="{{ 'Pages'|t }}">{{ pager }}</nav>{% endif %}
+  </div>
+</div>

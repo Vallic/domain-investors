@@ -94,11 +94,11 @@ install:
   - field_group
   - coffee
   - dashboard
-  - domain_portfolio_tools
+  - domain_investors_tools
   - default_admin
-  # Portfolio for visitors: the Domain Investors design system, its four
+  # The visitor theme: the Domain Investors design system, its four
   # templates and six colour schemes. Its blocks come with it.
-  - portfolio
+  - domain_investors_theme
 config:
   # Configuration that already exists is left as it is.
   strict: false
@@ -124,15 +124,15 @@ config:
     # The visitor theme's blocks: messages, tabs, page titles, the checkout
     # progress and the footer menu. A recipe installs a theme without its
     # optional configuration, so they are listed.
-    portfolio:
-      - block.block.portfolio_checkout_progress
-      - block.block.portfolio_content
-      - block.block.portfolio_footer_menu
-      - block.block.portfolio_local_actions
-      - block.block.portfolio_messages
-      - block.block.portfolio_page_title
-      - block.block.portfolio_primary_local_tasks
-      - block.block.portfolio_secondary_local_tasks
+    domain_investors_theme:
+      - block.block.domain_investors_theme_checkout_progress
+      - block.block.domain_investors_theme_content
+      - block.block.domain_investors_theme_footer_menu
+      - block.block.domain_investors_theme_local_actions
+      - block.block.domain_investors_theme_messages
+      - block.block.domain_investors_theme_page_title
+      - block.block.domain_investors_theme_primary_local_tasks
+      - block.block.domain_investors_theme_secondary_local_tasks
     default_admin:
       - block.block.default_admin_breadcrumbs
       - block.block.default_admin_content
@@ -184,6 +184,10 @@ config:
     mailer_policy: '*'
     dashboard: '*'
   actions:
+    # Such an order completes by itself once it is paid and handed over.
+    commerce_domains_handover.settings:
+      simpleConfigUpdate:
+        complete_orders: true
     # The domain checkout, for orders of the default type; Buy now goes
     # straight to it, so "added to your cart" would only puzzle the buyer.
     # A placed order has to stay open for Commerce Domains to cancel it when
@@ -257,7 +261,7 @@ config:
     # The admin theme, also for editing pages.
     system.theme:
       simpleConfigUpdate:
-        default: portfolio
+        default: domain_investors_theme
         admin: default_admin
     node.settings:
       simpleConfigUpdate:

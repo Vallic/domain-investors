@@ -9,7 +9,7 @@ field_name: page_template
 entity_type: commerce_product
 type: list_string
 settings:
-  # The templates of the Portfolio theme. A domain without one uses the
+  # The templates of the visitor theme. A domain without one uses the
   # site's, chosen under Appearance.
   allowed_values:
     -

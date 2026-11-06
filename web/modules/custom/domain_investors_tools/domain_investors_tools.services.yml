@@ -1,0 +1,18 @@
+services:
+  _defaults:
+    autowire: true
+
+  Drupal\domain_investors_tools\ProviderSetup:
+    arguments:
+      $providerPluginManager: '@plugin.manager.commerce_domains_provider'
+
+  # Purge stays quiet where neither Varnish nor the Vallic CDN is there.
+  Drupal\domain_investors_tools\Config\QuietPurgeOverride:
+    arguments:
+      $storage: '@config.storage'
+    tags:
+      - { name: config.factory.override, priority: 5 }
+
+  Drupal\domain_investors_tools\EscrowSetup: ~
+
+  Drupal\domain_investors_tools\DemoContent: ~

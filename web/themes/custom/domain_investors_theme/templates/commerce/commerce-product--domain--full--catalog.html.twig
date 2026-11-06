@@ -1,0 +1,56 @@
+{#
+/**
+ * @file
+ * A domain's page in the Catalog template: dense, with the facts in a table
+ * and similar names in the catalog's own table.
+ */
+#}
+<article{{ attributes.addClass('pf-domain') }}>
+  <div class="pf-container pf-stack pf-gap-6" style="padding-block: var(--space-4) var(--space-8);">
+    <nav aria-label="{{ 'Breadcrumb'|t }}" class="pf-crumb ui-body-sm"><a href="{{ path('<front>') }}">{{ 'All names'|t }}</a> / {{ domain.name }}</nav>
+    <div class="pf-split" style="gap: 40px;">
+      <div class="pf-split-aside" style="flex-basis: 320px;">
+        {% if domain.status != 'sold' %}
+          {% embed 'domain_investors_theme:buy-box' with { domain: domain, points: points, buy_form: buy_form } only %}
+            {% block buy %}{{ buy_form }}{% endblock %}
+          {% endembed %}
+        {% endif %}
+      </div>
+      <div class="pf-split-main pf-stack pf-gap-5">
+        <div class="pf-stack pf-gap-3">
+          {{ include('domain_investors_theme:domain-name', { name: domain.name, size: 'xl', tag: 'h1' }, with_context = false) }}
+          {{ include('domain_investors_theme:sale-terms', { buy_now: domain.buy_now, offers: domain.offers, lease: domain.lease_months > 0, status: domain.status }, with_context = false) }}
+          {% if domain.summary %}<p class="ui-body">{{ domain.summary }}</p>{% endif %}
+        </div>
+        {% if facts %}
+          <div class="dp-table-wrap">
+            <table class="pf-facts-table">
+              <caption class="ui-label">{{ 'Facts'|t }}</caption>
+              <tbody>
+                {% for label, value in facts %}
+                  <tr><th scope="row" class="ui-body-sm">{{ label }}</th><td class="fig-data">{{ value }}</td></tr>
+                {% endfor %}
+                {% if domain.lease_line %}
+                  <tr><th scope="row" class="ui-body-sm">{{ 'Lease-to-own'|t }}</th><td class="fig-data">{{ domain.lease_line }}</td></tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    {% if similar %}
+      <section class="pf-stack pf-gap-4" style="padding-top: var(--space-4);">
+        <h2 class="ui-heading">{{ 'Similar names'|t }}</h2>
+        {{ include('domain_investors_theme:domain-table', { caption: 'Similar names'|t, rows: similar, columns: [
+          { label: 'Domain'|t }, { label: 'Letters'|t }, { label: 'Ending'|t }, { label: 'Price'|t }, { label: 'Terms'|t }, { label: 'Action'|t, hidden: true },
+        ] }, with_context = false) }}
+      </section>
+    {% endif %}
+    <section id="how" class="pf-stack pf-gap-5" style="padding-top: var(--space-4);">
+      <h2 class="ui-heading">{{ 'How buying works'|t }}</h2>
+      {{ include('domain_investors_theme:transfer-steps', {}, with_context = false) }}
+    </section>
+    {% include '@domain_investors_theme/includes/offer.html.twig' with { section_class: 'pf-rule pf-section' } %}
+  </div>
+</article>

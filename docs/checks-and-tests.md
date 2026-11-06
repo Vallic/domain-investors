@@ -2,12 +2,12 @@
 
 # Checks and tests
 
-GitHub Actions (`.github/workflows/tests.yml`) runs on every push to `main`
+GitHub Actions (`.github/workflows/tests.yml`) runs on every push to `1.x`
 and every pull request, and each Monday with the newest Commerce Domains
 release, so what an update will need shows up before the update:
 
 - **Coding standards:** `composer validate`, PHP syntax, and Drupal's coding
-  standards on the profile, `domain_portfolio_tools` and the Portfolio theme
+  standards on the profile, `domain_investors_tools` and the Domain Investors theme
   (`phpcs.xml.dist`).
 - **Install:** the profile installed into MariaDB 11.8, twice: with the
   answers most owners give, and with every optional recipe. Each site gets a

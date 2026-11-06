@@ -39,7 +39,7 @@ services:
 
 build:
   steps:
-    # Composer is the whole build: the Portfolio theme is plain CSS, with
+    # Composer is the whole build: the visitor theme is plain CSS, with
     # nothing to compile.
     - name: PHP dependencies
       run: composer install --no-dev --optimize-autoloader --no-interaction

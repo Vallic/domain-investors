@@ -4,7 +4,7 @@ dependencies:
   config:
     - system.menu.portfolio-tasks
   module:
-    - domain_portfolio_tools
+    - domain_investors_tools
     - layout_builder
     - system
 id: portfolio
@@ -22,10 +22,10 @@ layout:
         uuid: 7c2f9e41-0a6b-4d3e-9b58-1e4f6a2d8c73
         region: first
         configuration:
-          id: domain_portfolio_owner_dashboard
+          id: domain_investors_owner_dashboard
           label: 'Your domains'
           label_display: '0'
-          provider: domain_portfolio_tools
+          provider: domain_investors_tools
           context_mapping: {  }
         weight: 0
         additional: {  }

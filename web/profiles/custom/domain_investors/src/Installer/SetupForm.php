@@ -13,8 +13,8 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Locale\CountryManagerInterface;
 use Drupal\Core\State\StateInterface;
-use Drupal\domain_portfolio_tools\DemoContent;
-use Drupal\portfolio\Appearance;
+use Drupal\domain_investors_tools\DemoContent;
+use Drupal\domain_investors_theme\Appearance;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -248,7 +248,7 @@ final class SetupForm extends FormBase {
       unset($form['extras']['#options']['demo']);
     }
 
-    // The Portfolio theme's template and colour scheme, which the base recipe
+    // The theme's template and colour scheme, which the base recipe
     // installed. Both can be changed later under Appearance, and each domain
     // can choose its own.
     $form['appearance'] = [

@@ -38,7 +38,7 @@ under *Commerce > Domains* once you have dealt with the order.
 - A Vallic Cloud production environment isn't offered them, in the installer or with
   Drush. To try them there, use a staging copy.
 - The list holds only names and asking prices
-  (`web/modules/custom/domain_portfolio_tools/demo/domains.csv`).
+  (`web/modules/custom/domain_investors_tools/demo/domains.csv`).
 
 To add your own domains instead, see [The domain catalog](catalog.md#import-your-domains).
 

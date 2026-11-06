@@ -28,7 +28,7 @@ events:
   commerce_add_payment_info: {  }
   commerce_purchase: {  }
   search: {  }
-  # An offer sent from a domain page, with its amount (domain_portfolio_tools).
+  # An offer sent from a domain page, with its amount (domain_investors_tools).
   generate_lead:
     currency: ''
     value: ''

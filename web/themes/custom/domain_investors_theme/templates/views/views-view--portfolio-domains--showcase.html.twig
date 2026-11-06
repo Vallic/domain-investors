@@ -1,0 +1,46 @@
+{#
+/**
+ * @file
+ * The portfolio in the Showcase template: the featured names, each with its
+ * story, then the rest in two columns. Mark names Featured on their edit
+ * form; without any, every name is listed.
+ */
+#}
+<div{{ attributes.addClass('pf-portfolio') }}>
+  <div class="pf-container">
+    <section class="pf-hero-tall pf-stack pf-gap-5">
+      <p class="ui-label pf-eyebrow">{{ featured ? 'A small collection'|t : 'Names for sale'|t }}</p>
+      <h1 class="ed-title pf-title-lg">{{ 'A few short names, and why each one works.'|t }}</h1>
+      <p class="ui-body pf-muted">{{ 'Each has a price you can pay today, and room for an offer.'|t }}</p>
+    </section>
+    {% for domain in featured %}
+      <article class="pf-feature">
+        <div class="pf-feature-story pf-stack pf-gap-5">
+          <a href="{{ domain.url }}" class="pf-feature-link">{{ include('domain_investors_theme:domain-name', { name: domain.name, size: 'xl', tag: 'h2' }, with_context = false) }}</a>
+          <p class="fig-data pf-muted">{{ domain.meta|join(' · ') }}</p>
+          {% if domain.summary %}<p class="ed-story">{{ domain.summary }}</p>{% endif %}
+        </div>
+        <div class="pf-feature-card">
+          {% if domain.status != 'sold' %}{{ include('domain_investors_theme:price', { amount: domain.price, lease: domain.lease_line }, with_context = false) }}{% endif %}
+          {{ include('domain_investors_theme:sale-terms', { buy_now: domain.buy_now, offers: domain.offers, lease: domain.lease_months > 0, status: domain.status }, with_context = false) }}
+          {{ include('domain_investors_theme:button', { label: 'See @name'|t({ '@name': domain.name }), href: domain.url }, with_context = false) }}
+        </div>
+      </article>
+    {% endfor %}
+    {% if more[0] %}
+      <section id="more" class="pf-section-lg pf-rule pf-stack pf-gap-5">
+        <div class="pf-stack pf-gap-2">
+          <h2 class="ui-heading">{{ featured ? 'More names'|t : 'All names'|t }}</h2>
+          <p class="ui-body pf-muted">{{ 'Every name takes offers.'|t }}</p>
+        </div>
+        <div class="pf-columns">
+          {% for column in more %}{{ include('domain_investors_theme:domain-list', { items: column }, with_context = false) }}{% endfor %}
+        </div>
+        {% if pager %}<nav class="pf-pager" aria-label="{{ 'Pages'|t }}">{{ pager }}</nav>{% endif %}
+      </section>
+    {% elseif not featured %}
+      {% include '@domain_investors_theme/includes/empty.html.twig' %}
+    {% endif %}
+  </div>
+  {% include '@domain_investors_theme/includes/how.html.twig' %}
+</div>

@@ -1,0 +1,11 @@
+# The site's template and colour scheme; each domain can choose its own on
+# its edit form. The installer's Appearance step sets these.
+template: standard
+scheme: light
+# The custom colour scheme, as #rrggbb: the background, the text and the
+# accent, and any of the colours worked out from them set by hand. Empty: the
+# Verdigris colours, and the rest worked out (Drupal\domain_investors_theme\Palette).
+custom:
+  surface: '#f4f5f1'
+  ink: '#151a19'
+  accent: '#0b6656'

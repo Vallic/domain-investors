@@ -1,0 +1,36 @@
+{#
+/**
+ * @file
+ * A domain's page in the Showcase template: the name on a sunken band with
+ * its one-line story, then the buy box beside the whole story in the serif.
+ */
+#}
+<article{{ attributes.addClass('pf-domain') }}>
+  <section class="pf-sunken pf-closed" style="border-top: 0;">
+    <div class="pf-container pf-hero-tall pf-stack pf-gap-5">
+      <p class="ui-label pf-eyebrow">{{ domain.status == 'sold' ? 'Sold'|t : 'For sale by its owner'|t }}</p>
+      {{ include('domain_investors_theme:domain-name', { name: domain.name, size: 'hero', tag: 'h1' }, with_context = false) }}
+      <p class="fig-data pf-muted">{{ domain.meta|join(' · ') }}</p>
+      {% if domain.summary %}<p class="ed-story">{{ domain.summary }}</p>{% endif %}
+    </div>
+  </section>
+  <div class="pf-container pf-split" style="padding-block: 72px; gap: 56px;">
+    <div class="pf-split-aside">
+      {% if domain.status != 'sold' %}
+        {% embed 'domain_investors_theme:buy-box' with { domain: domain, points: points, buy_form: buy_form } only %}
+          {% block buy %}{{ buy_form }}{% endblock %}
+        {% endembed %}
+      {% endif %}
+    </div>
+    {% if story|render|striptags|trim %}
+      <div class="pf-split-main pf-stack pf-gap-5">
+        <h2 class="ed-title pf-title-md">{{ 'Why @name'|t({ '@name': domain.name }) }}</h2>
+        <div class="ed-story pf-prose">{{ story }}</div>
+      </div>
+    {% endif %}
+  </div>
+  {% include '@domain_investors_theme/includes/how.html.twig' with { closed: true } %}
+  <div class="pf-container">
+    {% include '@domain_investors_theme/includes/offer.html.twig' with { section_class: 'pf-section-lg', heading_class: 'ed-title pf-title-md' } %}
+  </div>
+</article>

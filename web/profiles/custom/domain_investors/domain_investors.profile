@@ -19,7 +19,7 @@ use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\domain_investors\Installer\Finisher;
 use Drupal\domain_investors\Installer\SetupForm;
-use Drupal\domain_portfolio_tools\DemoContent;
+use Drupal\domain_investors_tools\DemoContent;
 
 /**
  * Implements hook_install_tasks().

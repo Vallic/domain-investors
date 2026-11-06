@@ -11,9 +11,9 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\domain_portfolio_tools\EscrowSetup;
-use Drupal\domain_portfolio_tools\ProviderSetup;
-use Drupal\portfolio\Appearance;
+use Drupal\domain_investors_tools\EscrowSetup;
+use Drupal\domain_investors_tools\ProviderSetup;
+use Drupal\domain_investors_theme\Appearance;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -156,7 +156,7 @@ final class Finisher implements ContainerInjectionInterface {
    *   The appearance answers.
    */
   protected function setUpAppearance(array $answers): void {
-    $settings = $this->configFactory->getEditable('portfolio.settings');
+    $settings = $this->configFactory->getEditable('domain_investors_theme.settings');
     if (isset(Appearance::TEMPLATES[$answers['template'] ?? ''])) {
       $settings->set('template', $answers['template']);
     }

@@ -1,0 +1,39 @@
+<div class="dp-table-wrap">
+  <table class="dp-table">
+    {% if caption %}<caption class="dp-visually-hidden">{{ caption }}</caption>{% endif %}
+    <thead>
+      <tr>
+        {% for column in columns %}
+          {% if column.url %}
+            <th scope="col" class="ui-label{{ column.numeric ? ' is-numeric' }}" aria-sort="{{ column.active ? (column.dir == 'desc' ? 'descending' : 'ascending') : 'none' }}">
+              <a class="dp-sort{{ column.active ? ' is-active' }}" href="{{ column.url }}">{{ column.label }}<span class="dp-sort-mark" aria-hidden="true">{{ column.active ? (column.dir == 'desc' ? '↓' : '↑') : '↕' }}</span></a>
+            </th>
+          {% else %}
+            <th scope="col" class="ui-label">{% if column.hidden %}<span class="dp-visually-hidden">{{ column.label }}</span>{% else %}{{ column.label }}{% endif %}</th>
+          {% endif %}
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for domain in rows %}
+        {% set sold = domain.status == 'sold' %}
+        <tr{{ sold ? ' class="is-sold"' }}>
+          <th scope="row" data-label="{{ 'Domain'|t }}"><a href="{{ domain.url }}" class="dp-table-name">{{ include('domain_investors_theme:domain-name', { name: domain.name }, with_context = false) }}</a></th>
+          <td class="is-numeric fig-data" data-label="Letters">{{ domain.letters }}</td>
+          <td class="fig-data" data-label="Ending">.{{ domain.extension }}</td>
+          <td class="is-numeric" data-label="Price">{% if sold %}<span class="fig-data dp-muted">—</span>{% else %}{{ include('domain_investors_theme:price', { amount: domain.price, size: 'sm', fallback: 'Offers'|t }, with_context = false) }}{% endif %}</td>
+          <td data-label="Terms">{{ include('domain_investors_theme:sale-terms', { buy_now: domain.buy_now, offers: domain.offers, lease: domain.lease_months > 0, status: domain.status }, with_context = false) }}</td>
+          <td class="dp-table-action">
+            {% if not sold %}
+              {% if domain.buy_now and domain.price %}
+                {{ include('domain_investors_theme:button', { label: 'Buy'|t, href: domain.url, variant: 'primary', size: 'sm', aria_label: 'Buy @name'|t({ '@name': domain.name }) }, with_context = false) }}
+              {% else %}
+                {{ include('domain_investors_theme:button', { label: 'Offer'|t, href: domain.url ~ '#offer', size: 'sm', aria_label: 'Make an offer on @name'|t({ '@name': domain.name }) }, with_context = false) }}
+              {% endif %}
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

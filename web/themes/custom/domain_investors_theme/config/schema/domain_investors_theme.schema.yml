@@ -1,0 +1,16 @@
+domain_investors_theme.settings:
+  type: theme_settings
+  label: 'Domain Investors Theme settings'
+  mapping:
+    template:
+      type: string
+      label: 'Template'
+    scheme:
+      type: string
+      label: 'Colour scheme'
+    custom:
+      type: sequence
+      label: 'Custom colour scheme'
+      sequence:
+        type: string
+        label: 'Colour'

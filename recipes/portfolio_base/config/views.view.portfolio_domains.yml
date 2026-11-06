@@ -264,7 +264,7 @@ display:
           expose:
             operator_id: domain_extension_op
             label: Ending
-            description: 'The extension, such as com or co.uk. The Portfolio theme shows it as chips.'
+            description: 'The extension, such as com or co.uk. The Domain Investors theme shows it as chips.'
             use_operator: false
             operator: domain_extension_op
             operator_limit_selection: false

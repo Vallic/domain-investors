@@ -1,0 +1,10 @@
+name: Domain card
+status: stable
+description: 'One name in the Standard grid. The whole card links to the domain page.'
+props:
+  type: object
+  required: [domain]
+  properties:
+    domain:
+      type: object
+      title: 'A domain, as domain_investors_theme_domain_facts() builds it'

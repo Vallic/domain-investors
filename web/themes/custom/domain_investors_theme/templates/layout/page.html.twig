@@ -1,0 +1,36 @@
+{#
+/**
+ * @file
+ * The page shell every template shares: the design system's header, Drupal's
+ * messages and tabs, the content, the footer.
+ *
+ * The domain page and the portfolio draw their own sections at full width,
+ * so the content region is not boxed in a container here.
+ */
+#}
+<div class="pf-page">
+  <div class="pf-container">
+    {% embed 'domain_investors_theme:site-header' with { brand: brand, home: home, links: nav, currency_switch: currency_switch } only %}
+      {% block currency %}{{ currency_switch }}{% endblock %}
+    {% endembed %}
+    {{ page.header }}
+    {% if page.highlighted %}
+      <div class="pf-messages pf-tabs">{{ page.highlighted }}</div>
+    {% endif %}
+  </div>
+
+  <main id="main-content" tabindex="-1">
+    {% if own_title %}
+      {{ page.content }}
+    {% else %}
+      <div class="pf-container pf-section pf-prose-page">
+        {{ page.content }}
+        {% if not_found %}
+          <p>{{ include('domain_investors_theme:button', { label: 'See all names'|t, href: home, variant: 'primary' }, with_context = false) }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </main>
+
+  {% include '@domain_investors_theme/includes/footer.html.twig' %}
+</div>

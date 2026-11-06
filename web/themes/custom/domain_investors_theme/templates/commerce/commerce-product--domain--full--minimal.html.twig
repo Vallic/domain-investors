@@ -1,0 +1,45 @@
+{#
+/**
+ * @file
+ * A domain's page in the Minimal template: one column, the price and
+ * two buttons, then the story, the offer form and what happens after paying.
+ */
+#}
+<article{{ attributes.addClass('pf-domain') }}>
+  <div class="pf-container pf-stack pf-gap-7" style="padding-block: var(--space-6) var(--space-8);">
+    <a href="{{ path('<front>') }}" class="pf-back ui-body-sm">← {{ 'All names'|t }}</a>
+    <section class="pf-stack pf-gap-4">
+      {{ include('domain_investors_theme:domain-name', { name: domain.name, size: 'hero', tag: 'h1' }, with_context = false) }}
+      <p class="fig-data pf-muted">{{ domain.meta|join(' · ') }}</p>
+    </section>
+    {% if domain.status == 'sold' %}
+      {{ include('domain_investors_theme:sale-terms', { status: 'sold' }, with_context = false) }}
+    {% else %}
+      <section class="pf-stack pf-gap-5">
+        {{ include('domain_investors_theme:price', { amount: domain.price, lease: domain.lease_line, size: 'xl' }, with_context = false) }}
+        <div class="pf-minimal-actions" style="display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: flex-start;">
+          {% if domain.buy_now and domain.price %}<div style="flex: 0 1 260px;">{{ buy_form }}</div>{% endif %}
+          {% if domain.offers %}{{ include('domain_investors_theme:button', { label: 'Make an offer'|t, href: '#offer', size: 'lg' }, with_context = false) }}{% endif %}
+        </div>
+        {% if points %}<p class="ui-body-sm pf-muted">{{ points|join('. ') }}.</p>{% endif %}
+      </section>
+    {% endif %}
+    {% if story|render|striptags|trim %}
+      <section class="pf-rule pf-stack pf-gap-3" style="padding-top: var(--space-6);">
+        <h2 class="ui-heading">{{ 'About this name'|t }}</h2>
+        <div class="ui-body pf-prose">{{ story }}</div>
+      </section>
+    {% endif %}
+    {% if offer_form %}
+      <section id="offer" class="pf-rule pf-stack pf-gap-4" style="padding-top: var(--space-6);">
+        <h2 class="ui-heading">{{ 'Make an offer'|t }}</h2>
+        <p class="ui-body pf-muted">{{ domain.minimum_offer ? 'Offers from @amount. '|t({ '@amount': domain.minimum_offer }) }}{{ 'Every offer is read and answered by email.'|t }}</p>
+        {{ offer_form }}
+      </section>
+    {% endif %}
+    <section class="pf-rule pf-stack pf-gap-5" style="padding-top: var(--space-6);">
+      <h2 class="ui-heading">{{ 'After you pay'|t }}</h2>
+      {{ include('domain_investors_theme:transfer-steps', {}, with_context = false) }}
+    </section>
+  </div>
+</article>

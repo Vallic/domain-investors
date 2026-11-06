@@ -64,9 +64,9 @@ $portfolio_gateways = [
 ];
 
 // The gateway forms show these as coming from the environment rather than
-// asking for them (domain_portfolio_tools), so saving a form never puts a
+// asking for them (domain_investors_tools), so saving a form never puts a
 // credential into configuration.
-$settings['domain_portfolio_gateway_credentials'] = $portfolio_gateways;
+$settings['domain_investors_gateway_credentials'] = $portfolio_gateways;
 
 // The installer never sees credentials: nothing it does needs them, and
 // nothing it saves can then carry them into configuration.

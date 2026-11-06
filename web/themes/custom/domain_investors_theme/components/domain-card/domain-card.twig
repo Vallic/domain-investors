@@ -1,0 +1,8 @@
+<article class="dp-card{{ domain.status == 'sold' ? ' is-sold' }}">
+  <a class="dp-card-link" href="{{ domain.url }}">{{ include('domain_investors_theme:domain-name', { name: domain.name, size: 'lg' }, with_context = false) }}</a>
+  {% if domain.meta %}<p class="dp-meta fig-data">{{ domain.meta|join(' · ') }}</p>{% endif %}
+  <div class="dp-card-foot">
+    {% if domain.status != 'sold' %}{{ include('domain_investors_theme:price', { amount: domain.price, lease: domain.lease_line }, with_context = false) }}{% endif %}
+    {{ include('domain_investors_theme:sale-terms', { buy_now: domain.buy_now, offers: domain.offers, lease: domain.lease_months > 0, status: domain.status }, with_context = false) }}
+  </div>
+</article>

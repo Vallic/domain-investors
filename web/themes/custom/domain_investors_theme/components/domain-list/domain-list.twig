@@ -1,0 +1,13 @@
+<ul class="dp-list">
+  {% for domain in items %}
+    <li class="dp-list-row{{ domain.status == 'sold' ? ' is-sold' }}">
+      <a href="{{ domain.url }}" class="dp-list-name">{{ include('domain_investors_theme:domain-name', { name: domain.name, size: size|default('md') }, with_context = false) }}</a>
+      <span class="dp-list-leader" aria-hidden="true"></span>
+      {% if domain.status == 'sold' %}
+        <span class="dp-list-sold fig-data">{{ 'Sold'|t }}</span>
+      {% else %}
+        <span class="dp-list-price">{{ include('domain_investors_theme:price', { amount: domain.price, fallback: 'Offers'|t }, with_context = false) }}</span>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>

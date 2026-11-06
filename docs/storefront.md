@@ -2,7 +2,7 @@
 
 # The storefront
 
-The storefront is the Portfolio theme, built from the Domain Investors
+The storefront is the Domain Investors theme, built from the Domain Investors
 design system: the domains for sale on the front page with a search by
 name and by ending, a page per domain at `/domain/example.com` with its
 price, Buy now and the offer form, and the pages How it works, About, Contact
@@ -30,7 +30,7 @@ Contact messages go to the store's email, and Antibot keeps bots off the form.
 
 ## Templates and colours
 
-The Portfolio theme draws the Domain Investors design system: its tokens are
+The Domain Investors theme draws the Domain Investors design system: its tokens are
 `css/tokens.css`, its components `css/components.css` and one Single
 Directory Component each under `components/` (domain name, price, sale
 terms, card, list, table, buy box, transfer steps, header).

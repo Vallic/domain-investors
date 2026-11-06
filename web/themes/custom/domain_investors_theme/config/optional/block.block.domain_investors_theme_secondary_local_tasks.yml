@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  theme:
+    - domain_investors_theme
+id: domain_investors_theme_secondary_local_tasks
+theme: domain_investors_theme
+region: highlighted
+weight: 11
+provider: null
+plugin: 'local_tasks_block'
+settings:
+  id: 'local_tasks_block'
+  label: 'Secondary tabs'
+  label_display: '0'
+  provider: core
+  primary: false
+  secondary: true
+visibility: {  }

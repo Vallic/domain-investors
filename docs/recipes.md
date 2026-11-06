@@ -10,7 +10,7 @@ leaves configuration that already exists as it is.
 
 | Recipe                             | What it sets up |
 |------------------------------------|-----------------|
-| `portfolio_base`                   | Commerce with the domain product type (domain, Atom premium, sale terms, costs), the domain checkout and handover, offers, import, pricing and bulk editing, marketplace syncing and CSV files, the Owner and Assistant roles, the Portfolio theme with the domain list, domain pages, its pages (How it works, About, Contact with its form, Privacy policy, Terms and conditions), Default Admin with Coffee and the owner dashboard, pages, pathauto, redirects, meta tags, structured data, sitemap, Symfony Mailer, Antibot, an image CAPTCHA on sign-up, and two-factor authentication for the Owner and the Assistant |
+| `portfolio_base`                   | Commerce with the domain product type (domain, Atom premium, sale terms, costs), the domain checkout and handover, offers, import, pricing and bulk editing, marketplace syncing and CSV files, the Owner and Assistant roles, the Domain Investors theme with the domain list, domain pages, its pages (How it works, About, Contact with its form, Privacy policy, Terms and conditions), Default Admin with Coffee and the owner dashboard, pages, pathauto, redirects, meta tags, structured data, sitemap, Symfony Mailer, Antibot, an image CAPTCHA on sign-up, and two-factor authentication for the Owner and the Assistant |
 | `portfolio_payments_stripe`        | Stripe Payment Element on the review step |
 | `portfolio_payments_paypal`        | PayPal payment links                   |
 | `portfolio_payments_wise`          | Wise Quick Pay, into your Wise business account |
@@ -25,7 +25,7 @@ leaves configuration that already exists as it is.
 | `portfolio_google_tag`             | Google Tag Manager or Analytics from `GOOGLE_TAG_ID`, with ecommerce events and a lead per offer sent |
 
 The install profile (`web/profiles/custom/domain_investors`) only asks the
-questions and applies these. `web/modules/custom/domain_portfolio_tools`
+questions and applies these. `web/modules/custom/domain_investors_tools`
 holds what the recipes need from code: the owner dashboard block, provider
 setup with keys (`drush domain-investors:provider`), the gateway forms that
 keep credentials out of configuration, `drush domain-investors:escrow-setup`,

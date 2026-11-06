@@ -4,6 +4,6 @@ type: 'Domain Investors'
 install:
   - commerce_exchanger
   - commerce_domains_marketplace
-  - domain_portfolio_tools
+  - domain_investors_tools
 config:
   strict: false

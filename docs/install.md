@@ -33,12 +33,31 @@ account), the installer sets up the portfolio and asks:
   to try the site with.
 - **Appearance:** the site's template and colour scheme.
 
-It then applies the recipes your answers call for, creates the store, gives
-your account the Owner role, and adds each registrar and marketplace with
-keys that read its API credentials from environment variables. Payment
-gateways start disabled and in test mode, unless their variables are already
-set when you install. Every answer can be changed later in the admin pages,
-and every optional [recipe](recipes.md) applied later with `drush recipe`.
+It then applies the recipes your answers call for, and asks for the keys
+your gateways, registrars and marketplaces need. They go into `.env` beside
+`web/`, which git ignores, never into configuration; any you leave empty
+gets a sample containing `replace-me`. That file is where you replace the
+samples later, one line each:
+
+```sh
+STRIPE_PUBLISHABLE_KEY=pk_test_replace-me
+STRIPE_SECRET_KEY=sk_test_replace-me
+DYNADOT_API_KEY=replace-me
+```
+
+Last, it creates the store, gives your account the Owner role, and adds each
+registrar and marketplace with keys that read its credentials from those
+variables. The chosen payment gateways are enabled, in test mode, even with
+samples, so you can try the checkout; a payment only goes through with real
+keys. Registrars and marketplaces with samples stay disabled, as their syncs
+would fail at the API: enable them once their keys are real. *Reports >
+Status report* lists the samples still in use.
+
+A variable set where the site runs (the Vallic Cloud console, or
+`.ddev/.env`) wins over `.env`. Where payments are live, as on a Vallic
+Cloud production environment, a gateway whose keys are missing or samples
+is turned off. Every answer can be changed later in the admin pages, and
+every optional [recipe](recipes.md) applied later with `drush recipe`.
 
 ## Locally, with DDEV
 

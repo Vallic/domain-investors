@@ -14,8 +14,13 @@ forms show where each credential comes from instead of asking for it.
 | Escrow.com     | `ESCROW_API_KEY`, `ESCROW_EMAIL`, `ESCROW_WEBHOOK_SECRET`               |
 | Bank transfer  | none: your bank details go in its payment instructions                  |
 
-1. Set the variables, with test keys on development and staging.
-2. Enable the gateway at *Commerce > Configuration > Payment gateways* (or
+1. Set the variables, with test keys on development and staging. The
+   installer wrote samples for the chosen gateways into `.env` beside `web/`:
+   replace them there, or set the variables where the site runs.
+2. The installer enabled the gateways you chose, even with samples, so the
+   checkout can be tried; a payment fails until the keys are real. Where
+   payments are live, a gateway with missing or sample keys is turned off.
+   Enable another at *Commerce > Configuration > Payment gateways* (or
    `drush config:set commerce_payment.commerce_payment_gateway.stripe status 1`).
 3. Gateways run in test mode, and in live mode on a Vallic Cloud production
    environment. `PAYMENT_MODE=live` or `PAYMENT_MODE=test` says otherwise for

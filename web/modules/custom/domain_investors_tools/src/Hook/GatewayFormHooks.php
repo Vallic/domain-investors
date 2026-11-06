@@ -11,6 +11,7 @@ use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\domain_investors_tools\Credentials;
 
 /**
  * Keeps payment gateway credentials out of the gateway forms.
@@ -67,16 +68,26 @@ final class GatewayFormHooks {
       // Saved empty, whatever was there: the variable fills it at runtime.
       $form_state->setValueForElement($child, '');
       $value = getenv($variable);
-      $set = is_string($value) && $value !== '';
+      $args = ['@variable' => $variable, '@file' => Credentials::path()];
+      if (!is_string($value) || $value === '') {
+        $markup = new TranslatableMarkup('From the <code>@variable</code> environment variable, which is not set yet. Set it in <code>@file</code>, or where the site runs; a value typed into this form would be saved into the exported configuration.', $args);
+      }
+      elseif (Credentials::isSample($value)) {
+        $markup = new TranslatableMarkup('From the <code>@variable</code> environment variable, which holds a sample: replace it in <code>@file</code>, or set it where the site runs.', $args);
+      }
+      elseif (Credentials::fromFile($variable)) {
+        $markup = new TranslatableMarkup('From the <code>@variable</code> environment variable, set in <code>@file</code>.', $args);
+      }
+      else {
+        $markup = new TranslatableMarkup('From the <code>@variable</code> environment variable, which is set.', $args);
+      }
 
       $parent_path = array_slice($path, 0, -1);
       $parent = &NestedArray::getValue($element, $parent_path);
       $parent['domain_investors_' . $setting] = [
         '#type' => 'item',
         '#title' => $title,
-        '#markup' => $set
-          ? new TranslatableMarkup('From the <code>@variable</code> environment variable, which is set.', ['@variable' => $variable])
-          : new TranslatableMarkup('From the <code>@variable</code> environment variable, which is not set yet. Set it where the site runs; a value typed into this form would be saved into the exported configuration.', ['@variable' => $variable]),
+        '#markup' => $markup,
         '#weight' => $child['#weight'] ?? 0,
       ];
       unset($child, $parent);

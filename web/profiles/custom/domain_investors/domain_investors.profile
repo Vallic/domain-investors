@@ -6,7 +6,8 @@
  *
  * After Drupal's own steps (database, site name, administrator), it applies
  * recipes/portfolio_base, asks about the store, payments, registrars and
- * marketplaces, applies the recipes the answers call for, and sets up the
+ * marketplaces, applies the recipes the answers call for, asks for their keys
+ * (written to .env, with samples for the ones left out), and sets up the
  * store and the providers. Everything it sets up can be changed afterwards
  * in the admin pages, and every optional recipe can be applied later with
  * `drush recipe`; see docs/install.md.
@@ -17,6 +18,7 @@ declare(strict_types=1);
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeRunner;
+use Drupal\domain_investors\Installer\CredentialsForm;
 use Drupal\domain_investors\Installer\Finisher;
 use Drupal\domain_investors\Installer\SetupForm;
 use Drupal\domain_investors_tools\DemoContent;
@@ -47,6 +49,13 @@ function domain_investors_install_tasks(array &$install_state): array {
       'display_name' => t('Add payments and connections'),
       'type' => 'batch',
     ],
+    // After the recipes, which add the gateways and providers it asks about.
+    'domain_investors_credentials' => [
+      'display_name' => t('Keys'),
+      'type' => 'form',
+      'function' => CredentialsForm::class,
+      'run' => _domain_investors_needs_credentials($install_state) ? INSTALL_TASK_RUN_IF_NOT_COMPLETED : INSTALL_TASK_SKIP,
+    ],
     'domain_investors_finish' => [
       'display_name' => t('Finish the setup'),
     ],
@@ -76,6 +85,26 @@ function domain_investors_apply_base(array &$install_state): array {
 function domain_investors_apply_options(array &$install_state): array {
   $recipes = SetupForm::answers()['recipes'] ?? [];
   return $recipes ? _domain_investors_recipe_batch($recipes, t('Adding payments and connections')) : [];
+}
+
+/**
+ * Whether the answers chose anything that reads credentials.
+ *
+ * Before the setup form, and before the database is there, it may. Once
+ * the last task has removed the answers, it doesn't.
+ *
+ * @phpstan-param array<mixed> $install_state
+ */
+function _domain_investors_needs_credentials(array $install_state): bool {
+  if (!in_array('domain_investors_setup_form', $install_state['tasks_performed'] ?? [], TRUE)) {
+    return TRUE;
+  }
+  try {
+    return SetupForm::answers() && CredentialsForm::groups();
+  }
+  catch (\Throwable) {
+    return TRUE;
+  }
 }
 
 /**

@@ -20,8 +20,10 @@ them, and the registrar is connected:
 | Spaceship           | `SPACESHIP_API_KEY`, `SPACESHIP_API_SECRET`                 |
 | Unstoppable Domains | `UNSTOPPABLE_API_KEY`                                       |
 
-- **Locally:** add `NAME=value` lines to `.ddev/.env` (never committed),
-  then `ddev restart`.
+- **Locally:** replace the `replace-me` samples in `.env` beside `web/`
+  (the installer wrote them; git ignores the file), then enable the
+  registrar: it starts disabled while its keys are samples. `.ddev/.env`
+  works too, after `ddev restart`.
 - **On Vallic Cloud:** `vallic var set DYNADOT_API_KEY 'the-key' production
   --secret`, then `vallic var apply production`; or *Variables* in the
   console, marked secret.

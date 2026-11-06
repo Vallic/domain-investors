@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\domain_investors_tools\Credentials;
 use Drupal\domain_investors_tools\EscrowSetup;
 use Drupal\domain_investors_tools\ProviderSetup;
 use Drupal\domain_investors_theme\Appearance;
@@ -33,16 +34,6 @@ final class Finisher implements ContainerInjectionInterface {
 
   // The default content the base recipe ships for the checkout terms.
   public const TERMS_PAGE_UUID = '5d0a5d3e-9f53-4b8e-a3f0-6e1c2b7d9a41';
-
-  // Gateway ID => [setting => variable] for the credentials a gateway cannot
-  // run without, as settings.portfolio.php reads them.
-  public const GATEWAY_CREDENTIALS = [
-    'stripe' => ['publishable_key' => 'STRIPE_PUBLISHABLE_KEY', 'secret_key' => 'STRIPE_SECRET_KEY'],
-    'paypal' => ['client_id' => 'PAYPAL_CLIENT_ID', 'client_secret' => 'PAYPAL_CLIENT_SECRET'],
-    'wise' => ['wise_tag' => 'WISE_TAG', 'public_key' => 'WISE_PUBLIC_KEY'],
-    'escrow_pay' => ['api_key' => 'ESCROW_API_KEY', 'email' => 'ESCROW_EMAIL'],
-    'escrow_offer' => ['api_key' => 'ESCROW_API_KEY', 'email' => 'ESCROW_EMAIL'],
-  ];
 
   // The EU member states, for the store's VAT registration.
   public const EU_COUNTRIES = [
@@ -252,7 +243,27 @@ final class Finisher implements ContainerInjectionInterface {
   }
 
   /**
-   * Turns on the chosen gateways whose credentials are set.
+   * Returns the gateways the payment answers add.
+   *
+   * @param string[] $payments
+   *   The payment answers.
+   *
+   * @return string[]
+   *   Gateway IDs.
+   */
+  public static function gateways(array $payments): array {
+    $chosen = [];
+    foreach ($payments as $payment) {
+      $chosen = array_merge($chosen, self::PAYMENT_GATEWAYS[$payment] ?? []);
+    }
+    return $chosen;
+  }
+
+  /**
+   * Turns on the chosen gateways, with sample credentials where needed.
+   *
+   * With samples (from .env) the checkout can be tried, and a payment fails;
+   * where payments are live, settings.portfolio.php turns such a gateway off.
    *
    * @param string[] $payments
    *   The payment answers.
@@ -262,31 +273,28 @@ final class Finisher implements ContainerInjectionInterface {
    */
   protected function setUpGateways(array $payments): array {
     $todo = [];
-    $chosen = [];
-    foreach ($payments as $payment) {
-      $chosen = array_merge($chosen, self::PAYMENT_GATEWAYS[$payment] ?? []);
-    }
-    foreach ($chosen as $gateway_id) {
+    $samples = [];
+    foreach (self::gateways($payments) as $gateway_id) {
       $gateway = $this->configFactory->getEditable('commerce_payment.commerce_payment_gateway.' . $gateway_id);
       if ($gateway->isNew()) {
         continue;
       }
-      $missing = array_filter(self::GATEWAY_CREDENTIALS[$gateway_id] ?? [], function (string $variable): bool {
-        $value = getenv($variable);
-        return !is_string($value) || $value === '';
-      });
       if ($gateway_id === 'bank_transfer') {
         $todo[] = $this->t('Bank transfer: add your bank details to its payment instructions, then enable it, at Commerce > Configuration > Payment gateways.');
         continue;
       }
-      if ($missing) {
-        $todo[] = $this->t('@gateway stays disabled until @variables are set; then enable it at Commerce > Configuration > Payment gateways.', [
-          '@gateway' => $gateway->get('label'),
-          '@variables' => implode(', ', array_unique($missing)),
-        ]);
-        continue;
-      }
       $gateway->set('status', TRUE)->save();
+      foreach (Credentials::GATEWAY_REQUIRED[$gateway_id] ?? [] as $variable) {
+        if (!Credentials::isReal($variable)) {
+          $samples[$variable] = $variable;
+        }
+      }
+    }
+    if ($samples) {
+      $todo[] = $this->t('Payments run with sample keys, and fail, until you replace @variables with your own: in @file, or as variables where the site runs.', [
+        '@variables' => implode(', ', $samples),
+        '@file' => Credentials::path(),
+      ]);
     }
 
     // Orders whose offer is negotiated on Escrow.com are paid there, and
@@ -309,12 +317,19 @@ final class Finisher implements ContainerInjectionInterface {
   protected function setUpProviders(array $answers): array {
     $todo = [];
     $plugins = array_unique(array_merge($answers['registrars'], $answers['marketplaces']));
+    $disabled = [];
     $variables = [];
     foreach ($plugins as $plugin_id) {
-      $this->providerSetup->addPluginProvider($plugin_id);
+      // With sample keys a sync would only fail at the API: such a provider
+      // starts disabled.
+      $real = $this->providerSetup->hasRealCredentials($plugin_id);
+      $this->providerSetup->addPluginProvider($plugin_id, $real);
+      if ($real) {
+        continue;
+      }
+      $disabled[] = $this->providerSetup->label($plugin_id);
       foreach ($this->providerSetup->variables($plugin_id) as $variable) {
-        $value = getenv($variable['variable']);
-        if ($variable['required'] && (!is_string($value) || $value === '')) {
+        if ($variable['required'] && !Credentials::isReal($variable['variable'])) {
           $variables[] = $variable['variable'];
         }
       }
@@ -325,10 +340,16 @@ final class Finisher implements ContainerInjectionInterface {
     foreach ($answers['other_marketplaces'] as $name) {
       $this->providerSetup->addMarketplace($name);
     }
-    if ($variables) {
-      $todo[] = $this->t('Set @variables for your registrars and marketplaces: each provider reads its API credentials from a key that reads one of these.', [
-        '@variables' => implode(', ', array_unique($variables)),
-      ]);
+    if ($disabled) {
+      $todo[] = $this->formatPlural(count($disabled),
+        '@providers stays disabled until you replace @variables with your own, in @file or as variables where the site runs; then enable it at Commerce > Configuration > Domains > Providers.',
+        '@providers stay disabled until you replace @variables with your own, in @file or as variables where the site runs; then enable them at Commerce > Configuration > Domains > Providers.',
+        [
+          '@providers' => implode(', ', $disabled),
+          '@variables' => implode(', ', array_unique($variables)),
+          '@file' => Credentials::path(),
+        ],
+      );
     }
     if ($answers['marketplaces']) {
       $todo[] = $this->t('Review a dry run before the first marketplace sync: drush commerce-domains:marketplace-sync PROVIDER --dry-run --details.');

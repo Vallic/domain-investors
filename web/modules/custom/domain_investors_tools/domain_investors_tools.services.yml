@@ -13,6 +13,8 @@ services:
     tags:
       - { name: config.factory.override, priority: 5 }
 
+  Drupal\domain_investors_tools\Credentials: ~
+
   Drupal\domain_investors_tools\EscrowSetup: ~
 
   Drupal\domain_investors_tools\DemoContent: ~

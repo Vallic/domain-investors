@@ -9,8 +9,9 @@
  *
  * Included from settings.php. It holds variable names, never values, so it is
  * committed like the rest of the project. Set the variables in your hosting
- * control panel (the Vallic Cloud console: Variables, marked secret), in
- * .ddev/.env under DDEV, or in the environment PHP runs in anywhere else.
+ * control panel (the Vallic Cloud console: Variables, marked secret), or in
+ * the .env file beside web/, which the installer writes with samples to
+ * replace and git ignores. Under DDEV, .ddev/.env works too.
  *
  * A variable that is not set, or is empty, overrides nothing: the gateway
  * keeps what its form says, which for every credential is empty. Never type a
@@ -29,6 +30,41 @@
  */
 
 use Drupal\Core\Installer\InstallerKernel;
+
+// The .env file beside web/, which git ignores: the installer writes it with
+// samples for the credentials the site needs, to replace with real ones. Its
+// lines are NAME=value, or NAME="value" with \n for a line break. A variable
+// set where the site runs wins. DOMAIN_INVESTORS_DOTENV remembers which ones
+// came from the file, as a PHP process keeps them between requests: those are
+// read again, so a change to the file shows on the next request.
+$portfolio_file = dirname($app_root) . '/.env';
+$portfolio_ours = array_filter(explode(',', (string) getenv('DOMAIN_INVESTORS_DOTENV')));
+$portfolio_loaded = [];
+if (is_readable($portfolio_file)) {
+  foreach (file($portfolio_file, FILE_IGNORE_NEW_LINES) ?: [] as $portfolio_line) {
+    if (!preg_match('/^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/', $portfolio_line, $portfolio_match)) {
+      continue;
+    }
+    [, $portfolio_name, $portfolio_value] = $portfolio_match;
+    if (getenv($portfolio_name) !== FALSE && !in_array($portfolio_name, $portfolio_ours, TRUE)) {
+      continue;
+    }
+    if (preg_match('/^"(.*)"$/s', $portfolio_value, $portfolio_match)) {
+      $portfolio_value = strtr($portfolio_match[1], ['\\\\' => '\\', '\\"' => '"', '\\n' => "\n"]);
+    }
+    elseif (preg_match("/^'(.*)'$/s", $portfolio_value, $portfolio_match)) {
+      $portfolio_value = $portfolio_match[1];
+    }
+    putenv($portfolio_name . '=' . $portfolio_value);
+    $portfolio_loaded[] = $portfolio_name;
+  }
+}
+// Taken out of the file since the last request.
+foreach (array_diff($portfolio_ours, $portfolio_loaded) as $portfolio_name) {
+  putenv($portfolio_name);
+}
+putenv('DOMAIN_INVESTORS_DOTENV=' . implode(',', $portfolio_loaded));
+unset($portfolio_file, $portfolio_ours, $portfolio_loaded, $portfolio_line, $portfolio_match, $portfolio_name, $portfolio_value);
 
 // Gateway ID => [setting => environment variable]. The payment recipes create
 // the gateways under these IDs.
@@ -98,6 +134,24 @@ if ($portfolio_mode === 'live' || $portfolio_mode === 'test') {
     $config['commerce_payment.commerce_payment_gateway.' . $portfolio_gateway]['configuration']['mode'] = $portfolio_mode;
   }
 }
+
+// The installer enables the chosen gateways even with sample credentials
+// ("replace-me", from .env), so the checkout can be tried. Where payments are
+// live, as settings.vallic.php makes them on a production environment, a
+// gateway missing a credential, or holding a sample, is turned off instead:
+// buyers would only see it fail. The webhook settings are optional.
+$portfolio_live = $portfolio_mode === 'live' || ($portfolio_mode !== 'test' && getenv('VALLIC_ENVIRONMENT_TYPE') === 'production');
+if ($portfolio_live) {
+  foreach ($portfolio_gateways as $portfolio_gateway => $portfolio_credentials) {
+    foreach (array_diff_key($portfolio_credentials, array_flip(['webhook_signing_secret', 'webhook_id'])) as $portfolio_variable) {
+      $portfolio_value = getenv($portfolio_variable);
+      if (!is_string($portfolio_value) || $portfolio_value === '' || str_contains(strtolower($portfolio_value), 'replace-me')) {
+        $config['commerce_payment.commerce_payment_gateway.' . $portfolio_gateway]['status'] = FALSE;
+      }
+    }
+  }
+}
+unset($portfolio_live);
 
 // Two-factor authentication keeps its secrets encrypted with
 // TFA_ENCRYPTION_KEY (32 random bytes, base64). Without it, or with a key of

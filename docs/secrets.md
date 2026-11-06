@@ -16,6 +16,10 @@ Configuration is exported and committed, so no credential goes into it:
   `drush config:set`, or in the exported YAML.
 - So `drush config:export` writes no credential: keys hold variable names,
   and gateways' credential settings stay empty.
+- The values themselves live in the environment: set where the site runs, or
+  in `.env` beside `web/`, which git ignores and `settings.portfolio.php`
+  loads. The installer writes that file, with `replace-me` samples for any
+  key you didn't give it.
 
 ---
 

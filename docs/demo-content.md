@@ -3,7 +3,8 @@
 # Demo content
 
 Try the site with a full catalog before you have added anything of your own: 200
-domains, with a mix of endings and prices.
+domains, with a mix of endings and prices. All have *Buy now*; the 28 priced above
+15,000 take offers too, through Escrow.com as well when you chose it.
 
 They are real domains, for sale by the people who make this project. **They are for
 a copy to try things on, not a site open to buyers:** a buyer's order would be for a

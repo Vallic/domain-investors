@@ -157,6 +157,18 @@ jobs:
       - name: Recipe fields match Commerce Domains
         run: vendor/bin/drush php:script scripts/ci/recipe-fields.php
 
+      - name: Sample keys
+        if: matrix.name == 'everything'
+        run: |
+          # The installer wrote samples for the keys it wasn't given.
+          grep -qx 'STRIPE_SECRET_KEY=sk_test_replace-me' .env
+          grep -qx 'DYNADOT_API_KEY=replace-me' .env
+          status() { vendor/bin/drush php:eval "echo (int) \Drupal::config('$1')->get('status');"; }
+          # Gateways run with them; providers wait for real ones.
+          test "$(status commerce_payment.commerce_payment_gateway.stripe)" = 1
+          test "$(status commerce_payment.commerce_payment_gateway.escrow_offer)" = 1
+          test "$(status commerce_domains.provider.dynadot)" = 0
+
       - name: Add domains
         run: |
           vendor/bin/drush php:script scripts/ci/seed.php

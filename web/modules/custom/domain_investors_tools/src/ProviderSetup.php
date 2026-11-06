@@ -161,6 +161,27 @@ final class ProviderSetup {
   }
 
   /**
+   * Whether every credential a provider plugin requires holds a real value.
+   *
+   * Not a sample from the .env file, which would only fail at the API.
+   */
+  public function hasRealCredentials(string $plugin_id): bool {
+    foreach ($this->variables($plugin_id) as $variable) {
+      if ($variable['required'] && !Credentials::isReal($variable['variable'])) {
+        return FALSE;
+      }
+    }
+    return TRUE;
+  }
+
+  /**
+   * Returns a provider plugin's label.
+   */
+  public function label(string $plugin_id): string {
+    return (string) $this->providerPluginManager->getDefinition($plugin_id)['label'];
+  }
+
+  /**
    * Returns a key that reads an environment variable, adding it if needed.
    */
   protected function environmentKey(string $id, string $label, string $variable): KeyInterface {

@@ -16,8 +16,11 @@
 | `VARNISH_HOST` | Purge, away from the platform (DDEV's Varnish add-on) |
 | `VALLIC_*`, `DB_*`, `REDIS_*`, `VARNISH_*`, `SMTP_HOST` | set by Vallic Cloud, read by `settings.vallic.php` |
 
-Set them in `.ddev/.env` locally, and as secret variables on Vallic Cloud: see
-[Connect a registrar](registrars.md) for how, and [Keeping secrets out of
+Set them in `.env` beside `web/` (git ignores it; the installer writes it
+with samples to replace, and `settings.portfolio.php` loads it), or in
+`.ddev/.env` under DDEV, and as secret variables on Vallic Cloud. A variable
+set where the site runs wins over `.env`. See [Connect a
+registrar](registrars.md) for how, and [Keeping secrets out of
 configuration](secrets.md) for why.
 
 ---

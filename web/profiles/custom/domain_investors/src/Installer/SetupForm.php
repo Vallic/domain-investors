@@ -106,6 +106,20 @@ final class SetupForm extends FormBase {
   }
 
   /**
+   * Loads Mailer Override's definitions before its form alter does.
+   *
+   * It filters them by what is enabled only once they are cached, and during
+   * installation they are not: loaded first by its form alter, unfiltered,
+   * they make it warn about a missing "metadata_key" (symfony_mailer 2.0.2).
+   * Loaded by an installer form first, they are filtered by the time it runs.
+   */
+  public static function loadMailerOverrides(): void {
+    if (\Drupal::hasService(self::MAILER_OVERRIDES)) {
+      \Drupal::service(self::MAILER_OVERRIDES)->getDefinitions();
+    }
+  }
+
+  /**
    * {@inheritdoc}
    *
    * @phpstan-param array<mixed> $form
@@ -113,14 +127,7 @@ final class SetupForm extends FormBase {
    * @phpstan-return array<mixed>
    */
   public function buildForm(array $form, FormStateInterface $form_state, ?array &$install_state = NULL): array {
-    // Mailer Override filters its definitions by what is enabled only once
-    // they are cached, and during installation they are not: loaded first by
-    // its form alter, unfiltered, they make it warn about a missing
-    // "metadata_key" (symfony_mailer 2.0.2). Loaded here first, they are
-    // filtered by the time it runs.
-    if (\Drupal::hasService(self::MAILER_OVERRIDES)) {
-      \Drupal::service(self::MAILER_OVERRIDES)->getDefinitions();
-    }
+    self::loadMailerOverrides();
 
     // Drush passes lists as "a,b"; the checkboxes want arrays.
     if ($form_state->isProgrammed()) {
@@ -181,7 +188,7 @@ final class SetupForm extends FormBase {
     $form['payments'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Payments'),
-      '#description' => $this->t('Gateways start in test mode, and are turned on once their keys are set: see docs/payments.md.'),
+      '#description' => $this->t('Gateways start enabled and in test mode. The next step asks for their keys; any you leave out get samples, to replace later in .env: see docs/payments.md.'),
       '#options' => [
         'stripe' => $this->t('Cards, with Stripe'),
         'paypal' => $this->t('PayPal'),
@@ -197,7 +204,7 @@ final class SetupForm extends FormBase {
     $form['registrars'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Where your domains are registered'),
-      '#description' => $this->t('Each is added with keys that read its API credentials from environment variables, so registrations, expiry dates and handovers can follow the account.'),
+      '#description' => $this->t('Each is added with keys that read its API credentials from environment variables, so registrations, expiry dates and handovers can follow the account. One with sample keys starts disabled.'),
       '#options' => $registrars,
       '#default_value' => [],
     ];

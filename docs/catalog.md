@@ -18,7 +18,8 @@ A domain has tabs beside *Edit*, each with its own Save:
 - **Registrar:** the registrar and its dates; with a registrar's API, the
   nameservers, lock, auto-renew and auth code. See
   [Connect a registrar](registrars.md).
-- **DNS:** the records, where the registrar's API can edit them.
+- **DNS:** the records, where the registrar's API can edit them, and a DNS
+  template to use. See [Connect a registrar](registrars.md#dns-records).
 - **Prices:** its price in other currencies. See
   [Prices in more currencies](currencies.md).
 - **Marketplaces:** its status on each one. See
@@ -56,8 +57,8 @@ drush commerce-domains:import --from-registrar=dynadot --unpublished
 
 Domains without a price get the first matching pricing rule (*Commerce >
 Configuration > Domains > Domain pricing*). Bulk actions on *Commerce >
-Domains* reprice, set sale terms, choose marketplaces, publish and
-unpublish a selection. With the domain search, index what you imported:
+Domains* reprice, set sale terms, choose marketplaces, apply a DNS
+template, publish and unpublish a selection. With the domain search, index what you imported:
 `drush search-api:index`.
 
 The [Commerce Domains README](https://git.drupalcode.org/project/commerce_domains/-/blob/1.x/README.md#importing-domains) has every option, including

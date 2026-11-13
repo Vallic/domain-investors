@@ -40,11 +40,23 @@ drush domain-investors:provider Hover     # a registrar without an API
 drush domain-investors:providers          # every provider, what it can do, its variables
 ```
 
+## DNS records
+
 For a domain on the registrar's own nameservers, its *DNS* tab edits the
 records at Dynadot, GNAME, GoDaddy, Namecheap, NameSilo, Porkbun and
 Spaceship: the changes are reviewed before they are written, and the zone as
 it was is kept, to be put back ([Commerce Domains README](https://git.drupalcode.org/project/commerce_domains/-/blob/1.x/README.md#dns-records)). The
 Owner has it; the Assistant does not, as it acts on the registrar at once.
+
+Records you give many domains, such as a forward to your site or an SPF
+record, go in a DNS template (*Commerce > Configuration > Domains > DNS
+templates*): up to 20 records, with `{domain}` in a value for the domain's
+name. *Use a DNS template* on the DNS tab puts its records in the table to
+review, either beside the records there or in their place. *Apply a DNS
+template* on *Commerce > Domains* writes it to a selection at once, without
+a review per domain; each zone as it was is still kept on its DNS tab.
+
+## Keeping registrations up to date
 
 Check what the account holds against the catalog, then record it:
 
@@ -53,12 +65,14 @@ drush commerce-domains:registrar-sync dynadot --dry-run --details
 drush commerce-domains:registrar-sync dynadot
 ```
 
-Turn on *Refresh registration details daily* on the provider to have cron
-keep expiry dates and auto-renew in line. *Also add the domains the account
-holds that the catalog lacks*, below it, has cron add new ones too, once a
-day: unpublished, not listed on marketplaces, and priced by the first
-matching pricing rule, else 0. Publish and price them when you are ready to
-sell.
+Turn on *Refresh registration details* on the provider to have cron keep
+expiry dates and auto-renew in line, every 1, 6, 12 or 24 hours (*Refresh
+every*). *Refresh now* on the provider's *Registrations* tab, or *Refresh
+registrations* in the provider list, does it at once. *Also add the domains
+the account holds that the catalog lacks*, below it, has cron add new ones
+too, as often: unpublished, not listed on marketplaces, and priced by the
+first matching pricing rule, else 0. Publish and price them when you are
+ready to sell.
 
 ## What a registrar can do
 

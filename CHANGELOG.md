@@ -3,7 +3,40 @@
 All notable changes to the Domain Investors template. Versions follow the
 git tags; the Commerce Domains release each one installs is noted.
 
-## 1.0.2 - 2026-11-14
+## 1.0.4 - 2026-11-14
+
+Commerce Domains 1.0.4.
+
+### Added
+
+- Notes on DNS template records: what each one is for, such as the
+  marketplace a TXT record verifies. Shown in the template form and list,
+  never written to the registrar.
+
+### Fixed
+
+- Namecheap domains on other nameservers showed an error on the DNS tab;
+  they now say the records are wherever the nameservers point, and the bulk
+  action skips them.
+
+### Security
+
+- Drupal core 11.4.12, with the Symfony 7.4.22/7.4.23 security releases.
+- Entity Print 2.20.0 (SA-CONTRIB-2026-327).
+
+### Changed
+
+- `drupal/commerce_domains` is required at `^1.0.4`.
+- Docs: record notes in [Connect a registrar](docs/registrars.md#dns-records).
+
+### Upgrading a site made from 1.0.3
+
+```sh
+composer update "drupal/core*" drupal/entity_print drupal/commerce_domains -W
+drush updb
+```
+
+## 1.0.3 - 2026-11-14
 
 Commerce Domains 1.0.3.
 

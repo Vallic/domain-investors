@@ -51,7 +51,9 @@ Owner has it; the Assistant does not, as it acts on the registrar at once.
 Records you give many domains, such as marketplace verification TXT records
 and a redirect to the domain's page, go in a DNS template (*Commerce >
 Configuration > Domains > DNS templates*): up to 20 records, with `{domain}`
-in a value for the domain's name. *Use a DNS template* on the DNS tab puts
+in a value for the domain's name, and a note on each record saying what it
+is for, such as the marketplace a TXT record verifies (notes are never
+written to the registrar). *Use a DNS template* on the DNS tab puts
 its records in the table to review, either beside the records there or in
 their place. *Apply a DNS template* on *Commerce > Domains* writes it to a
 selection at once, without a review per domain; each zone as it was is still

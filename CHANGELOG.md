@@ -3,6 +3,33 @@
 All notable changes to the Domain Investors template. Versions follow the
 git tags; the Commerce Domains release each one installs is noted.
 
+## 1.0.2 - 2026-11-14
+
+Commerce Domains 1.0.3.
+
+### Added
+
+- DNS records at NameBright: its domains on NameBright's nameservers get the
+  DNS tab, DNS templates and the bulk action. A, AAAA, CNAME, MX and TXT
+  records; no TTLs.
+- *URL redirect, any registrar* in DNS templates: a Dynadot forward, a GNAME
+  or Namecheap URL record, so one template redirects domains at any of
+  them. Registrars without a redirect in their DNS API leave it out.
+
+### Changed
+
+- `drupal/commerce_domains` is required at `^1.0.3`.
+- Docs: NameBright and redirects in
+  [Connect a registrar](docs/registrars.md#dns-records).
+
+### Upgrading a site made from 1.0.1
+
+```sh
+composer update drupal/commerce_domains
+```
+
+No database updates or configuration changes.
+
 ## 1.0.1 - 2026-11-14
 
 Commerce Domains 1.0.2.

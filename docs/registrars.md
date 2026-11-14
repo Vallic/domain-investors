@@ -43,18 +43,26 @@ drush domain-investors:providers          # every provider, what it can do, its 
 ## DNS records
 
 For a domain on the registrar's own nameservers, its *DNS* tab edits the
-records at Dynadot, GNAME, GoDaddy, Namecheap, NameSilo, Porkbun and
-Spaceship: the changes are reviewed before they are written, and the zone as
+records at Dynadot, GNAME, GoDaddy, Namecheap, NameBright, NameSilo, Porkbun
+and Spaceship: the changes are reviewed before they are written, and the zone as
 it was is kept, to be put back ([Commerce Domains README](https://git.drupalcode.org/project/commerce_domains/-/blob/1.x/README.md#dns-records)). The
 Owner has it; the Assistant does not, as it acts on the registrar at once.
 
-Records you give many domains, such as a forward to your site or an SPF
-record, go in a DNS template (*Commerce > Configuration > Domains > DNS
-templates*): up to 20 records, with `{domain}` in a value for the domain's
-name. *Use a DNS template* on the DNS tab puts its records in the table to
-review, either beside the records there or in their place. *Apply a DNS
-template* on *Commerce > Domains* writes it to a selection at once, without
-a review per domain; each zone as it was is still kept on its DNS tab.
+Records you give many domains, such as marketplace verification TXT records
+and a redirect to the domain's page, go in a DNS template (*Commerce >
+Configuration > Domains > DNS templates*): up to 20 records, with `{domain}`
+in a value for the domain's name. *Use a DNS template* on the DNS tab puts
+its records in the table to review, either beside the records there or in
+their place. *Apply a DNS template* on *Commerce > Domains* writes it to a
+selection at once, without a review per domain; each zone as it was is still
+kept on its DNS tab.
+
+A *URL redirect, any registrar* record, such as one to
+`https://example.com/domain/{domain}`, becomes the registrar's own redirect:
+a Dynadot forward, a GNAME or Namecheap URL record. GoDaddy, NameBright,
+NameSilo, Porkbun and Spaceship have none in their DNS API, so it is left
+out there, with a warning; set their forwarding in the registrar's account.
+NameBright's API takes no TTL either: leave it empty for its domains.
 
 ## Keeping registrations up to date
 

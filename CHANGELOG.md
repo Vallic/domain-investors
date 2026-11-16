@@ -3,6 +3,37 @@
 All notable changes to the Domain Investors template. Versions follow the
 git tags; the Commerce Domains release each one installs is noted.
 
+## 1.0.6 - 2026-11-16
+
+Commerce Domains 1.0.6.
+
+### Fixed
+
+- Profit and expenses counted a renewal on the day a domain was registered
+  when that registration was the purchase: domains caught as they dropped
+  (backorders, pending-delete auctions) and hand registrations each showed
+  one estimated renewal too many. A registration's first year is no longer
+  counted.
+- Importing a registrar's order history into *Import renewal costs* crashed
+  on a currency cell like "EURO EUR (€)". The renewal cost, renewals and sales
+  imports now read the code from such cells, and report a cell without one on
+  its row.
+
+### Changed
+
+- `drupal/commerce_domains` is required at `^1.0.6`.
+- Docs: which years are estimated, in
+  [Sales and profit](docs/sales-and-profit.md#renewals-paid).
+
+### Upgrading a site made from 1.0.5
+
+```sh
+composer update drupal/commerce_domains
+```
+
+No database updates or configuration changes: profit, expenses and each
+domain's *Costs* tab are corrected as soon as the code is updated.
+
 ## 1.0.5 - 2026-11-16
 
 Commerce Domains 1.0.5.

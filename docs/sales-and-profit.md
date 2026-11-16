@@ -61,6 +61,12 @@ When a registrar sync finds an expiry date moved on by about a year or more, it
 records a renewal marked estimated, at the yearly cost. Importing what was charged
 replaces it.
 
+Years without a record are estimated: one renewal on each anniversary of the
+expiry date between the purchase and the sale (or today). The first year of a
+registration is never one, since the registration paid for it: a domain caught as
+it dropped, or registered by hand, is registered as it is bought, and its purchase
+price covers that year.
+
 ## Renewal costs
 
 *Commerce > Domains > Renewal costs* is a table of what a year costs, by extension,

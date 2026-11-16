@@ -44,10 +44,18 @@ price below 10,000 and 25% from there up. The longest lease goes by the price:
 | 20,000 to 50,000 | 24 months |
 | 50,000 and above | 36 months |
 
-The bands are the same everywhere. A marketplace may allow longer, such as 60
-months on Afternic, but only a domain's own term gets there. The Sale terms page
-lists what each enabled marketplace does with empty terms; only the Owner can
-change it.
+You can change the bands on the Sale terms page: each row is the longest lease
+below a price, lowest price first, and *Longest lease from the last price up*
+covers the rest. *Down payment on a lease*, 10% as it comes, is the share of the
+price paid first for domains that set no *Lease down payment* of their own: at
+checkout on this site, and in Spaceship's file, the only marketplace upload with
+a down payment.
+
+The bands and the down payment are the same everywhere, within each marketplace's
+own limit: Dynadot and NameSilo stop at 12 months, Spaceship at 36. A marketplace
+may allow longer, such as 60 months on Afternic, but only a domain's own term gets
+there. The Sale terms page lists what each enabled marketplace does with empty
+terms; only the Owner can change it.
 
 Leases on the site itself need the [lease recipe](lease-to-own.md).
 

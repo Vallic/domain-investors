@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4b06a43f7bc787a7ffbc6f3c142cdec3",
+    "content-hash": "179fdaa83c3b7168240139fe5202ee5d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2385,17 +2385,17 @@
         },
         {
             "name": "drupal/commerce_domains",
-            "version": "1.0.4",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/commerce_domains.git",
-                "reference": "1.0.4"
+                "reference": "1.0.5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/commerce_domains-1.0.4.zip",
-                "reference": "1.0.4",
-                "shasum": "97fe93b386c76816ea528c521f7d4f204c905ed8"
+                "url": "https://ftp.drupal.org/files/projects/commerce_domains-1.0.5.zip",
+                "reference": "1.0.5",
+                "shasum": "8a184dfe5eed410722d4d248decd00da24df3ac0"
             },
             "require": {
                 "drupal/advancedqueue": "^1.4",
@@ -2431,8 +2431,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.0.4",
-                    "datestamp": "1794671838",
+                    "version": "1.0.5",
+                    "datestamp": "1794849991",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -2458,7 +2458,7 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/commerce_domains"
             },
-            "published-time": "2026-11-14T15:56:58+00:00"
+            "published-time": "2026-11-16T17:25:58+00:00"
         },
         {
             "name": "drupal/commerce_escrow",

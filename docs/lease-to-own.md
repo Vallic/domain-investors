@@ -6,7 +6,8 @@
 buyers of a domain with Buy now choose at checkout between paying in full
 and a lease of 6 to 60 months, up to the domain's *Lease-to-own* term (or
 the rule worked out from its price). They pay a down payment (*Lease down
-payment* on the domain, else 10%), then the rest monthly:
+payment* on the domain, else *Down payment on a lease* on
+[Sale terms](sale-terms.md), 10%), then the rest monthly:
 - **by card** (Stripe): charged on cron to the card saved at checkout;
 - **by bank transfer or Wise**: each month the buyer is mailed the amount
   and how to pay it (your bank transfer instructions, or a Wise pay link).
@@ -29,6 +30,17 @@ That is its own *Lease-to-own* term, or the one worked out from its price: see
 [Sale terms](sale-terms.md). The monthly payments split what the down payment
 leaves, the last one making up the rounding. Each is due on the same day of the
 month from when the order was placed.
+
+## Charging more for a lease
+
+As it comes, a lease costs the same as paying in full. To charge more, set a
+percentage for each term in *What a lease costs over paying in full*, under
+*Commerce > Domains > Settings > Domain leases*, such as 5% for 6 months and 10% from 12 months up. When the buyer
+chooses a lease, it is added to the order as a fee (*Lease to own, 12 months*),
+after discounts and tax, so the down payment, the monthly payments and the invoice
+include it. Checkout shows each term's total and what it adds, and paying in full
+stays at the price. Changing the percentages doesn't change orders already placed.
+Leases on marketplaces are not affected.
 
 ## When a payment is missed
 

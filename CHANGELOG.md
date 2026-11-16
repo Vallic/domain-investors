@@ -3,6 +3,45 @@
 All notable changes to the Domain Investors template. Versions follow the
 git tags; the Commerce Domains release each one installs is noted.
 
+## 1.0.5 - 2026-11-16
+
+Commerce Domains 1.0.5.
+
+### Added
+
+- Lease price bands and down payment on *Sale terms*
+  (*Commerce > Configuration > Domains*): change the longest lease below each
+  price, and *Down payment on a lease* (10%) for domains that set none. The
+  same on this site and every marketplace, within each marketplace's limit;
+  Spaceship's file now uses that down payment instead of a fixed 25%.
+- A lease can cost more than paying in full: a percentage for each term under
+  *Commerce > Domains > Settings > Domain leases*, none by default. It is
+  added to the order as a fee once the buyer chooses the lease, so the down
+  payment, the monthly payments and the invoice include it. Marketplaces are
+  not affected.
+
+### Changed
+
+- `drupal/commerce_domains` is required at `^1.0.5`.
+- Docs: the price bands and down payment in [Sale terms](docs/sale-terms.md);
+  where the down payment comes from, and charging more for a lease, in
+  [Lease to own](docs/lease-to-own.md).
+
+### Upgrading a site made from 1.0.4
+
+```sh
+composer update drupal/commerce_domains
+drush updb
+drush config:export
+```
+
+The update keeps the price bands as they were, and moves the lease
+recipe's default down payment to *Sale terms*. On a site without the lease
+recipe it is set to 25%, as Spaceship's file had. Run it before importing
+configuration that has the new settings. With the lease recipe, Spaceship's
+file goes from 25% to that down payment (10% unless you changed it), so
+upload it again. Marketplaces get changed bands with their next full sync.
+
 ## 1.0.4 - 2026-11-14
 
 Commerce Domains 1.0.4.
